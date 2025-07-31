@@ -9,12 +9,12 @@ import qs from "qs";
 
 const cancelTokenSource = axios.CancelToken.source();
 
-const apiConfig: AxiosInstance = axios.create({
+export const apiConfig: AxiosInstance = axios.create({
+	baseURL: import.meta.env.VITE_PUBLIC_API_URL,
 	timeout: 310000,
 	headers: {
 		Accept: "application/json",
 		"Content-Type": "application/json",
-		"Ocp-Apim-Subscription-Key": import.meta.env.REACT_APP_OCP_APIM_KEY,
 	},
 	paramsSerializer: (params) =>
 		qs.stringify(params, {
