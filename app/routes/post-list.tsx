@@ -1,7 +1,6 @@
 import { usePostList } from "~/api/post";
 import type { Route } from "./+types/post-list";
-import React, { useEffect } from "react";
-import apiConfig from "~/config/api";
+import { useNavigate } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -11,20 +10,28 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function PostList() {
+	const navigate = useNavigate();
 	const { data, isLoading, error } = usePostList({
 		queryKey: ["posts"],
 	});
-
-	console.log("dataa", data);
 
 	if (isLoading) return <p>Loading...</p>;
 	if (error) return <p>Error: {(error as Error).message}</p>;
 
 	return (
-		<div>
-			hehehe
+		<div className="m-3">
 			{data?.map((item, index) => {
-				return <div key={index}>{item?.title} </div>;
+				return (
+					<div
+						key={index}
+						className="p-2 border-2 mb-2 rounded-md cursor-pointer"
+						onClick={() => {
+							navigate("/post/detail/" + item.id);
+						}}
+					>
+						{item?.title}
+					</div>
+				);
 			})}
 		</div>
 	);
