@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import type { Route } from "./+types/post-detail";
 import { fetchPostDetail } from "~/api/post";
 import { queryClient } from "~/lib/queryClient";
