@@ -10,7 +10,7 @@ import qs from "qs";
 const cancelTokenSource = axios.CancelToken.source();
 
 export const apiConfig: AxiosInstance = axios.create({
-	baseURL: import.meta.env.VITE_PUBLIC_API_URL,
+	baseURL: import.meta.env.VITE_APP_API_URL,
 	timeout: 310000,
 	headers: {
 		Accept: "application/json",
