@@ -1,4 +1,4 @@
-import { usePostList } from "~/api/post";
+import { usePostList } from "@/api/post";
 import type { Route } from "./+types/post-list";
 import { useNavigate } from "react-router";
 

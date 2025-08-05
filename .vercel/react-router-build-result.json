@@ -1,0 +1,112 @@
+{
+  "buildManifest": {
+    "serverBundles": {
+      "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0": {
+        "id": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+        "file": "build/server/nodejs_eyJydW50aW1lIjoibm9kZWpzIn0/build/index.js",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    },
+    "routeIdToServerBundleId": {
+      "routes/home": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/post-list": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/post-detail": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
+    },
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "app/root.tsx",
+        "config": {}
+      },
+      "routes/home": {
+        "id": "routes/home",
+        "parentId": "root",
+        "file": "app/routes/home.tsx",
+        "index": true,
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/__layout/__auth.layout": {
+        "id": "routes/__layout/__auth.layout",
+        "parentId": "root",
+        "file": "app/routes/__layout/__auth.layout.tsx",
+        "config": {}
+      },
+      "routes/post-list": {
+        "id": "routes/post-list",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "app/routes/post-list.tsx",
+        "path": "post/list",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/post-detail": {
+        "id": "routes/post-detail",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "app/routes/post-detail.tsx",
+        "path": "post/detail/:id",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    }
+  },
+  "reactRouterConfig": {
+    "appDirectory": "/Volumes/SSD/Hyundai/minisite/app",
+    "basename": "/",
+    "buildDirectory": "/Volumes/SSD/Hyundai/minisite/build",
+    "future": {
+      "unstable_middleware": false,
+      "unstable_optimizeDeps": false,
+      "unstable_splitRouteModules": false,
+      "unstable_subResourceIntegrity": false,
+      "unstable_viteEnvironmentApi": false
+    },
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "root.tsx"
+      },
+      "routes/home": {
+        "id": "routes/home",
+        "parentId": "root",
+        "file": "routes/home.tsx",
+        "index": true
+      },
+      "routes/__layout/__auth.layout": {
+        "id": "routes/__layout/__auth.layout",
+        "parentId": "root",
+        "file": "./routes/__layout/__auth.layout.tsx"
+      },
+      "routes/post-list": {
+        "id": "routes/post-list",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/post-list.tsx",
+        "path": "post/list"
+      },
+      "routes/post-detail": {
+        "id": "routes/post-detail",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/post-detail.tsx",
+        "path": "post/detail/:id"
+      }
+    },
+    "routeDiscovery": {
+      "mode": "lazy"
+    },
+    "serverBuildFile": "build/index.js",
+    "serverModuleFormat": "esm",
+    "ssr": true
+  },
+  "viteConfig": {
+    "build": {
+      "assetsDir": "assets"
+    }
+  }
+}

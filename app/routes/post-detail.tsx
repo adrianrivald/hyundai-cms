@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import type { Route } from "./+types/post-detail";
-import { fetchPostDetail } from "~/api/post";
-import { queryClient } from "~/lib/queryClient";
-import type { PostTypes } from "~/types/PostTypes";
+
 import { useParams } from "react-router";
+import { fetchPostDetail } from "@/api/post";
+import { queryClient } from "@/lib/queryClient";
+import type { PostTypes } from "@/types/PostTypes";
 
 export function meta({ data }: Route.MetaArgs) {
 	if (!data) return [{ title: "Loading Post..." }];
