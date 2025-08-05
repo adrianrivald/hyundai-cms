@@ -14,4 +14,5 @@ export default [
 			route("detail/:id", "./routes/post-detail.tsx"),
 		]),
 	]),
+	route("dev", "./routes/dev.tsx"),
 ] satisfies RouteConfig;
