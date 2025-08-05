@@ -1,7 +1,6 @@
+import apiConfig from "@/config/api";
+import type { PostTypes } from "@/types/PostTypes";
 import { useQuery, type QueryObserverOptions } from "@tanstack/react-query";
-import apiConfig from "~/config/api";
-
-import type { PostTypes } from "~/types/PostTypes";
 
 async function fetchPosts(): Promise<PostTypes[]> {
 	const data = await apiConfig.get(`/posts`);

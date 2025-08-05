@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import { AppSidebar } from "~/components/app-sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 import {
 	Breadcrumb,
 	BreadcrumbList,
@@ -7,13 +7,13 @@ import {
 	BreadcrumbLink,
 	BreadcrumbSeparator,
 	BreadcrumbPage,
-} from "~/components/ui/breadcrumb";
-import { Separator } from "~/components/ui/separator";
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 import {
 	SidebarProvider,
 	SidebarInset,
 	SidebarTrigger,
-} from "~/components/ui/sidebar";
+} from "@/components/ui/sidebar";
 
 const AuthLayout = () => {
 	return (
