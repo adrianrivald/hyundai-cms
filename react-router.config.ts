@@ -7,5 +7,5 @@ export default {
 	ssr: true,
 	routeDiscovery: { mode: "lazy" },
 	serverBuildFile: "build/index.js",
-	presets: [vercelPreset()],
+	// presets: [vercelPreset()],
 } satisfies Config;

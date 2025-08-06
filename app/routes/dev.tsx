@@ -16,6 +16,7 @@ import { Stack } from "@/components/stack";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
 
 import { type DateRange } from "react-day-picker";
@@ -94,18 +95,33 @@ const DevPage = () => {
 
 	const allComments = data?.pages.flat() ?? [];
 
+	const openSnackbar = () => {
+		// enqueueSnackbar("This is a snackbar!", {
+		// 	variant: "default",
+		// });
+		enqueueSnackbar("This is a snackbar!", {
+			variant: "error",
+		});
+		// enqueueSnackbar("This is a snackbar!", {
+		// 	variant: "success",
+		// });
+		// enqueueSnackbar("This is a snackbar!", {
+		// 	variant: "info",
+		// });
+	};
+
 	return (
 		<Container>
 			<ScrollArea>
 				{/* <Dev /> */}
 
-				<Container className="bg-blue-400 mt-[100px]">
+				<Container className="bg-blue-400 mt-[20px]">
 					<Iconify icon="ic:baseline-home" width={30} height={30} />
 					<Iconify icon="ic:baseline-home" width={30} height={30} />
 					<Iconify icon="material-symbols:10k" width="24" height="24" />
 					<Button
 						onClick={() => {
-							//openSnackbar()
+							openSnackbar();
 						}}
 						title="Open Snackbar"
 					>

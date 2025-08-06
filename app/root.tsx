@@ -9,10 +9,10 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { queryClient } from "./lib/queryClient";
+import { NotistackProvider } from "./components/notistack-provider";
 
 export const links: Route.LinksFunction = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -37,10 +37,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Links />
 			</head>
 			<body>
-				<QueryClientProvider client={queryClient}>
-					{children}
-					<ReactQueryDevtools initialIsOpen={false} />
-				</QueryClientProvider>
+				<NotistackProvider>
+					<QueryClientProvider client={queryClient}>
+						{children}
+						<ReactQueryDevtools initialIsOpen={false} />
+					</QueryClientProvider>
+				</NotistackProvider>
+
 				<ScrollRestoration />
 				<Scripts />
 			</body>
