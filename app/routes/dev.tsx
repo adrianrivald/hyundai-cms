@@ -152,7 +152,7 @@ const DevPage = () => {
 					</Stack>
 
 					<Stack direction="row" spacing={10} alignItems="center">
-						<div>Item 1</div>
+						<div className="text-hmmi-primary-900">Item 2 change</div>
 						<div>Item 2</div>
 						<div>Item 3</div>
 					</Stack>
@@ -176,7 +176,12 @@ const DevPage = () => {
 					<Grid container spacing={4}>
 						<Grid item sm={6} className="border-2 p-2 items-center rounded-sm">
 							<FormProvider methods={form1}>
-								<RHFTextField name="formText" label="Form Text" required />
+								<RHFTextField
+									name="formText"
+									label="Form Text"
+									required
+									placeholder="Masukan alamat email"
+								/>
 								<RHFTextField
 									name="formNumber"
 									label="Form Number"
@@ -368,15 +373,31 @@ const DevPage = () => {
 									direction="column"
 									size="sm"
 								/>
+								<div className="text-hmmi-primary-100 font-bold text-2xl ">
+									testing
+								</div>
+								<div className="text-[#1C4D27] font-bold text-2xl">testing</div>
 								<Stack direction="row" className="mt-5">
 									<Button variant={"outline"} className="w-full">
 										Cancel
 									</Button>
 									<Button className="w-full">Submit</Button>
+									<Button variant={"ghost"}>Submit</Button>
 								</Stack>
 							</FormProvider>
 						</Grid>
 					</Grid>
+					<div className="flex-row gap-2 mx-2 my-2">
+						<Button variant={"outline"} disabled>
+							Submit
+						</Button>
+						<Button variant={"ghost"} disabled>
+							Submit
+						</Button>
+						<Button variant={"default"} disabled>
+							Submit
+						</Button>
+					</div>
 				</Container>
 			</ScrollArea>
 		</Container>

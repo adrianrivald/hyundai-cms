@@ -21,6 +21,13 @@ const buttonVariants = cva(
 				link: "text-primary underline-offset-4 hover:underline",
 				success: "bg-[#59AD24] text-white hover:bg-[#59AD24]/50",
 				white: "bg-white text-black hover:bg-gray-100",
+
+				hmmiPrimary:
+					"bg-hmmi-primary-900 text-white hover:bg-hmmi-primary-700 disabled:bg-hmmi-grey-200 disabled:text-hmmi-grey-400",
+				hmmiOutline:
+					"border border-hmmi-primary-500 bg-background text-hmmi-primary-500 hover:bg-hmmi-primary-50 disabled:border-hmmi-grey-200 disabled:text-hmmi-grey-400",
+				hmmiGhost:
+					"hover:bg-hmmi-primary-50 hover:text-accent-foreground text-hmmi-primary-500",
 			},
 			size: {
 				default: "h-10 px-4 py-2",
@@ -30,7 +37,7 @@ const buttonVariants = cva(
 			},
 		},
 		defaultVariants: {
-			variant: "default",
+			variant: "hmmiPrimary",
 			size: "default",
 		},
 	}
