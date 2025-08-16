@@ -7,5 +7,5 @@ export default {
 	ssr: true,
 	basename: "/",
 	serverBuildFile: "build/index.js",
-	// presets: [vercelPreset()],
+	presets: [vercelPreset()],
 } satisfies Config;
