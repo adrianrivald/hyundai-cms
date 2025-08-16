@@ -8,6 +8,7 @@ import {
 
 export default [
 	index("routes/home.tsx"),
+	route("login", "./routes/login.tsx"),
 	layout("./routes/__layout/__auth.layout.tsx", [
 		...prefix("post", [
 			route("list", "./routes/post-list.tsx"),

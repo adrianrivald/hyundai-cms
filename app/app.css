@@ -10,8 +10,18 @@
 @source inline('{xs:,sm:,md:,lg:,xl:,2xl:,}grid-cols-{1,2,3,4,5,6,7,8,9,10,11,12}');
 @source inline('{xs:,sm:,md:,lg:,xl:,2xl:,}gap-{0,0.5,1,1.5,2,2.5,3,3.5,4,5,6,7,8,9,10,11,12,14,16,20,24,28,32,36,40,44,48,52,56,60,64,72,80,96}');
 
+@font-face {
+  font-family: 'Hyundai Sans Head Office';
+  src: local('Hyundai Sans Head Office'), local('Hyundai-Sans-Head-Office'),
+       url('/fonts/HyundaiSansHeadOffice-Regular.woff2') format('woff2'),
+       url('/fonts/HyundaiSansHeadOffice-Regular.woff') format('woff'),
+       url('/fonts/HyundaiSansHeadOffice-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+  --font-sans: "Hyundai Sans", "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
