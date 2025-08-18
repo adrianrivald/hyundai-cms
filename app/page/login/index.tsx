@@ -6,16 +6,30 @@ import { Stack } from "@/components/stack";
 import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const LoginPage = () => {
 	const isMobile = useIsMobile();
 	const methods = useForm({
 		defaultValues: {
-			username: "",
+			email: "",
 			password: "",
 		},
+		resolver: yupResolver(
+			yup.object().shape({
+				email: yup.string().required("Email must be filled"),
+				password: yup
+					.string()
+					.min(8, "Password must more than 8 character")
+					.required("Password must be filled"),
+			})
+		),
 	});
+
+	const onSubmit = () => {};
 	return (
 		<Container className="py-0 max-h-screen">
 			<Grid container>
@@ -35,11 +49,29 @@ const LoginPage = () => {
 										name="email"
 										label="Email"
 										placeholder="Masukan alamat email"
+										type="email"
+										startIcon={
+											<Icon
+												icon="mage:email"
+												width="20"
+												height="20"
+												color="#153263"
+											/>
+										}
 									/>
 									<RHFTextField
 										name="password"
 										label="Password"
 										placeholder="Masukan Kata Sandi"
+										type="password"
+										startIcon={
+											<Icon
+												icon="solar:lock-linear"
+												width="20"
+												height="20"
+												color="#153263"
+											/>
+										}
 									/>
 									<div className="cursor-pointer">
 										<Typography className="text-sm font-medium text-right">
@@ -47,7 +79,17 @@ const LoginPage = () => {
 										</Typography>
 									</div>
 
-									<Button>Login</Button>
+									<Button
+										onClick={() => {
+											methods.trigger().then((isValid) => {
+												if (isValid) {
+													onSubmit();
+												}
+											});
+										}}
+									>
+										Login
+									</Button>
 								</div>
 							</FormProvider>
 						</div>

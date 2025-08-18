@@ -72,14 +72,15 @@ export default function RHFTextField({
 							ref={field.ref}
 							autoComplete="off"
 							onWheel={handleWheel}
+							aria-invalid={!!error}
 							className={cn(
 								getVariantStyles(),
-								error && "border-destructive",
 								startIcon && "pl-10",
 								endIcon && "pr-10",
 								other.type === "number" &&
 									"[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
-								className
+								className,
+								error && "border-destructive"
 							)}
 						/>
 						{endIcon && (
