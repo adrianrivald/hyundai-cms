@@ -1,6 +1,6 @@
 import { usePostList } from "@/api/post";
-import type { Route } from "./+types/post-list";
 import { useNavigate } from "react-router";
+import type { Route } from "./+types/post-list";
 
 export function meta({}: Route.MetaArgs) {
 	return [

@@ -7,13 +7,14 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
-	index("routes/home.tsx"),
+	index("routes/guard-route/home/home.tsx"),
 	route("login", "./routes/login.tsx"),
 	layout("./routes/__layout/__auth.layout.tsx", [
 		...prefix("post", [
-			route("list", "./routes/post-list.tsx"),
-			route("detail/:id", "./routes/post-detail.tsx"),
+			route("list", "./routes/guard-route/post/post-list.tsx"),
+			route("detail/:id", "./routes/guard-route/post/post-detail.tsx"),
 		]),
 	]),
 	route("dev", "./routes/dev.tsx"),
+	route("not-authorized", "routes/not-authorized.tsx"),
 ] satisfies RouteConfig;
