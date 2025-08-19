@@ -1,44 +1,3 @@
-// import { Outlet } from "react-router";
-// import { AppSidebar } from "@/components/app-sidebar";
-// import {
-// 	Breadcrumb,
-// 	BreadcrumbList,
-// 	BreadcrumbItem,
-// 	BreadcrumbLink,
-// 	BreadcrumbSeparator,
-// 	BreadcrumbPage,
-// } from "@/components/ui/breadcrumb";
-// import { Separator } from "@/components/ui/separator";
-// import {
-// 	SidebarProvider,
-// 	SidebarInset,
-// 	SidebarTrigger,
-// 	useSidebar,
-// } from "@/components/ui/sidebar";
-// import { ScrollArea } from "@radix-ui/react-scroll-area";
-
-// const AuthLayout = () => {
-// 	return (
-// 		<div className="flex h-screen flex-col pt-[--navbar-height,0]">
-// 			<div className="flex flex-1 overflow-hidden">
-// 				<SidebarProvider className="fixed h-[94%]">
-// 					{/* <LayoutSidebar /> */}
-// 					{/* <TopBar /> */}
-// 					<SidebarInset className="flex-1 mt-10">
-// 						<ScrollArea>
-// 							<main className="flex flex-1 flex-col gap-4 px-6 pt-10 pb-5 mb-[55px] ">
-// 								<Outlet />
-// 							</main>
-// 						</ScrollArea>
-// 					</SidebarInset>
-// 				</SidebarProvider>
-// 			</div>
-// 		</div>
-// 	);
-// };
-
-// export default AuthLayout;
-
 import { AppSidebar } from "@/components/app-sidebar";
 import {
 	Breadcrumb,
@@ -54,39 +13,39 @@ import {
 	SidebarInset,
 	SidebarProvider,
 	SidebarTrigger,
-	useSidebar,
 } from "@/components/ui/sidebar";
 import { Outlet } from "react-router";
 
 export default function AuthLayout() {
 	return (
-		<div className="flex flex-1 overflow-hidden">
-			<SidebarProvider className="fixed h-[94%]">
+		<div className="min-h-screen">
+			<SidebarProvider>
 				<AppSidebar />
-
-				<SidebarInset className="flex-1">
-					<ScrollArea>
-						<header className="bg-background sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b px-4 mb-4">
-							<SidebarTrigger className="-ml-1" />
-							<Separator orientation="vertical" className="mr-2 h-4" />
-							<Breadcrumb>
-								<BreadcrumbList>
-									<BreadcrumbItem className="hidden md:block">
-										<BreadcrumbLink href="#">
-											Building Your Application
-										</BreadcrumbLink>
-									</BreadcrumbItem>
-									<BreadcrumbSeparator className="hidden md:block" />
-									<BreadcrumbItem>
-										<BreadcrumbPage>Data Fetching</BreadcrumbPage>
-									</BreadcrumbItem>
-								</BreadcrumbList>
-							</Breadcrumb>
-						</header>
-						<main className="flex flex-1 flex-col gap-4 px-6 pb-5 mb-[55px] ">
+				<SidebarInset>
+					{/* <div className="flex h-screen flex-col"> */}
+					<header className="bg-background sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b px-4">
+						<SidebarTrigger className="-ml-1" />
+						<Separator orientation="vertical" className="mr-2 h-4" />
+						<Breadcrumb>
+							<BreadcrumbList>
+								<BreadcrumbItem className="hidden md:block">
+									<BreadcrumbLink href="#">
+										Building Your Application
+									</BreadcrumbLink>
+								</BreadcrumbItem>
+								<BreadcrumbSeparator className="hidden md:block" />
+								<BreadcrumbItem>
+									<BreadcrumbPage>Data Fetching</BreadcrumbPage>
+								</BreadcrumbItem>
+							</BreadcrumbList>
+						</Breadcrumb>
+					</header>
+					<ScrollArea className="flex-1">
+						<main className="h-full px-6">
 							<Outlet />
 						</main>
 					</ScrollArea>
+					{/* </div> */}
 				</SidebarInset>
 			</SidebarProvider>
 		</div>
