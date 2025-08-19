@@ -10,6 +10,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { cn } from "@/lib/utils";
 
 const LoginPage = () => {
 	const isMobile = useIsMobile();
@@ -33,9 +34,9 @@ const LoginPage = () => {
 	return (
 		<Container className="py-0 max-h-screen">
 			<Grid container>
-				<Grid item xs={12} sm={6} md={6} className="min-h-screen flex flex-col">
+				<Grid item xs={12} md={6} className="min-h-screen flex flex-col">
 					<div className="flex-1 flex flex-col items-center justify-center ">
-						<div className=" w-[55%]">
+						<div className={cn(`${isMobile ? "w-[70%]" : "w-[55%]"}`)}>
 							<img src="/images/logo.webp" className="w-[134px] h-[18px]" />
 							<Typography className="text-4xl font-sans font-bold mt-4 text-hmmi-primary-500">
 								Silakan masuk ke akun Anda
