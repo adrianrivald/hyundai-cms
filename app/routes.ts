@@ -7,11 +7,12 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
-	index("routes/guard-route/home/home.tsx"),
+	//index("routes/guard-route/home/home.tsx"),
+	// index(''),
 	route("login", "./routes/login.tsx"),
 	layout("./routes/__layout/__auth.layout.tsx", [
+		index("./routes/guard-route/post/post-list.tsx"),
 		...prefix("post", [
-			route("list", "./routes/guard-route/post/post-list.tsx"),
 			route("detail/:id", "./routes/guard-route/post/post-detail.tsx"),
 		]),
 	]),
