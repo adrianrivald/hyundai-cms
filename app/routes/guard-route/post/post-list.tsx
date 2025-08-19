@@ -1,6 +1,16 @@
 import { usePostList } from "@/api/post";
-import type { Route } from "./+types/post-list";
 import { useNavigate } from "react-router";
+import type { Route } from "./+types/post-list";
+import {
+	Breadcrumb,
+	BreadcrumbList,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbSeparator,
+	BreadcrumbPage,
+} from "@/components/ui/breadcrumb";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@radix-ui/react-separator";
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -19,7 +29,7 @@ export default function PostList() {
 	if (error) return <p>Error: {(error as Error).message}</p>;
 
 	return (
-		<div className="m-3">
+		<div>
 			{data?.map((item, index) => {
 				return (
 					<div

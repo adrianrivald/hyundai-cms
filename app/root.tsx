@@ -5,6 +5,7 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
+	useNavigation,
 } from "react-router";
 
 import type { Route } from "./+types/root";
@@ -13,6 +14,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { queryClient } from "./lib/queryClient";
 import { NotistackProvider } from "./components/notistack-provider";
+import { LoadingIndicator } from "./components/loading-indicator";
+import NotFound from "./components/not-found";
 
 export const links: Route.LinksFunction = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -52,7 +55,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-	return <Outlet />;
+	const navigation = useNavigation();
+	const isNavigating = Boolean(navigation.location);
+	return (
+		<>
+			{isNavigating && <LoadingIndicator />}
+			<Outlet />
+		</>
+	);
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
@@ -61,11 +71,12 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 	let stack: string | undefined;
 
 	if (isRouteErrorResponse(error)) {
-		message = error.status === 404 ? "404" : "Error";
-		details =
-			error.status === 404
-				? "The requested page could not be found."
-				: error.statusText || details;
+		if (error.status === 404) {
+			return <NotFound />;
+		} else {
+			message = "Error";
+			details = error.statusText || details;
+		}
 	} else if (import.meta.env.DEV && error && error instanceof Error) {
 		details = error.message;
 		stack = error.stack;

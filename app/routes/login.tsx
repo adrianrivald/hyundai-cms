@@ -2,10 +2,7 @@ import LoginPage from "@/page/login";
 import type { Route } from "./+types/login";
 
 export function meta({}: Route.MetaArgs) {
-	return [
-		{ title: "New React Router App" },
-		{ name: "description", content: "Welcome to React Router!" },
-	];
+	return [{ title: "Login | Hyundai Factory Tour" }];
 }
 
 export default function Login() {

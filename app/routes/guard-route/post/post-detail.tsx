@@ -1,9 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Route } from "./+types/post-detail";
 
 import { useParams } from "react-router";
 import { fetchPostDetail } from "@/api/post";
-import { queryClient } from "@/lib/queryClient";
 
 export function meta() {
 	return [

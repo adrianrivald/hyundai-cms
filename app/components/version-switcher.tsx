@@ -17,7 +17,7 @@ export function VersionSwitcher({
 }) {
 	const [selectedVersion, setSelectedVersion] = useState(defaultVersion);
 	return (
-		<SidebarMenu>
+		<SidebarMenu className=" ">
 			<SidebarMenuItem>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
