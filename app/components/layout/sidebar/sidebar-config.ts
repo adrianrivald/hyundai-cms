@@ -26,7 +26,36 @@ export const SIDEBAR_MENU: Items[] = [
 		id: "3",
 		title: "Report",
 		url: "/dashboard",
-		items: [],
+		items: [
+			{
+				id: "1",
+				title: "Registration Report",
+				url: "/dashboard",
+				items: [],
+				authorized: ["all"],
+			},
+			{
+				id: "2",
+				title: "Visitor Report",
+				url: "/dashboard",
+				items: [],
+				authorized: ["all"],
+			},
+			{
+				id: "3",
+				title: "Activity Report",
+				url: "/dashboard",
+				items: [],
+				authorized: ["all"],
+			},
+			{
+				id: "2",
+				title: "User Report",
+				url: "/dashboard",
+				items: [],
+				authorized: ["all"],
+			},
+		],
 		authorized: ["all"],
 	},
 	{
@@ -67,6 +96,13 @@ export const SIDEBAR_MENU: Items[] = [
 	},
 	{
 		id: "5",
+		title: "User Management",
+		url: "/dashboard",
+		items: [],
+		authorized: ["all"],
+	},
+	{
+		id: "6",
 		title: "Logout",
 		url: "/dashboard",
 		items: [],

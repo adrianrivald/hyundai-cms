@@ -73,7 +73,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarContent
 				className={`gap-0 ${state === "expanded" ? "w-56" : "w-13"} bg-[#153263] rounded-tr-[70px]`}
 			>
-				<SidebarGroup className="mt-8">
+				<SidebarGroup className="mt-8 bg-[#153263] z-[10]">
 					<SidebarMenu>
 						{SIDEBAR_MENU.map((item, index) => {
 							if ((item.items?.length || 0) > 0) {
