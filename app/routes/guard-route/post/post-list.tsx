@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@radix-ui/react-separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import Container from "@/components/container";
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -29,7 +31,7 @@ export default function PostList() {
 	if (error) return <p>Error: {(error as Error).message}</p>;
 
 	return (
-		<div>
+		<Container>
 			{data?.map((item, index) => {
 				return (
 					<div
@@ -43,6 +45,6 @@ export default function PostList() {
 					</div>
 				);
 			})}
-		</div>
+		</Container>
 	);
 }
