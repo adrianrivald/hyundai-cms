@@ -1,4 +1,4 @@
-interface Items {
+export interface Items {
 	id: string;
 	title: string;
 	url: string;
@@ -11,47 +11,47 @@ export const SIDEBAR_MENU: Items[] = [
 	{
 		id: "1",
 		title: "Dashboard",
-		url: "/dashboard",
+		url: "/",
 		items: [],
 		authorized: ["all"],
 	},
 	{
 		id: "2",
 		title: "Calendar",
-		url: "/dashboard",
+		url: "/calendar",
 		items: [],
 		authorized: ["all"],
 	},
 	{
 		id: "3",
 		title: "Report",
-		url: "/dashboard",
+		url: "",
 		items: [
 			{
 				id: "1",
 				title: "Registration Report",
-				url: "/dashboard",
+				url: "/report/registration-report",
 				items: [],
 				authorized: ["all"],
 			},
 			{
 				id: "2",
 				title: "Visitor Report",
-				url: "/dashboard",
+				url: "/report/visitor-report",
 				items: [],
 				authorized: ["all"],
 			},
 			{
 				id: "3",
 				title: "Activity Report",
-				url: "/dashboard",
+				url: "/report/activity-report",
 				items: [],
 				authorized: ["all"],
 			},
 			{
 				id: "2",
 				title: "User Report",
-				url: "/dashboard",
+				url: "/report/user-report",
 				items: [],
 				authorized: ["all"],
 			},
@@ -97,7 +97,7 @@ export const SIDEBAR_MENU: Items[] = [
 	{
 		id: "5",
 		title: "User Management",
-		url: "/dashboard",
+		url: "/user-management",
 		items: [],
 		authorized: ["all"],
 	},
