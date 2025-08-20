@@ -7,11 +7,30 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
-	//index("routes/guard-route/home/home.tsx"),
-	// index(''),
 	route("login", "./routes/login.tsx"),
 	layout("./routes/__layout/__auth.layout.tsx", [
-		index("./routes/guard-route/post/post-list.tsx"),
+		index("./routes/guard-route/dashboard/index.tsx"),
+		route("calendar", "./routes/guard-route/calendar/index.tsx"),
+
+		...prefix("user-management", [
+			index("./routes/guard-route/user-management/index.tsx"),
+		]),
+		...prefix("report", [
+			route(
+				"activity-report",
+				"./routes/guard-route/report/report-activity/index.tsx"
+			),
+			route(
+				"registration-report",
+				"./routes/guard-route/report/report-registration/index.tsx"
+			),
+			route("user-report", "./routes/guard-route/report/report-user/index.tsx"),
+			route(
+				"visitor-report",
+				"./routes/guard-route/report/report-visitor/index.tsx"
+			),
+		]),
+
 		...prefix("post", [
 			route("detail/:id", "./routes/guard-route/post/post-detail.tsx"),
 		]),
