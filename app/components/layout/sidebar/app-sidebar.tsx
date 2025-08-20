@@ -1,214 +1,202 @@
 import * as React from "react";
-import { ChevronRight } from "lucide-react";
-
-import { SearchForm } from "@/components/search-form";
-import { VersionSwitcher } from "@/components/version-switcher";
+import { ChevronDown } from "lucide-react";
 import {
 	Collapsible,
-	CollapsibleContent,
 	CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+	CollapsibleContent,
+} from "@radix-ui/react-collapsible";
 import {
-	Sidebar,
+	SidebarHeader,
 	SidebarContent,
 	SidebarGroup,
-	SidebarGroupContent,
-	SidebarGroupLabel,
-	SidebarHeader,
 	SidebarMenu,
-	SidebarMenuButton,
 	SidebarMenuItem,
+	SidebarMenuButton,
 	SidebarRail,
-} from "@/components/ui/sidebar";
+	Sidebar,
+	useSidebar,
+	SidebarMenuSub,
+	SidebarMenuSubButton,
+	SidebarMenuSubItem,
+} from "../../ui/sidebar";
+import { cn } from "@/lib/utils";
+import { SIDEBAR_MENU, type Items } from "./sidebar-config";
+import { Typography } from "../../typography";
+import { useLocation, useNavigate } from "react-router";
 
 // This is sample data.
 const data = {
-	versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
 	navMain: [
 		{
-			title: "Getting Started",
+			title: "Post",
 			url: "#",
-			items: [
-				{
-					title: "Installation",
-					url: "#",
-				},
-				{
-					title: "Project Structure",
-					url: "#",
-				},
-			],
-		},
-		{
-			title: "Building Your Application",
-			url: "#",
-			items: [
-				{
-					title: "Routing",
-					url: "#",
-				},
-				{
-					title: "Data Fetching",
-					url: "#",
-					isActive: true,
-				},
-				{
-					title: "Rendering",
-					url: "#",
-				},
-				{
-					title: "Caching",
-					url: "#",
-				},
-				{
-					title: "Styling",
-					url: "#",
-				},
-				{
-					title: "Optimizing",
-					url: "#",
-				},
-				{
-					title: "Configuring",
-					url: "#",
-				},
-				{
-					title: "Testing",
-					url: "#",
-				},
-				{
-					title: "Authentication",
-					url: "#",
-				},
-				{
-					title: "Deploying",
-					url: "#",
-				},
-				{
-					title: "Upgrading",
-					url: "#",
-				},
-				{
-					title: "Examples",
-					url: "#",
-				},
-			],
-		},
-		{
-			title: "API Reference",
-			url: "#",
-			items: [
-				{
-					title: "Components",
-					url: "#",
-				},
-				{
-					title: "File Conventions",
-					url: "#",
-				},
-				{
-					title: "Functions",
-					url: "#",
-				},
-				{
-					title: "next.config.js Options",
-					url: "#",
-				},
-				{
-					title: "CLI",
-					url: "#",
-				},
-				{
-					title: "Edge Runtime",
-					url: "#",
-				},
-			],
-		},
-		{
-			title: "Architecture",
-			url: "#",
-			items: [
-				{
-					title: "Accessibility",
-					url: "#",
-				},
-				{
-					title: "Fast Refresh",
-					url: "#",
-				},
-				{
-					title: "Next.js Compiler",
-					url: "#",
-				},
-				{
-					title: "Supported Browsers",
-					url: "#",
-				},
-				{
-					title: "Turbopack",
-					url: "#",
-				},
-			],
-		},
-		{
-			title: "Community",
-			url: "#",
-			items: [
-				{
-					title: "Contribution Guide",
-					url: "#",
-				},
-			],
+			items: [],
 		},
 	],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	const { state, open } = useSidebar();
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	const isItemActive = (item: Items): boolean => {
+		if (!location?.pathname) return false;
+
+		// Special handling for root path
+		if (item.url === "/" && location.pathname === "/") {
+			return true;
+		}
+
+		// For non-root, use startsWith to support sub-routes
+		if (
+			item.url &&
+			item.url !== "/" &&
+			location.pathname.startsWith(item.url)
+		) {
+			return true;
+		}
+
+		// Recursively check nested items
+		return item.items?.some(isItemActive) ?? false;
+	};
+
 	return (
-		<Sidebar {...props}>
-			<SidebarHeader>
-				<VersionSwitcher
-					versions={data.versions}
-					defaultVersion={data.versions[0]}
-				/>
-				<SearchForm />
+		<Sidebar
+			{...props}
+			collapsible="offcanvas"
+			variant="sidebar"
+			className="bg-white"
+		>
+			<SidebarHeader className="bg-white">
+				<SidebarMenu
+					className={cn(
+						" px-2 py-2 rounded-lg flex items-center justify-between mt-1",
+						!open && "px-0 py-1 "
+					)}
+				>
+					<SidebarMenuItem>
+						{open && (
+							<img
+								src={`/images/logo.webp`}
+								alt="Logo"
+								width={201}
+								height={27}
+							/>
+						)}
+					</SidebarMenuItem>
+				</SidebarMenu>
 			</SidebarHeader>
-			<SidebarContent className="gap-0">
-				{/* We create a collapsible SidebarGroup for each parent. */}
-				{data.navMain.map((item) => (
-					<Collapsible
-						key={item.title}
-						title={item.title}
-						defaultOpen
-						className="group/collapsible"
-					>
-						<SidebarGroup>
-							<SidebarGroupLabel
-								asChild
-								className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm"
-							>
-								<CollapsibleTrigger>
-									{item.title}{" "}
-									<ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
-								</CollapsibleTrigger>
-							</SidebarGroupLabel>
-							<CollapsibleContent>
-								<SidebarGroupContent>
-									<SidebarMenu>
-										{item.items.map((item) => (
-											<SidebarMenuItem key={item.title}>
-												<SidebarMenuButton asChild isActive={item.isActive}>
-													<a href={item.url}>{item.title}</a>
+			<SidebarContent
+				className={`gap-0 ${state === "expanded" ? "w-56" : "w-13"} bg-[#153263] rounded-tr-[70px]`}
+			>
+				<SidebarGroup className="mt-8 bg-[#153263] z-[10]">
+					<SidebarMenu>
+						{SIDEBAR_MENU.map((item, index) => {
+							const itemIsActive = isItemActive(item);
+							if ((item.items?.length || 0) > 0) {
+								return (
+									<Collapsible
+										key={item.title}
+										asChild
+										defaultOpen={itemIsActive}
+										className="group/collapsible"
+									>
+										<SidebarMenuItem>
+											<CollapsibleTrigger asChild>
+												<SidebarMenuButton
+													className={cn(
+														"rounded-none px-4 h-10",
+														// itemIsActive && 'bg-yellow-300',
+														!open &&
+															"flex items-center justify-center group-data-[collapsible=icon]:!w-full cursor-pointer"
+													)}
+													tooltip={item.title}
+												>
+													<Typography
+														className={cn(
+															"text-sm text-white",
+															itemIsActive && "font-bold"
+														)}
+													>
+														{item.title}
+													</Typography>
+													<ChevronDown
+														className={cn(
+															"ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180 text-white",
+															!open && "hidden"
+														)}
+													/>
 												</SidebarMenuButton>
-											</SidebarMenuItem>
-										))}
-									</SidebarMenu>
-								</SidebarGroupContent>
-							</CollapsibleContent>
-						</SidebarGroup>
-					</Collapsible>
-				))}
+											</CollapsibleTrigger>
+											<CollapsibleContent>
+												<SidebarMenuSub className="mx-0 px-0 border-none">
+													{item.items?.map((subItem) => {
+														const subIsActive = isItemActive(subItem);
+														return (
+															<SidebarMenuSubItem key={subItem.title}>
+																<SidebarMenuSubButton
+																	onClick={() => {
+																		navigate(subItem.url);
+																	}}
+																	className={cn(
+																		"rounded-none pl-8 h-10 cursor-pointer"
+																	)}
+																>
+																	<Typography
+																		className={cn(
+																			"text-sm text-white",
+																			subIsActive && "font-bold"
+																		)}
+																	>
+																		{subItem.title}
+																	</Typography>
+																</SidebarMenuSubButton>
+															</SidebarMenuSubItem>
+														);
+													})}
+												</SidebarMenuSub>
+											</CollapsibleContent>
+										</SidebarMenuItem>
+									</Collapsible>
+								);
+							}
+							return (
+								<SidebarMenuItem
+									key={item.title + String(index)}
+									onClick={() => {
+										navigate(item.url);
+									}}
+								>
+									<SidebarMenuButton
+										className={cn(
+											"rounded-none px-4 h-10 group-data-[collapsible=icon]:!w-full justify-center cursor-pointer",
+											open && "justify-start"
+										)}
+										tooltip={item.title}
+									>
+										<Typography
+											className={cn(
+												"text-sm text-white",
+												itemIsActive && "font-bold"
+											)}
+										>
+											{item.title}
+										</Typography>
+									</SidebarMenuButton>
+								</SidebarMenuItem>
+							);
+						})}
+					</SidebarMenu>
+				</SidebarGroup>
+				<img
+					src="/images/bg-sidebar.webp"
+					height={298}
+					width={298}
+					className="absolute bottom-[-5rem] left-[-5rem]"
+				/>
 			</SidebarContent>
+
 			<SidebarRail />
 		</Sidebar>
 	);

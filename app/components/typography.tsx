@@ -147,7 +147,7 @@ export function Typography({
 	...props
 }: ComponentProps<"div">) {
 	return (
-		<div className={cn("text-md font-sans", className)} {...props}>
+		<div className={cn("text-md font-sans font-normal", className)} {...props}>
 			{children}
 		</div>
 	);
