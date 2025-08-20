@@ -312,13 +312,14 @@ const SidebarInset = React.forwardRef<
 	React.ComponentProps<"div">
 >(({ className, ...props }, ref) => {
 	const { state } = useSidebar();
+	const isMobile = useIsMobile();
 	return (
 		<main
 			ref={ref}
 			data-state={state}
 			className={cn(
 				"transition-all duration-300 ease-in-out w-full",
-				"data-[state=expanded]:ml-[14rem]",
+				!isMobile && "data-[state=expanded]:ml-[15rem]",
 				// "data-[state=collapsed]:ml-[3rem]",
 				"relative flex min-h-svh flex-1 flex-col bg-background",
 				"peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",

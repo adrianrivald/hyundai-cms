@@ -88,7 +88,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				</SidebarMenu>
 			</SidebarHeader>
 			<SidebarContent
-				className={`gap-0 ${state === "expanded" ? "w-56" : "w-13"} bg-[#153263] rounded-tr-[70px]`}
+				className={`gap-0 ${state === "expanded" ? "w-59" : "w-13"} bg-[#153263] rounded-tr-[70px]`}
 			>
 				<SidebarGroup className="mt-8 bg-[#153263] z-[10]">
 					<SidebarMenu>
