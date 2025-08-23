@@ -43,12 +43,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const isItemActive = (item: Items): boolean => {
 		if (!location?.pathname) return false;
 
-		// Special handling for root path
 		if (item.url === "/" && location.pathname === "/") {
 			return true;
 		}
 
-		// For non-root, use startsWith to support sub-routes
 		if (
 			item.url &&
 			item.url !== "/" &&
@@ -88,9 +86,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				</SidebarMenu>
 			</SidebarHeader>
 			<SidebarContent
-				className={`gap-0 ${state === "expanded" ? "w-59" : "w-13"} bg-[#153263] rounded-tr-[70px]`}
+				className={`gap-0 ${state === "expanded" ? "w-59" : "w-13"} rounded-tr-[70px]`}
+				style={{
+					background: "linear-gradient(to bottom, #153263, #00102B)",
+				}}
 			>
-				<SidebarGroup className="mt-8 bg-[#153263] z-[10]">
+				<SidebarGroup className="mt-8  z-[10]">
 					<SidebarMenu>
 						{SIDEBAR_MENU.map((item, index) => {
 							const itemIsActive = isItemActive(item);

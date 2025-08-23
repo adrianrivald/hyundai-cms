@@ -35,6 +35,8 @@ export default [
 			route("detail/:id", "./routes/guard-route/post/post-detail.tsx"),
 		]),
 	]),
+
+	...prefix("qr-scan", [index("./routes/guard-route/qr-scan/index.tsx")]),
 	route("dev", "./routes/dev.tsx"),
 	route("not-authorized", "routes/not-authorized.tsx"),
 ] satisfies RouteConfig;
