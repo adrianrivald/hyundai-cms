@@ -35,7 +35,7 @@ export function useListAlbum() {
 	});
 
 	const table = useTableConfig({
-		data: (data as [] as AlbumTypes[]) ?? [],
+		data: (data?.slice(0, 10) as [] as AlbumTypes[]) ?? [],
 		columns: dataAlbumColumn,
 		tableState,
 		// pageCount: data?.meta?.totalPages ?? -1,
