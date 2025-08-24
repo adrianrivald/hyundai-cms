@@ -5,7 +5,7 @@ export default function CalendarPage() {
 	const { table, data } = useListAlbum();
 	return (
 		<div>
-			<DataTable table={table} showPagination={false} />
+			<DataTable table={table} showPagination={true} />
 		</div>
 	);
 }
