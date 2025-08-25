@@ -5,6 +5,8 @@ export function meta({}: Route.MetaArgs) {
 	return [{ title: "User Management | Hyundai Factory Tour" }];
 }
 
+export const ssr = false;
+
 export default function UserManagement() {
 	return <UserManagementPage />;
 }
