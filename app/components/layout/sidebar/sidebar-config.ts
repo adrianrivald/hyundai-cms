@@ -103,6 +103,13 @@ export const SIDEBAR_MENU: Items[] = [
 	},
 	{
 		id: "6",
+		title: "QR Scan",
+		url: "/qr-scan",
+		items: [],
+		authorized: ["all"],
+	},
+	{
+		id: "7",
 		title: "Logout",
 		url: "/dashboard",
 		items: [],
