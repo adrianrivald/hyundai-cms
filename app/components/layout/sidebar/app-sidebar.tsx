@@ -18,22 +18,12 @@ import {
 	SidebarMenuSub,
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
+	SidebarFooter,
 } from "../../ui/sidebar";
 import { cn } from "@/lib/utils";
 import { SIDEBAR_MENU, type Items } from "./sidebar-config";
 import { Typography } from "../../typography";
 import { useLocation, useNavigate } from "react-router";
-
-// This is sample data.
-const data = {
-	navMain: [
-		{
-			title: "Post",
-			url: "#",
-			items: [],
-		},
-	],
-};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { state, open } = useSidebar();
@@ -43,12 +33,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const isItemActive = (item: Items): boolean => {
 		if (!location?.pathname) return false;
 
-		// Special handling for root path
 		if (item.url === "/" && location.pathname === "/") {
 			return true;
 		}
 
-		// For non-root, use startsWith to support sub-routes
 		if (
 			item.url &&
 			item.url !== "/" &&
@@ -88,9 +76,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				</SidebarMenu>
 			</SidebarHeader>
 			<SidebarContent
-				className={`gap-0 ${state === "expanded" ? "w-59" : "w-13"} bg-[#153263] rounded-tr-[70px]`}
+				className={`gap-0 ${state === "expanded" ? "w-59" : "w-13"} rounded-tr-[60px] `}
+				style={{
+					background: "linear-gradient(to bottom, #153263, #00102B)",
+				}}
 			>
-				<SidebarGroup className="mt-8 bg-[#153263] z-[10]">
+				<SidebarGroup className="mt-8  z-[10] ">
 					<SidebarMenu>
 						{SIDEBAR_MENU.map((item, index) => {
 							const itemIsActive = isItemActive(item);
@@ -106,7 +97,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 											<CollapsibleTrigger asChild>
 												<SidebarMenuButton
 													className={cn(
-														"rounded-none px-4 h-10",
+														"rounded-none px-4 h-10 ",
 														// itemIsActive && 'bg-yellow-300',
 														!open &&
 															"flex items-center justify-center group-data-[collapsible=icon]:!w-full cursor-pointer"
@@ -170,14 +161,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 								>
 									<SidebarMenuButton
 										className={cn(
-											"rounded-none px-4 h-10 group-data-[collapsible=icon]:!w-full justify-center cursor-pointer",
+											" rounded-none px-4 h-10 group-data-[collapsible=icon]:!w-full justify-center cursor-pointer hover:bg-transparent ",
 											open && "justify-start"
 										)}
 										tooltip={item.title}
 									>
 										<Typography
 											className={cn(
-												"text-sm text-white",
+												"text-sm text-white ",
 												itemIsActive && "font-bold"
 											)}
 										>
@@ -196,7 +187,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					className="absolute bottom-[-5rem] left-[-5rem]"
 				/>
 			</SidebarContent>
-
+			<SidebarFooter className="bg-[#00102B] pl-5">
+				<SidebarMenuButton
+					onClick={() => {
+						//setDialogOpen(true)
+					}}
+					className={cn("rounded-md bg-[#00102B] z-10 text-white")}
+					tooltip={"Logout"}
+				>
+					<Typography className={cn("text-sm text-white ")}>Logout</Typography>
+				</SidebarMenuButton>
+			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>
 	);
