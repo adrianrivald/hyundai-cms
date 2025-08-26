@@ -53,7 +53,7 @@ const SidebarProvider = React.forwardRef<
 >(
 	(
 		{
-			defaultOpen = true,
+			defaultOpen = false,
 			open: openProp,
 			onOpenChange: setOpenProp,
 			className,
@@ -174,7 +174,7 @@ const Sidebar = React.forwardRef<
 			return (
 				<div
 					className={cn(
-						"flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground",
+						"flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground ",
 						className
 					)}
 					ref={ref}
@@ -318,7 +318,7 @@ const SidebarInset = React.forwardRef<
 			ref={ref}
 			data-state={state}
 			className={cn(
-				"transition-all duration-300 ease-in-out w-full",
+				"transition-all duration-300 ease-in-out w-full ",
 				!isMobile && "data-[state=expanded]:ml-[15rem]",
 				// "data-[state=collapsed]:ml-[3rem]",
 				"relative flex min-h-svh flex-1 flex-col bg-background",

@@ -16,6 +16,70 @@ export const SIDEBAR_MENU: Items[] = [
 		authorized: ["all"],
 	},
 	{
+		id: "4",
+		title: "Content Editor",
+		url: "/content-editor",
+		items: [
+			{
+				id: "1",
+				title: "Homepage",
+				url: "/content-editor/homepage",
+				items: [],
+				authorized: ["all"],
+			},
+			{
+				id: "2",
+				title: "Social Media",
+				url: "/dashboard",
+				items: [],
+				authorized: ["all"],
+			},
+			{
+				id: "3",
+				title: "Artikel",
+				url: "/dashboard",
+				items: [],
+				authorized: ["all"],
+			},
+			{
+				id: "3",
+				title: "Contact",
+				url: "/dashboard",
+				items: [],
+				authorized: ["all"],
+			},
+			{
+				id: "3",
+				title: "FAQ",
+				url: "/dashboard",
+				items: [],
+				authorized: ["all"],
+			},
+			{
+				id: "3",
+				title: "Legal",
+				url: "/dashboard",
+				items: [],
+				authorized: ["all"],
+			},
+			{
+				id: "3",
+				title: "About us",
+				url: "/dashboard",
+				items: [],
+				authorized: ["all"],
+			},
+			{
+				id: "3",
+				title: "Registration Guide",
+				url: "/dashboard",
+				items: [],
+				authorized: ["all"],
+			},
+		],
+		authorized: ["all"],
+	},
+	{
 		id: "2",
 		title: "Calendar",
 		url: "/calendar",
@@ -25,7 +89,7 @@ export const SIDEBAR_MENU: Items[] = [
 	{
 		id: "3",
 		title: "Report",
-		url: "",
+		url: "/report/",
 		items: [
 			{
 				id: "1",
@@ -59,39 +123,10 @@ export const SIDEBAR_MENU: Items[] = [
 		authorized: ["all"],
 	},
 	{
-		id: "4",
-		title: "Content Editor",
-		url: "",
-		items: [
-			{
-				id: "1",
-				title: "Homepage",
-				url: "/dashboard",
-				items: [],
-				authorized: ["all"],
-			},
-			{
-				id: "2",
-				title: "Social Media",
-				url: "/dashboard",
-				items: [],
-				authorized: ["all"],
-			},
-			{
-				id: "3",
-				title: "Tour",
-				url: "/dashboard",
-				items: [],
-				authorized: ["all"],
-			},
-			{
-				id: "4",
-				title: "FAQ",
-				url: "/dashboard",
-				items: [],
-				authorized: ["all"],
-			},
-		],
+		id: "2",
+		title: "Whistleblower",
+		url: "/calendar",
+		items: [],
 		authorized: ["all"],
 	},
 	{

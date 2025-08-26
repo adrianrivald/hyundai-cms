@@ -31,6 +31,10 @@ export default [
 			),
 		]),
 
+		...prefix("content-editor", [
+			route("homepage", "./routes/guard-route/content-editor/homepage.tsx"),
+		]),
+
 		...prefix("post", [
 			route("detail/:id", "./routes/guard-route/post/post-detail.tsx"),
 		]),

@@ -1,3 +1,30 @@
+// import { Grid } from "../grid";
+// import { Typography } from "../typography";
+
+// const Tabs = () => {
+// 	return (
+// 		<Grid className=" bg-white rounded-sm" container>
+// 			<Grid item sm={4} className="py-4 bg-[#153263] rounded-sm">
+// 				<Typography className="font-semibold text-sm text-center text-white">
+// 					Daftar Banner
+// 				</Typography>
+// 			</Grid>
+// 			<Grid item sm={4} className="py-4">
+// 				<Typography className="font-semibold text-sm text-center">
+// 					Daftar Tour
+// 				</Typography>
+// 			</Grid>
+// 			<Grid item sm={4} className="py-4">
+// 				<Typography className="font-semibold text-sm text-center">
+// 					Daftar Pabrik
+// 				</Typography>
+// 			</Grid>
+// 		</Grid>
+// 	);
+// };
+
+// export default Tabs;
+
 // Tabs.tsx
 import { createContext, useContext, useState, type ReactNode } from "react";
 
