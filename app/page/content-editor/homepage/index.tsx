@@ -8,6 +8,8 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import ListBanner from "./banner/list";
 import ListTour from "./tour/list";
 import ListFactory from "./factory/list";
+import ListYoutube from "./youtube/list";
+import ListSocialMedia from "./social-media/list";
 
 export default function Homepage() {
 	return (
@@ -42,6 +44,24 @@ export default function Homepage() {
 				</TabsContent>
 				<TabsContent value="pabrik">
 					<ListFactory />
+				</TabsContent>
+			</Tabs>
+
+			<Tabs defaultValue="youtube" className={"mt-5"}>
+				<TabsList className="w-[calc(100%/3)]">
+					<TabsTrigger value="youtube">Youtube Section</TabsTrigger>
+				</TabsList>
+				<TabsContent value="youtube">
+					<ListYoutube />
+				</TabsContent>
+			</Tabs>
+
+			<Tabs defaultValue="social-media" className={"mt-5"}>
+				<TabsList className="w-[calc(100%/3)]">
+					<TabsTrigger value="social-media">Social Media</TabsTrigger>
+				</TabsList>
+				<TabsContent value="social-media">
+					<ListSocialMedia />
 				</TabsContent>
 			</Tabs>
 		</Container>

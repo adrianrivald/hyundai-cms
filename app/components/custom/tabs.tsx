@@ -26,6 +26,8 @@
 // export default Tabs;
 
 // Tabs.tsx
+import { cn } from "@/lib/utils";
+import type { ClassValue } from "clsx";
 import { createContext, useContext, useState, type ReactNode } from "react";
 
 interface TabsContextType {
@@ -38,14 +40,16 @@ const TabsContext = createContext<TabsContextType | undefined>(undefined);
 export const Tabs = ({
 	defaultValue,
 	children,
+	className,
 }: {
 	defaultValue: string;
 	children: ReactNode;
+	className?: ClassValue;
 }) => {
 	const [activeTab, setActiveTab] = useState(defaultValue);
 	return (
 		<TabsContext.Provider value={{ activeTab, setActiveTab }}>
-			<div className="w-full">{children}</div>
+			<div className={cn("w-full", className)}>{children}</div>
 		</TabsContext.Provider>
 	);
 };
