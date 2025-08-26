@@ -23,7 +23,7 @@ export function DataTableBodyCell<T extends RowData>({
 			? meta.cellProps(cell.getContext())
 			: (meta?.cellProps ?? {});
 
-		const classes = cn("text-foreground font-medium py-2", className);
+		const classes = cn("text-foreground font-medium py-2 px-5", className);
 
 		return {
 			className: classes,
@@ -37,7 +37,7 @@ export function DataTableBodyCell<T extends RowData>({
 			{...cellProps}
 			style={{
 				//@ts-ignore
-				...cell.column.columnDef.meta?.headerCellProps?.style,
+				...cell.column.columnDef.meta?.cellProps?.style,
 				//...getCommonPinningStyles(cell.column),
 				backgroundColor:
 					// @ts-ignore

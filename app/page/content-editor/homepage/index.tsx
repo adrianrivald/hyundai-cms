@@ -3,10 +3,11 @@ import { Tabs } from "@/components/custom/tabs";
 import { TabsContent } from "@/components/custom/tabs-content";
 import { TabsList } from "@/components/custom/tabs-list";
 import { TabsTrigger } from "@/components/custom/tabs-trigger";
-
-import { Grid } from "@/components/grid";
 import { Typography } from "@/components/typography";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import ListBanner from "./banner/list";
+import ListTour from "./tour/list";
+import ListFactory from "./factory/list";
 
 export default function Homepage() {
 	return (
@@ -34,13 +35,13 @@ export default function Homepage() {
 				</TabsList>
 
 				<TabsContent value="banner">
-					<Typography>Konten untuk Banner</Typography>
+					<ListBanner />
 				</TabsContent>
 				<TabsContent value="tour">
-					<Typography>Konten untuk Tour</Typography>
+					<ListTour />
 				</TabsContent>
 				<TabsContent value="pabrik">
-					<Typography>Konten untuk Pabrik</Typography>
+					<ListFactory />
 				</TabsContent>
 			</Tabs>
 		</Container>
