@@ -54,9 +54,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			{...props}
 			collapsible="offcanvas"
 			variant="sidebar"
-			className="bg-red-500 sidebar-custom"
+			className="sidebar-custom"
 		>
-			<SidebarHeader className="">
+			<SidebarHeader className={``}>
 				<SidebarMenu
 					className={cn(
 						" px-2 py-2 rounded-lg flex items-center justify-between mt-1",
@@ -64,20 +64,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					)}
 				>
 					<SidebarMenuItem>
-						{open && (
-							<img
-								src={`/images/logo.webp`}
-								alt="Logo"
-								width={201}
-								height={27}
-							/>
-						)}
+						<img src={`/images/logo.webp`} alt="Logo" width={201} height={27} />
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
 			<SidebarContent className="bg-[#f4f8ff] sidebar">
 				<SidebarGroup
-					className={`z-[10] gap-0 h-[120vh] pt-8 ${state === "expanded" ? "w-60" : "w-13"} rounded-tr-[70px] bg-[#0D254D]`}
+					className={`z-[10] gap-0 h-[120vh] pt-8 ${(state === "expanded" || state === "collapsed") && "w-60"} rounded-tr-[70px] bg-[#0D254D]`}
 				>
 					<SidebarMenu>
 						{SIDEBAR_MENU.map((item, index) => {
@@ -97,7 +90,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 														"rounded-none px-4 h-10 ",
 														// itemIsActive && 'bg-yellow-300',
 														!open &&
-															"flex items-center justify-center group-data-[collapsible=icon]:!w-full cursor-pointer"
+															"flex items-center group-data-[collapsible=icon]:!w-full cursor-pointer"
 													)}
 													tooltip={item.title}
 												>
@@ -111,8 +104,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 													</Typography>
 													<ChevronDown
 														className={cn(
-															"ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180 text-white",
-															!open && "hidden"
+															"ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180 text-white"
 														)}
 													/>
 												</SidebarMenuButton>
@@ -158,7 +150,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 								>
 									<SidebarMenuButton
 										className={cn(
-											" rounded-none px-4 h-10 group-data-[collapsible=icon]:!w-full justify-center cursor-pointer hover:bg-transparent ",
+											" rounded-none px-4 h-10 group-data-[collapsible=icon]:!w-full  cursor-pointer hover:bg-transparent ",
 											open && "justify-start"
 										)}
 										tooltip={item.title}
