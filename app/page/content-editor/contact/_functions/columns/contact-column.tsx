@@ -1,16 +1,14 @@
 import CellText from "@/components/layout/table/data-table-cell";
+import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
 import type { AlbumTypes } from "@/types/PostTypes";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import type { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
 
-export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
+export const dataContactColumn: ColumnDef<AlbumTypes>[] = [
 	{
 		accessorKey: "title",
-		header: "Gambar",
+		header: "Phone",
 		cell: ({ row }) => (
 			<CellText className="text-left">{row?.original?.title || "-"}</CellText>
 		),
@@ -25,7 +23,7 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 	},
 	{
 		accessorKey: "completed",
-		header: "Judul",
+		header: "Email",
 		cell: ({ row }) => <CellText className="">{row.original?.title}</CellText>,
 		meta: {
 			cellProps: {
@@ -37,33 +35,14 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 		},
 	},
 	{
-		accessorKey: "title",
-		header: "Deskripsi",
-		cell: ({ row }) => (
-			<CellText className="text-left">{row?.original?.title || "-"}</CellText>
-		),
+		accessorKey: "completed",
+		header: "Alamat",
+		cell: ({ row }) => <CellText className="">{row.original?.title}</CellText>,
 		meta: {
 			cellProps: {
 				style: {
-					minWidth: 170,
-					maxWidth: 175,
-				},
-			},
-		},
-	},
-	{
-		accessorKey: "title",
-		header: "Tanggal Terbit",
-		cell: ({ row }) => (
-			<CellText className="text-left">
-				{format(new Date(), "dd/MM/yyyy")}
-			</CellText>
-		),
-		meta: {
-			cellProps: {
-				style: {
-					minWidth: 100,
-					maxWidth: 105,
+					minWidth: 190,
+					maxWidth: 195,
 				},
 			},
 		},
@@ -107,6 +86,13 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 				</Button>
 			);
 		},
+		cell: ({ row }) => (
+			<div className="flex gap-2">
+				<Typography className="text-blue-500 underline cursor-pointer">
+					Lihat Detail
+				</Typography>
+			</div>
+		),
 
 		meta: {
 			headerCellProps: {

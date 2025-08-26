@@ -1,16 +1,13 @@
 import CellText from "@/components/layout/table/data-table-cell";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
 import type { AlbumTypes } from "@/types/PostTypes";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import type { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
 
-export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
+export const dataSocmedColumn: ColumnDef<AlbumTypes>[] = [
 	{
 		accessorKey: "title",
-		header: "Gambar",
+		header: "Judul",
 		cell: ({ row }) => (
 			<CellText className="text-left">{row?.original?.title || "-"}</CellText>
 		),
@@ -25,7 +22,7 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 	},
 	{
 		accessorKey: "completed",
-		header: "Judul",
+		header: "Tipe Sosial Media",
 		cell: ({ row }) => <CellText className="">{row.original?.title}</CellText>,
 		meta: {
 			cellProps: {
@@ -37,33 +34,14 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 		},
 	},
 	{
-		accessorKey: "title",
-		header: "Deskripsi",
-		cell: ({ row }) => (
-			<CellText className="text-left">{row?.original?.title || "-"}</CellText>
-		),
+		accessorKey: "completed",
+		header: "Social Media Link",
+		cell: ({ row }) => <CellText className="">{row.original?.title}</CellText>,
 		meta: {
 			cellProps: {
 				style: {
 					minWidth: 170,
 					maxWidth: 175,
-				},
-			},
-		},
-	},
-	{
-		accessorKey: "title",
-		header: "Tanggal Terbit",
-		cell: ({ row }) => (
-			<CellText className="text-left">
-				{format(new Date(), "dd/MM/yyyy")}
-			</CellText>
-		),
-		meta: {
-			cellProps: {
-				style: {
-					minWidth: 100,
-					maxWidth: 105,
 				},
 			},
 		},
@@ -89,8 +67,8 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 		meta: {
 			cellProps: {
 				style: {
-					minWidth: 80,
-					maxWidth: 85,
+					minWidth: 130,
+					maxWidth: 135,
 				},
 			},
 		},
@@ -109,10 +87,10 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 		},
 
 		meta: {
-			headerCellProps: {
+			cellProps: {
 				style: {
-					minWidth: 130,
-					maxWidth: 135,
+					minWidth: 80,
+					maxWidth: 85,
 				},
 			},
 		},

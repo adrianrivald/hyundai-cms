@@ -110,8 +110,8 @@ export const dataTourColumn: ColumnDef<AlbumTypes>[] = [
 		meta: {
 			cellProps: {
 				style: {
-					minWidth: 130,
-					maxWidth: 135,
+					minWidth: 80,
+					maxWidth: 85,
 				},
 			},
 		},
