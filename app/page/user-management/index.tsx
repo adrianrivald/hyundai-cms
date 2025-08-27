@@ -1,14 +1,14 @@
 import Container from "@/components/container";
+import { DataTable } from "@/components/layout/table/data-table";
+import { useListUserManagement } from "./_functions/hooks/use-list-user-management";
 
-export const config = {
-	ssr: false,
-};
-
-export default function UserManagementPage() {
+const UserManagementPage = () => {
+	const { table } = useListUserManagement();
 	return (
 		<Container>
-			User Management
-			<div></div>
+			<DataTable table={table} showPagination={false} />
 		</Container>
 	);
-}
+};
+
+export default UserManagementPage;
