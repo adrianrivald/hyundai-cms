@@ -1,7 +1,12 @@
 import { FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import type { InputHTMLAttributes, ReactNode, WheelEvent } from "react";
+import {
+	useEffect,
+	type InputHTMLAttributes,
+	type ReactNode,
+	type WheelEvent,
+} from "react";
 import { useFormContext } from "react-hook-form";
 
 interface RHFTextFieldProps extends InputHTMLAttributes<HTMLDivElement> {
@@ -53,7 +58,7 @@ export default function RHFTextField({
 							className={cn(
 								required &&
 									"after:content-['*'] after:ml-0.5 after:text-red-500",
-								"truncate text-hmmi-primary-900 "
+								"truncate text-hmmi-grey-900 text-[14px]"
 							)}
 						>
 							{label}
@@ -69,8 +74,11 @@ export default function RHFTextField({
 							{...field}
 							{...other}
 							id={name}
-							ref={field.ref}
+							ref={(e) => {
+								field.ref(e);
+							}}
 							autoComplete="off"
+							autoFocus={false}
 							onWheel={handleWheel}
 							aria-invalid={!!error}
 							className={cn(

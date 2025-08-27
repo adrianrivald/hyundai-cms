@@ -1,11 +1,12 @@
 import CellText from "@/components/layout/table/data-table-cell";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+
 import type { AlbumTypes } from "@/types/PostTypes";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, Row, Table } from "@tanstack/react-table";
 import { format } from "date-fns";
+import DialogBanner from "../components/dialog-banner";
+import { useState } from "react";
 
 export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 	{
@@ -71,21 +72,7 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 	{
 		accessorKey: "completed",
 		header: "Aksi",
-		cell: ({ row }) => (
-			<div className="flex gap-2">
-				<div className="cursor-pointer">
-					<Icon
-						icon="basil:edit-outline"
-						width="24"
-						height="24"
-						color="#153263"
-					/>
-				</div>
-				<div className="cursor-pointer">
-					<Icon icon="mage:trash" width="24" height="24" color="#FF3B30" />
-				</div>
-			</div>
-		),
+		cell: ({ row, table }) => <ActionCell row={row} table={table} />,
 		meta: {
 			cellProps: {
 				style: {
@@ -97,14 +84,21 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 	},
 	{
 		accessorKey: "ACTION_BUTTON",
-		header: () => {
+		header: ({ table }) => {
+			const [open, setOpen] = useState(false);
+
 			return (
-				<Button
-					className="bg-amber-500 hover:bg-amber-600 my-2"
-					startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
-				>
-					Tambah
-				</Button>
+				<div>
+					<Button
+						onClick={() => setOpen(true)}
+						className="bg-amber-500 hover:bg-amber-600 my-2"
+						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
+					>
+						Tambah
+					</Button>
+
+					<DialogBanner open={open} onClose={() => setOpen(false)} />
+				</div>
 			);
 		},
 
@@ -118,3 +112,27 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 		},
 	},
 ];
+
+const ActionCell = ({
+	row,
+	table,
+}: {
+	row: Row<AlbumTypes>;
+	table: Table<AlbumTypes>;
+}) => {
+	return (
+		<div className="flex gap-2">
+			<div className="cursor-pointer">
+				<Icon
+					icon="basil:edit-outline"
+					width="24"
+					height="24"
+					color="#153263"
+				/>
+			</div>
+			<div className="cursor-pointer">
+				<Icon icon="mage:trash" width="24" height="24" color="#FF3B30" />
+			</div>
+		</div>
+	);
+};
