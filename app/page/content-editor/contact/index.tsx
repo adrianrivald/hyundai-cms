@@ -10,7 +10,7 @@ const ContactPage = () => {
 	const { table } = useListContact();
 	return (
 		<Container>
-			<Tabs defaultValue="contact" className={"mt-5"}>
+			<Tabs defaultValue="contact">
 				<TabsList className="w-[calc(100%/3)]">
 					<TabsTrigger value="contact">Contact</TabsTrigger>
 				</TabsList>

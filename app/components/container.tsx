@@ -8,7 +8,7 @@ interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
 
 const Container = ({ children, className, ...props }: ContainerProps) => {
 	return (
-		<div className={cn("py-3 h-full", className)} {...props}>
+		<div className={cn("py-3 my-5 h-full", className)} {...props}>
 			{children}
 		</div>
 	);

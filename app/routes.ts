@@ -51,6 +51,8 @@ export default [
 		...prefix("post", [
 			route("detail/:id", "./routes/guard-route/post/post-detail.tsx"),
 		]),
+
+		route("whistleblower", "./routes/guard-route/whistleblower/index.tsx"),
 	]),
 
 	...prefix("qr-scan", [index("./routes/guard-route/qr-scan/index.tsx")]),

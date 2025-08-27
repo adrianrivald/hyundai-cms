@@ -3,18 +3,18 @@ import { Tabs } from "@/components/custom/tabs";
 import { TabsContent } from "@/components/custom/tabs-content";
 import { TabsList } from "@/components/custom/tabs-list";
 import { TabsTrigger } from "@/components/custom/tabs-trigger";
-import { useListSocialMedia } from "./_functions/hooks/use-list-social-media";
 import { DataTable } from "@/components/layout/table/data-table";
+import { useListAboutUs } from "./_functions/hooks/use-list-about-us";
 
-const SocialMediaPage = () => {
-	const { table } = useListSocialMedia();
+const AboutUsPage = () => {
+	const { table } = useListAboutUs();
 	return (
 		<Container>
-			<Tabs defaultValue="social-media">
+			<Tabs defaultValue="about-us">
 				<TabsList className="w-[calc(100%/3)]">
-					<TabsTrigger value="social-media">Social Media</TabsTrigger>
+					<TabsTrigger value="about-us">About Us Content</TabsTrigger>
 				</TabsList>
-				<TabsContent value="social-media">
+				<TabsContent value="about-us">
 					<DataTable table={table} showPagination={false} />
 				</TabsContent>
 			</Tabs>
@@ -22,4 +22,4 @@ const SocialMediaPage = () => {
 	);
 };
 
-export default SocialMediaPage;
+export default AboutUsPage;

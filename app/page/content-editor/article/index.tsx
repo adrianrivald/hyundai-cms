@@ -5,7 +5,7 @@ import { useListArticle } from "./_functions/hooks/use-list-article";
 const ArticlePage = () => {
 	const { table, metadata } = useListArticle();
 	return (
-		<Container className="grid grid-cols-1">
+		<Container>
 			<DataTable table={table} showPagination={true} pagination={metadata} />
 		</Container>
 	);

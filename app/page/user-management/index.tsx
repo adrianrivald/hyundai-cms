@@ -1,21 +1,14 @@
-"use client";
-import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-
-import CalendarWithDnD from "./BigCalendar";
+import Container from "@/components/container";
 
 export const config = {
-	ssr: false, // Disable SSR for this route
+	ssr: false,
 };
 
 export default function UserManagementPage() {
 	return (
-		<div>
-			{" "}
+		<Container>
 			User Management
-			<div>
-				<CalendarWithDnD />
-			</div>
-		</div>
+			<div></div>
+		</Container>
 	);
 }

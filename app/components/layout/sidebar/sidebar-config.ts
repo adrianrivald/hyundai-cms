@@ -125,7 +125,7 @@ export const SIDEBAR_MENU: Items[] = [
 	{
 		id: "2",
 		title: "Whistleblower",
-		url: "/calendar",
+		url: "/whistleblower",
 		items: [],
 		authorized: ["all"],
 	},

@@ -66,6 +66,48 @@
         "file": "./routes/guard-route/content-editor/homepage.tsx",
         "path": "content-editor/homepage"
       },
+      "routes/guard-route/content-editor/social-media": {
+        "id": "routes/guard-route/content-editor/social-media",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/social-media.tsx",
+        "path": "content-editor/social-media"
+      },
+      "routes/guard-route/content-editor/article": {
+        "id": "routes/guard-route/content-editor/article",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/article.tsx",
+        "path": "content-editor/article"
+      },
+      "routes/guard-route/content-editor/contact": {
+        "id": "routes/guard-route/content-editor/contact",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/contact.tsx",
+        "path": "content-editor/contact"
+      },
+      "routes/guard-route/content-editor/about-us": {
+        "id": "routes/guard-route/content-editor/about-us",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/about-us.tsx",
+        "path": "content-editor/about-us"
+      },
+      "routes/guard-route/content-editor/faq": {
+        "id": "routes/guard-route/content-editor/faq",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/faq.tsx",
+        "path": "content-editor/faq"
+      },
+      "routes/guard-route/content-editor/legal": {
+        "id": "routes/guard-route/content-editor/legal",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/legal.tsx",
+        "path": "content-editor/legal"
+      },
+      "routes/guard-route/content-editor/registration-guide": {
+        "id": "routes/guard-route/content-editor/registration-guide",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/registration-guide.tsx",
+        "path": "content-editor/registration-guide"
+      },
       "routes/guard-route/post/post-detail": {
         "id": "routes/guard-route/post/post-detail",
         "parentId": "routes/__layout/__auth.layout",
@@ -169,6 +211,48 @@
         "parentId": "routes/__layout/__auth.layout",
         "file": "./routes/guard-route/content-editor/homepage.tsx",
         "path": "content-editor/homepage"
+      },
+      "routes/guard-route/content-editor/social-media": {
+        "id": "routes/guard-route/content-editor/social-media",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/social-media.tsx",
+        "path": "content-editor/social-media"
+      },
+      "routes/guard-route/content-editor/article": {
+        "id": "routes/guard-route/content-editor/article",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/article.tsx",
+        "path": "content-editor/article"
+      },
+      "routes/guard-route/content-editor/contact": {
+        "id": "routes/guard-route/content-editor/contact",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/contact.tsx",
+        "path": "content-editor/contact"
+      },
+      "routes/guard-route/content-editor/about-us": {
+        "id": "routes/guard-route/content-editor/about-us",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/about-us.tsx",
+        "path": "content-editor/about-us"
+      },
+      "routes/guard-route/content-editor/faq": {
+        "id": "routes/guard-route/content-editor/faq",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/faq.tsx",
+        "path": "content-editor/faq"
+      },
+      "routes/guard-route/content-editor/legal": {
+        "id": "routes/guard-route/content-editor/legal",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/legal.tsx",
+        "path": "content-editor/legal"
+      },
+      "routes/guard-route/content-editor/registration-guide": {
+        "id": "routes/guard-route/content-editor/registration-guide",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/registration-guide.tsx",
+        "path": "content-editor/registration-guide"
       },
       "routes/guard-route/post/post-detail": {
         "id": "routes/guard-route/post/post-detail",

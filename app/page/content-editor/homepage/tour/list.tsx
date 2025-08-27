@@ -1,12 +1,13 @@
 import { DataTable } from "@/components/layout/table/data-table";
 import { useListTour } from "../_functions/hooks/use-list-tour";
+import Container from "@/components/container";
 
 const ListTour = () => {
 	const { table } = useListTour();
 	return (
-		<div className="">
+		<Container className="">
 			<DataTable table={table} showPagination={false} />
-		</div>
+		</Container>
 	);
 };
 
