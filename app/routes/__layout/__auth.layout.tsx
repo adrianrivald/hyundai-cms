@@ -10,11 +10,11 @@ export default function AuthLayout() {
 		<div className="min-h-screen">
 			<SidebarProvider>
 				<AppSidebar />
-				<SidebarInset>
+				<SidebarInset className="bg-[#f4f8ff]">
 					{/* <div className="flex h-screen flex-col"> */}
 					<HeaderBar />
 					<ScrollArea className="flex-1">
-						<main className="h-full px-6">
+						<main className="h-full px-6 bg-[#f4f8ff] ">
 							<Outlet />
 						</main>
 					</ScrollArea>

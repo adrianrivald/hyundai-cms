@@ -1,11 +1,10 @@
-import { DataTable } from "@/components/layout/table/data-table";
-import { useListAlbum } from "./functions/hooks/use-list-albums";
+import CalendarBasic from "./functions/components/BigCalendar";
+import Container from "@/components/container";
 
 export default function CalendarPage() {
-	const { table, data } = useListAlbum();
 	return (
-		<div>
-			<DataTable table={table} showPagination={true} />
-		</div>
+		<Container>
+			<CalendarBasic />
+		</Container>
 	);
 }

@@ -31,9 +31,28 @@ export default [
 			),
 		]),
 
+		...prefix("content-editor", [
+			route("homepage", "./routes/guard-route/content-editor/homepage.tsx"),
+			route(
+				"social-media",
+				"./routes/guard-route/content-editor/social-media.tsx"
+			),
+			route("article", "./routes/guard-route/content-editor/article.tsx"),
+			route("contact", "./routes/guard-route/content-editor/contact.tsx"),
+			route("about-us", "./routes/guard-route/content-editor/about-us.tsx"),
+			route("faq", "./routes/guard-route/content-editor/faq.tsx"),
+			route("legal", "./routes/guard-route/content-editor/legal.tsx"),
+			route(
+				"registration-guide",
+				"./routes/guard-route/content-editor/registration-guide.tsx"
+			),
+		]),
+
 		...prefix("post", [
 			route("detail/:id", "./routes/guard-route/post/post-detail.tsx"),
 		]),
+
+		route("whistleblower", "./routes/guard-route/whistleblower/index.tsx"),
 	]),
 
 	...prefix("qr-scan", [index("./routes/guard-route/qr-scan/index.tsx")]),

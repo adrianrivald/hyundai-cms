@@ -22,7 +22,7 @@ export default function DataTableHeadCell<T extends RowData>({
 				: (meta?.headerCellProps ?? { style: {} });
 
 		const baseClasses = cn(
-			"text-left",
+			"text-left bg-white px-5",
 			index === 0 && "rounded-tl-lg",
 			index === totalHeaders - 1 && "rounded-tr-lg",
 			style

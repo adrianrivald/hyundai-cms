@@ -1,78 +1,137 @@
 {
   "buildManifest": {
-    "serverBundles": {
-      "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0": {
-        "id": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-        "file": "build/server/nodejs_eyJydW50aW1lIjoibm9kZWpzIn0/build/index.js",
-        "config": {
-          "runtime": "nodejs"
-        }
-      }
-    },
-    "routeIdToServerBundleId": {
-      "routes/home": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-      "routes/login": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-      "routes/post-list": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-      "routes/post-detail": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-      "routes/dev": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
-    },
     "routes": {
       "root": {
         "path": "",
         "id": "root",
-        "file": "app/root.tsx",
-        "config": {}
-      },
-      "routes/home": {
-        "id": "routes/home",
-        "parentId": "root",
-        "file": "app/routes/home.tsx",
-        "index": true,
-        "config": {
-          "runtime": "nodejs"
-        }
+        "file": "root.tsx"
       },
       "routes/login": {
         "id": "routes/login",
         "parentId": "root",
-        "file": "app/routes/login.tsx",
-        "path": "login",
-        "config": {
-          "runtime": "nodejs"
-        }
+        "file": "./routes/login.tsx",
+        "path": "login"
       },
       "routes/__layout/__auth.layout": {
         "id": "routes/__layout/__auth.layout",
         "parentId": "root",
-        "file": "app/routes/__layout/__auth.layout.tsx",
-        "config": {}
+        "file": "./routes/__layout/__auth.layout.tsx"
       },
-      "routes/post-list": {
-        "id": "routes/post-list",
+      "routes/guard-route/dashboard/index": {
+        "id": "routes/guard-route/dashboard/index",
         "parentId": "routes/__layout/__auth.layout",
-        "file": "app/routes/post-list.tsx",
-        "path": "post/list",
-        "config": {
-          "runtime": "nodejs"
-        }
+        "file": "./routes/guard-route/dashboard/index.tsx",
+        "index": true
       },
-      "routes/post-detail": {
-        "id": "routes/post-detail",
+      "routes/guard-route/calendar/index": {
+        "id": "routes/guard-route/calendar/index",
         "parentId": "routes/__layout/__auth.layout",
-        "file": "app/routes/post-detail.tsx",
-        "path": "post/detail/:id",
-        "config": {
-          "runtime": "nodejs"
-        }
+        "file": "./routes/guard-route/calendar/index.tsx",
+        "path": "calendar"
+      },
+      "routes/guard-route/user-management/index": {
+        "id": "routes/guard-route/user-management/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/user-management/index.tsx",
+        "path": "user-management",
+        "index": true
+      },
+      "routes/guard-route/report/report-activity/index": {
+        "id": "routes/guard-route/report/report-activity/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/report/report-activity/index.tsx",
+        "path": "report/activity-report"
+      },
+      "routes/guard-route/report/report-registration/index": {
+        "id": "routes/guard-route/report/report-registration/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/report/report-registration/index.tsx",
+        "path": "report/registration-report"
+      },
+      "routes/guard-route/report/report-user/index": {
+        "id": "routes/guard-route/report/report-user/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/report/report-user/index.tsx",
+        "path": "report/user-report"
+      },
+      "routes/guard-route/report/report-visitor/index": {
+        "id": "routes/guard-route/report/report-visitor/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/report/report-visitor/index.tsx",
+        "path": "report/visitor-report"
+      },
+      "routes/guard-route/content-editor/homepage": {
+        "id": "routes/guard-route/content-editor/homepage",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/homepage.tsx",
+        "path": "content-editor/homepage"
+      },
+      "routes/guard-route/content-editor/social-media": {
+        "id": "routes/guard-route/content-editor/social-media",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/social-media.tsx",
+        "path": "content-editor/social-media"
+      },
+      "routes/guard-route/content-editor/article": {
+        "id": "routes/guard-route/content-editor/article",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/article.tsx",
+        "path": "content-editor/article"
+      },
+      "routes/guard-route/content-editor/contact": {
+        "id": "routes/guard-route/content-editor/contact",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/contact.tsx",
+        "path": "content-editor/contact"
+      },
+      "routes/guard-route/content-editor/about-us": {
+        "id": "routes/guard-route/content-editor/about-us",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/about-us.tsx",
+        "path": "content-editor/about-us"
+      },
+      "routes/guard-route/content-editor/faq": {
+        "id": "routes/guard-route/content-editor/faq",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/faq.tsx",
+        "path": "content-editor/faq"
+      },
+      "routes/guard-route/content-editor/legal": {
+        "id": "routes/guard-route/content-editor/legal",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/legal.tsx",
+        "path": "content-editor/legal"
+      },
+      "routes/guard-route/content-editor/registration-guide": {
+        "id": "routes/guard-route/content-editor/registration-guide",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/registration-guide.tsx",
+        "path": "content-editor/registration-guide"
+      },
+      "routes/guard-route/post/post-detail": {
+        "id": "routes/guard-route/post/post-detail",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/post/post-detail.tsx",
+        "path": "post/detail/:id"
+      },
+      "routes/guard-route/qr-scan/index": {
+        "id": "routes/guard-route/qr-scan/index",
+        "parentId": "root",
+        "file": "./routes/guard-route/qr-scan/index.tsx",
+        "path": "qr-scan",
+        "index": true
       },
       "routes/dev": {
         "id": "routes/dev",
         "parentId": "root",
-        "file": "app/routes/dev.tsx",
-        "path": "dev",
-        "config": {
-          "runtime": "nodejs"
-        }
+        "file": "./routes/dev.tsx",
+        "path": "dev"
+      },
+      "routes/not-authorized": {
+        "id": "routes/not-authorized",
+        "parentId": "root",
+        "file": "routes/not-authorized.tsx",
+        "path": "not-authorized"
       }
     }
   },
@@ -93,12 +152,6 @@
         "id": "root",
         "file": "root.tsx"
       },
-      "routes/home": {
-        "id": "routes/home",
-        "parentId": "root",
-        "file": "routes/home.tsx",
-        "index": true
-      },
       "routes/login": {
         "id": "routes/login",
         "parentId": "root",
@@ -110,32 +163,129 @@
         "parentId": "root",
         "file": "./routes/__layout/__auth.layout.tsx"
       },
-      "routes/post-list": {
-        "id": "routes/post-list",
+      "routes/guard-route/dashboard/index": {
+        "id": "routes/guard-route/dashboard/index",
         "parentId": "routes/__layout/__auth.layout",
-        "file": "./routes/post-list.tsx",
-        "path": "post/list"
+        "file": "./routes/guard-route/dashboard/index.tsx",
+        "index": true
       },
-      "routes/post-detail": {
-        "id": "routes/post-detail",
+      "routes/guard-route/calendar/index": {
+        "id": "routes/guard-route/calendar/index",
         "parentId": "routes/__layout/__auth.layout",
-        "file": "./routes/post-detail.tsx",
+        "file": "./routes/guard-route/calendar/index.tsx",
+        "path": "calendar"
+      },
+      "routes/guard-route/user-management/index": {
+        "id": "routes/guard-route/user-management/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/user-management/index.tsx",
+        "path": "user-management",
+        "index": true
+      },
+      "routes/guard-route/report/report-activity/index": {
+        "id": "routes/guard-route/report/report-activity/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/report/report-activity/index.tsx",
+        "path": "report/activity-report"
+      },
+      "routes/guard-route/report/report-registration/index": {
+        "id": "routes/guard-route/report/report-registration/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/report/report-registration/index.tsx",
+        "path": "report/registration-report"
+      },
+      "routes/guard-route/report/report-user/index": {
+        "id": "routes/guard-route/report/report-user/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/report/report-user/index.tsx",
+        "path": "report/user-report"
+      },
+      "routes/guard-route/report/report-visitor/index": {
+        "id": "routes/guard-route/report/report-visitor/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/report/report-visitor/index.tsx",
+        "path": "report/visitor-report"
+      },
+      "routes/guard-route/content-editor/homepage": {
+        "id": "routes/guard-route/content-editor/homepage",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/homepage.tsx",
+        "path": "content-editor/homepage"
+      },
+      "routes/guard-route/content-editor/social-media": {
+        "id": "routes/guard-route/content-editor/social-media",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/social-media.tsx",
+        "path": "content-editor/social-media"
+      },
+      "routes/guard-route/content-editor/article": {
+        "id": "routes/guard-route/content-editor/article",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/article.tsx",
+        "path": "content-editor/article"
+      },
+      "routes/guard-route/content-editor/contact": {
+        "id": "routes/guard-route/content-editor/contact",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/contact.tsx",
+        "path": "content-editor/contact"
+      },
+      "routes/guard-route/content-editor/about-us": {
+        "id": "routes/guard-route/content-editor/about-us",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/about-us.tsx",
+        "path": "content-editor/about-us"
+      },
+      "routes/guard-route/content-editor/faq": {
+        "id": "routes/guard-route/content-editor/faq",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/faq.tsx",
+        "path": "content-editor/faq"
+      },
+      "routes/guard-route/content-editor/legal": {
+        "id": "routes/guard-route/content-editor/legal",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/legal.tsx",
+        "path": "content-editor/legal"
+      },
+      "routes/guard-route/content-editor/registration-guide": {
+        "id": "routes/guard-route/content-editor/registration-guide",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/registration-guide.tsx",
+        "path": "content-editor/registration-guide"
+      },
+      "routes/guard-route/post/post-detail": {
+        "id": "routes/guard-route/post/post-detail",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/post/post-detail.tsx",
         "path": "post/detail/:id"
+      },
+      "routes/guard-route/qr-scan/index": {
+        "id": "routes/guard-route/qr-scan/index",
+        "parentId": "root",
+        "file": "./routes/guard-route/qr-scan/index.tsx",
+        "path": "qr-scan",
+        "index": true
       },
       "routes/dev": {
         "id": "routes/dev",
         "parentId": "root",
         "file": "./routes/dev.tsx",
         "path": "dev"
+      },
+      "routes/not-authorized": {
+        "id": "routes/not-authorized",
+        "parentId": "root",
+        "file": "routes/not-authorized.tsx",
+        "path": "not-authorized"
       }
     },
     "routeDiscovery": {
-      "mode": "lazy",
-      "manifestPath": "/__manifest"
+      "mode": "initial"
     },
     "serverBuildFile": "build/index.js",
     "serverModuleFormat": "esm",
-    "ssr": true
+    "ssr": false
   },
   "viteConfig": {
     "build": {

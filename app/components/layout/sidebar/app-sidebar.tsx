@@ -54,9 +54,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			{...props}
 			collapsible="offcanvas"
 			variant="sidebar"
-			className="bg-white"
+			className="sidebar-custom"
 		>
-			<SidebarHeader className="bg-white">
+			<SidebarHeader className={``}>
 				<SidebarMenu
 					className={cn(
 						" px-2 py-2 rounded-lg flex items-center justify-between mt-1",
@@ -64,24 +64,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					)}
 				>
 					<SidebarMenuItem>
-						{open && (
-							<img
-								src={`/images/logo.webp`}
-								alt="Logo"
-								width={201}
-								height={27}
-							/>
-						)}
+						<img src={`/images/logo.webp`} alt="Logo" width={201} height={27} />
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
-			<SidebarContent
-				className={`gap-0 ${state === "expanded" ? "w-59" : "w-13"} rounded-tr-[60px] `}
-				style={{
-					background: "linear-gradient(to bottom, #153263, #00102B)",
-				}}
-			>
-				<SidebarGroup className="mt-8  z-[10] ">
+			<SidebarContent className="bg-[#f4f8ff] sidebar">
+				<SidebarGroup
+					className={`z-[10] gap-0 h-[120vh] pt-8 ${(state === "expanded" || state === "collapsed") && "w-60"} rounded-tr-[70px] bg-[#0D254D]`}
+				>
 					<SidebarMenu>
 						{SIDEBAR_MENU.map((item, index) => {
 							const itemIsActive = isItemActive(item);
@@ -100,7 +90,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 														"rounded-none px-4 h-10 ",
 														// itemIsActive && 'bg-yellow-300',
 														!open &&
-															"flex items-center justify-center group-data-[collapsible=icon]:!w-full cursor-pointer"
+															"flex items-center group-data-[collapsible=icon]:!w-full cursor-pointer"
 													)}
 													tooltip={item.title}
 												>
@@ -114,8 +104,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 													</Typography>
 													<ChevronDown
 														className={cn(
-															"ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180 text-white",
-															!open && "hidden"
+															"ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180 text-white"
 														)}
 													/>
 												</SidebarMenuButton>
@@ -161,7 +150,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 								>
 									<SidebarMenuButton
 										className={cn(
-											" rounded-none px-4 h-10 group-data-[collapsible=icon]:!w-full justify-center cursor-pointer hover:bg-transparent ",
+											" rounded-none px-4 h-10 group-data-[collapsible=icon]:!w-full  cursor-pointer hover:bg-transparent ",
 											open && "justify-start"
 										)}
 										tooltip={item.title}
@@ -180,19 +169,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						})}
 					</SidebarMenu>
 				</SidebarGroup>
-				<img
+				{/* <img
 					src="/images/bg-sidebar.webp"
 					height={298}
 					width={298}
 					className="absolute bottom-[-5rem] left-[-5rem]"
-				/>
+				/> */}
 			</SidebarContent>
-			<SidebarFooter className="bg-[#00102B] pl-5">
+			<SidebarFooter className="bg-[#0D254D] pl-5">
 				<SidebarMenuButton
 					onClick={() => {
 						//setDialogOpen(true)
 					}}
-					className={cn("rounded-md bg-[#00102B] z-10 text-white")}
+					className={cn("rounded-md bg-[#0D254D] z-10 text-white")}
 					tooltip={"Logout"}
 				>
 					<Typography className={cn("text-sm text-white ")}>Logout</Typography>

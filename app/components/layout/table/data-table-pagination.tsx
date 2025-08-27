@@ -232,7 +232,7 @@ export function DataTablePagination<T extends RowData>({
 						{!pagination.hidePageSearch && (
 							<>
 								<Separator orientation="vertical" className="mx-2 h-5" />
-								<div className="flex items-center gap-1">
+								{/* <div className="flex items-center gap-1">
 									<p className="text-sm ">Go to Page</p>
 
 									<GoToPagination
@@ -243,7 +243,7 @@ export function DataTablePagination<T extends RowData>({
 									<p className="text-sm">
 										{`Max ${table.getPageOptions().length}`}
 									</p>
-								</div>
+								</div> */}
 							</>
 						)}
 					</>
