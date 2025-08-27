@@ -11,7 +11,7 @@ const CellText = ({ color = "black", children, className }: CellTextProps) => {
 	return (
 		<div
 			className={cn(
-				"text-[12px] text-left py-2 overflow-hidden text-ellipsis font-light",
+				"text-[14px] text-left py-2 overflow-hidden text-ellipsis font-light",
 				"line-clamp-2",
 				className
 			)}

@@ -1,21 +1,14 @@
-"use client";
-import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
+import Container from "@/components/container";
+import { DataTable } from "@/components/layout/table/data-table";
+import { useListUserManagement } from "./_functions/hooks/use-list-user-management";
 
-import CalendarWithDnD from "./BigCalendar";
-
-export const config = {
-	ssr: false, // Disable SSR for this route
+const UserManagementPage = () => {
+	const { table } = useListUserManagement();
+	return (
+		<Container>
+			<DataTable table={table} showPagination={false} />
+		</Container>
+	);
 };
 
-export default function UserManagementPage() {
-	return (
-		<div>
-			{" "}
-			User Management
-			<div>
-				<CalendarWithDnD />
-			</div>
-		</div>
-	);
-}
+export default UserManagementPage;
