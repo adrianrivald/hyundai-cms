@@ -2,9 +2,12 @@ import FormProvider from "@/components/RHForm/FormProvider";
 import RHFDatePicker from "@/components/RHForm/RHFDatePicker";
 import RHFTextArea from "@/components/RHForm/RHFTextArea";
 import RHFTextField from "@/components/RHForm/RHFTextField";
+import RHFUploadFile from "@/components/RHForm/RHFUploadFile";
 import DialogModal from "@/components/custom/dialog/dialog-modal";
 import { Grid } from "@/components/grid";
+import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
@@ -38,6 +41,13 @@ const DialogBanner = ({ open, onClose, data }: DialogBannerProps) => {
 				<div className="">
 					<FormProvider methods={methods}>
 						<Grid container spacing={4}>
+							<Grid item xs={12}>
+								<RHFUploadFile
+									name="image"
+									label="Upload Banner"
+									slug="banner"
+								/>
+							</Grid>
 							<Grid item xs={12}>
 								<RHFTextField
 									name="title"
