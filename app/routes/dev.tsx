@@ -5,6 +5,7 @@ import RHFCheckboxGroup from "@/components/RHForm/RHFCheckboxGroup";
 import RHFDatePicker from "@/components/RHForm/RHFDatePicker";
 import RHFDateRangePicker from "@/components/RHForm/RHFDateRangePicker";
 import RHFRadioGroup from "@/components/RHForm/RHFRadioGroup";
+import RHFSelect from "@/components/RHForm/RHFSelect";
 import RHFSelectMultiple from "@/components/RHForm/RHFSelectMultiple";
 import RHFSwitch from "@/components/RHForm/RHFSwitch";
 import RHFTextArea from "@/components/RHForm/RHFTextArea";
@@ -273,6 +274,33 @@ const DevPage = () => {
 									onChange={(selected) => {
 										form1.setValue("comment", selected?.body ?? "");
 									}}
+								/>
+
+								<RHFSelect
+									name="user"
+									label="Select User"
+									options={[
+										{ id: 1, name: "hehe" },
+										{ id: 2, name: "hehe2" },
+										{ id: 3, name: "hehe3" },
+										{ id: 4, name: "hehe3" },
+										{ id: 5, name: "hehe3" },
+										{ id: 6, name: "hehe3" },
+										{ id: 7, name: "hehe3" },
+										{ id: 8, name: "hehe3" },
+										{ id: 9, name: "hehe3" },
+										{ id: 10, name: "hehe3" },
+										{ id: 11, name: "hehe3" },
+										{ id: 12, name: "hehe3" },
+										{ id: 13, name: "hehe3" },
+										{ id: 14, name: "hehe3" },
+										{ id: 15, name: "hehe3" },
+										{ id: 16, name: "hehe3" },
+									]}
+									placeholder="Select User"
+									getOptionLabel={(user) => user.name}
+									getOptionValue={(user) => String(user.id)}
+									required
 								/>
 
 								<RHFAutocomplete

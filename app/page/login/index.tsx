@@ -19,6 +19,8 @@ const LoginPage = () => {
 			email: "",
 			password: "",
 		},
+		mode: "onChange",
+		shouldFocusError: false,
 		resolver: yupResolver(
 			yup.object().shape({
 				email: yup.string().required("Email must be filled"),
@@ -51,6 +53,8 @@ const LoginPage = () => {
 										label="Email"
 										placeholder="Masukan alamat email"
 										type="email"
+										autoFocus={false}
+										autoComplete={"email"}
 										startIcon={
 											<Icon
 												icon="mage:email"
