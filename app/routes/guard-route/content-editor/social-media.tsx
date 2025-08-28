@@ -1,3 +1,4 @@
+import PageAuthorization from "@/components/page-authorization";
 import type { Route } from "./+types/social-media";
 import SocialMediaPage from "@/page/content-editor/social-media";
 
@@ -6,5 +7,9 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function ContentEditorSocialMedia() {
-	return <SocialMediaPage />;
+	return (
+		<PageAuthorization>
+			<SocialMediaPage />;
+		</PageAuthorization>
+	);
 }

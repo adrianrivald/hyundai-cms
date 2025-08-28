@@ -6,6 +6,7 @@ import axios, {
 	type AxiosStatic,
 } from "axios";
 import qs from "qs";
+import Cookies from "js-cookie"; // 👈 import js-cookie
 
 const cancelTokenSource = axios.CancelToken.source();
 
@@ -25,7 +26,6 @@ export const apiConfig: AxiosInstance = axios.create({
 
 declare module "axios" {
 	interface AxiosDefaults {
-		// interceptors?: AxiosInstance["interceptors"];
 		interceptors?: {
 			request: {
 				onFulfilled?: Parameters<
@@ -47,9 +47,7 @@ declare module "axios" {
 	}
 }
 
-// https://github.com/axios/axios/issues/510
-// For create default interceptor for all instance or inherit instance,
-// because axios is not supported yet
+// --- Make sure every new instance inherits the default interceptors
 const _createAxios = (apiConfig as AxiosStatic).create.bind(axios);
 (apiConfig as AxiosStatic).create = function create(conf) {
 	const instance = _createAxios(conf);
@@ -73,10 +71,14 @@ const _createAxios = (apiConfig as AxiosStatic).create.bind(axios);
 	return instance;
 };
 
+// --- Interceptor logic
 const requestFulfilled = (config: InternalAxiosRequestConfig) => {
-	//TODO:
-	//const token = getClientIdData()?.tokenResponse.accessToken
-	//config.headers.Authorization = `Bearer ${token}`
+	// 👇 Grab token from cookie if available
+	const token = Cookies.get("token");
+	if (token) {
+		config.headers.Authorization = `Bearer ${token}`;
+	}
+
 	config.cancelToken = cancelTokenSource.token;
 	return config;
 };
@@ -84,16 +86,21 @@ const requestFulfilled = (config: InternalAxiosRequestConfig) => {
 const requestRejected = (error: AxiosError) => Promise.reject(error);
 
 const responseFulfilled = (res: AxiosResponse) => res;
+
 const responseRejected = async (error: AxiosError) => {
 	if (error.response?.status === 401 || error.response?.status === 403) {
-		localStorage.removeItem(import.meta.env.REACT_APP_CLIENT_ID);
-		localStorage.removeItem(import.meta.env.REACT_APP_CLIENT_UT_PORTAL);
-		localStorage.removeItem(import.meta.env.REACT_APP_OCP_APIM_KEY);
-		window.location.href = "/";
+		// Clean up cookies & local storage
+		Cookies.remove("token");
+		Cookies.remove("info");
+
+		if (window.location.pathname !== "/login") {
+			window.location.href = "/login";
+		}
 	}
 	return Promise.reject(error);
 };
 
+// --- Attach defaults
 apiConfig.defaults.interceptors = {
 	request: {
 		onFulfilled: requestFulfilled,

@@ -2,7 +2,6 @@ import FormProvider from "@/components/RHForm/FormProvider";
 import RHFTextField from "@/components/RHForm/RHFTextField";
 import Container from "@/components/container";
 import { Grid } from "@/components/grid";
-import { Stack } from "@/components/stack";
 import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -11,32 +10,65 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { cn } from "@/lib/utils";
+import { useLogin } from "@/api/auth";
+import { enqueueSnackbar } from "notistack";
+import { useEffect, useState } from "react";
+import useToken from "@/hooks/use-token";
+import { useNavigate } from "react-router";
 
 const LoginPage = () => {
 	const isMobile = useIsMobile();
+	const navigate = useNavigate();
+	const [loginError, setLoginError] = useState("");
 	const methods = useForm({
 		defaultValues: {
 			email: "",
 			password: "",
 		},
-		mode: "onChange",
-		shouldFocusError: false,
+		mode: "all",
+		reValidateMode: "onChange",
 		resolver: yupResolver(
 			yup.object().shape({
 				email: yup.string().required("Email must be filled"),
 				password: yup
 					.string()
-					.min(8, "Password must more than 8 character")
+					.min(4, "Password must more than 4 character")
 					.required("Password must be filled"),
 			})
 		),
 	});
+	const token = useToken();
 
-	const onSubmit = () => {};
+	useEffect(() => {
+		if (token) {
+			navigate("/");
+		}
+	}, []);
+
+	const { mutate, isPending } = useLogin({});
+
+	const onSubmit = () => {
+		setLoginError("");
+		const data = methods.watch();
+		mutate(
+			{ email: data.email, password: data.password },
+			{
+				onSuccess: () => {
+					enqueueSnackbar("Login Success", {
+						variant: "success",
+					});
+				},
+				onError: (err) => {
+					setLoginError("Email atau password salah.");
+				},
+			}
+		);
+	};
+
 	return (
-		<Container className="py-0 max-h-screen">
+		<Container className="py-0 my-0">
 			<Grid container>
-				<Grid item xs={12} md={6} className="min-h-screen flex flex-col">
+				<Grid item xs={12} md={6} className="min-h-[100vh] flex flex-col">
 					<div className="flex-1 flex flex-col items-center justify-center ">
 						<div className={cn(`${isMobile ? "w-[70%]" : "w-[55%]"}`)}>
 							<img src="/images/logo.webp" className="w-[134px] h-[18px]" />
@@ -46,7 +78,10 @@ const LoginPage = () => {
 							<Typography className="text-xs text-hmmi-grey-400">
 								Masukan alamat email dan password untuk masuk ke akun anda.
 							</Typography>
-							<FormProvider methods={methods}>
+							<FormProvider
+								methods={methods}
+								onSubmit={methods.handleSubmit(onSubmit)}
+							>
 								<div className="flex flex-col gap-4 mt-3">
 									<RHFTextField
 										name="email"
@@ -78,6 +113,9 @@ const LoginPage = () => {
 											/>
 										}
 									/>
+									<Typography className="text-red-500 text-center">
+										{loginError}
+									</Typography>
 									<div className="cursor-pointer">
 										<Typography className="text-sm font-medium text-right">
 											Forgot Password ?
@@ -85,13 +123,9 @@ const LoginPage = () => {
 									</div>
 
 									<Button
-										onClick={() => {
-											methods.trigger().then((isValid) => {
-												if (isValid) {
-													onSubmit();
-												}
-											});
-										}}
+										type="submit"
+										loading={isPending}
+										disabled={isPending}
 									>
 										Login
 									</Button>
@@ -109,7 +143,7 @@ const LoginPage = () => {
 					<Grid item xs={6}>
 						<img
 							src="/images/logo-login.webp"
-							className="h-screen w-full object-cover"
+							className="min-h-[100vh] w-full object-cover"
 							alt="Login Visual"
 						/>
 					</Grid>

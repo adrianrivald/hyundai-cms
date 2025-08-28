@@ -1,5 +1,6 @@
 import UserManagementPage from "@/page/user-management";
 import type { Route } from "./+types";
+import PageAuthorization from "@/components/page-authorization";
 
 export function meta({}: Route.MetaArgs) {
 	return [{ title: "User Management | Hyundai Factory Tour" }];
@@ -8,5 +9,9 @@ export function meta({}: Route.MetaArgs) {
 export const ssr = false;
 
 export default function UserManagement() {
-	return <UserManagementPage />;
+	return (
+		<PageAuthorization>
+			<UserManagementPage />;
+		</PageAuthorization>
+	);
 }
