@@ -12,6 +12,7 @@ import {
 	type InputHTMLAttributes,
 	useEffect,
 } from "react";
+import useToken from "@/hooks/use-token";
 
 interface RHFUploadFileProps extends InputHTMLAttributes<HTMLInputElement> {
 	name: string;
@@ -32,6 +33,7 @@ export default function RHFUploadFile({
 	const { control, setError } = useFormContext();
 	const [preview, setPreview] = useState<string | null>("" ?? null);
 	const [loading, setLoading] = useState(false);
+	const token = useToken();
 
 	const uploadFile = async (
 		file: File,
@@ -43,14 +45,16 @@ export default function RHFUploadFile({
 			formData.append("image", file);
 			formData.append("slug", slug);
 
-			const res = await fetch("https://hmmi-api.mkahfi.id/api/upload/image", {
-				method: "POST",
-				headers: {
-					Authorization:
-						"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vaG1taS1hcGkubWthaGZpLmlkL2FwaS9hdXRoL2xvZ2luIiwiaWF0IjoxNzU2MzYzNTkwLCJleHAiOjE3NTYzNjcxOTAsIm5iZiI6MTc1NjM2MzU5MCwianRpIjoidTBqaGNFQXlER1FmWlpkRCIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.U3ZaHYBOongl8H9ctVACria8yiNNFqVqdEm-pAfq0z0",
-				},
-				body: formData,
-			});
+			const res = await fetch(
+				`${import.meta.env.VITE_APP_API_URL}upload/image`,
+				{
+					method: "POST",
+					headers: {
+						Authorization: "Bearer " + token,
+					},
+					body: formData,
+				}
+			);
 			if (!res.ok) throw new Error("Upload failed");
 			const data = await res.json();
 

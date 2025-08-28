@@ -9,7 +9,7 @@ export function meta({}: Route.MetaArgs) {
 export default function ContentEditorArticle() {
 	return (
 		<PageAuthorization>
-			<ArticlePage />;
+			<ArticlePage />
 		</PageAuthorization>
 	);
 }

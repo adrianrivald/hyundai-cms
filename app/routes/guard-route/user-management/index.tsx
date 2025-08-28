@@ -11,7 +11,7 @@ export const ssr = false;
 export default function UserManagement() {
 	return (
 		<PageAuthorization>
-			<UserManagementPage />;
+			<UserManagementPage />
 		</PageAuthorization>
 	);
 }

@@ -54,6 +54,7 @@ const LoginPage = () => {
 			{ email: data.email, password: data.password },
 			{
 				onSuccess: () => {
+					navigate("/");
 					enqueueSnackbar("Login Success", {
 						variant: "success",
 					});

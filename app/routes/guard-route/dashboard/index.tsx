@@ -9,7 +9,7 @@ export function meta({}: Route.MetaArgs) {
 export default function Dashboard() {
 	return (
 		<PageAuthorization>
-			<DashboardPage />;
+			<DashboardPage />
 		</PageAuthorization>
 	);
 }

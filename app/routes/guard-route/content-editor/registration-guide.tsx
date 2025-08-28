@@ -11,7 +11,7 @@ export function meta({}: Route.MetaArgs) {
 export default function ContentEditorRegistrationGuide() {
 	return (
 		<PageAuthorization>
-			<SocialMediaPage />;
+			<SocialMediaPage />
 		</PageAuthorization>
 	);
 }

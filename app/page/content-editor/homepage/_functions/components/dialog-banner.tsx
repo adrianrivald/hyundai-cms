@@ -5,38 +5,97 @@ import RHFTextField from "@/components/RHForm/RHFTextField";
 import RHFUploadFile from "@/components/RHForm/RHFUploadFile";
 import DialogModal from "@/components/custom/dialog/dialog-modal";
 import { Grid } from "@/components/grid";
-import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import { useEffect } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 import { useForm } from "react-hook-form";
+import { BannerSchema, type BannerType } from "../models/banner";
+import { usePostBanner, usePutBanner } from "@/api/banner";
+import { enqueueSnackbar, useSnackbar } from "notistack";
+import { format } from "date-fns";
 
 interface DialogBannerProps {
 	open: boolean;
 	onClose: () => void;
-	data?: any;
+	data?: BannerType;
+	refetch?: () => void;
 }
 
-const DialogBanner = ({ open, onClose, data }: DialogBannerProps) => {
+const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 	const methods = useForm({
 		defaultValues: {
-			image: {
-				file: {},
-				file_url: "",
-			},
+			image: "",
 			title: "",
 			description: "",
 			date: "",
+			link: "",
 		},
 		shouldFocusError: false,
 		mode: "onChange",
+		resolver: yupResolver(BannerSchema),
 	});
+
+	const { mutate: mutatePost, isPending: pendingPost } = usePostBanner();
+	const { mutate: mutateEdit, isPending: pendingEdit } = usePutBanner();
+
+	const onSubmit = () => {
+		const form = methods.watch();
+		const dataForm: BannerType = {
+			id: data?.id,
+			name: form.title,
+			description: form.description,
+			image_path: form.image,
+			link_url: form.link,
+			is_active: false,
+			published_at: format(new Date(form.date), "yyyy/MM/dd"),
+		};
+		if (data?.id) {
+			mutateEdit(dataForm, {
+				onSuccess: () => {
+					onClose();
+					methods.clearErrors();
+					methods.reset();
+					refetch && refetch();
+					enqueueSnackbar("Data telah diubah", {
+						variant: "success",
+					});
+				},
+				onError: () => {
+					enqueueSnackbar("Error: Ubah banner gagal", {
+						variant: "error",
+					});
+				},
+			});
+		} else {
+			mutatePost(dataForm, {
+				onSuccess: () => {
+					onClose();
+					methods.clearErrors();
+					methods.reset();
+					refetch && refetch();
+					enqueueSnackbar("Data telah ditambahkan", {
+						variant: "success",
+					});
+				},
+				onError: () => {
+					enqueueSnackbar("Error: Pembuatan banner gagal", {
+						variant: "error",
+					});
+				},
+			});
+		}
+	};
+
 	return (
 		<DialogModal
 			open={open}
-			onOpenChange={onClose}
+			onOpenChange={() => {
+				onClose();
+				methods.clearErrors();
+				methods.reset();
+			}}
 			headerTitle={data?.id ? "Edit Banner" : "Tambah Banner"}
-			contentProps="w-[800px]"
+			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
 				<div className="">
 					<FormProvider methods={methods}>
@@ -46,6 +105,7 @@ const DialogBanner = ({ open, onClose, data }: DialogBannerProps) => {
 									name="image"
 									label="Upload Banner"
 									slug="banner"
+									required
 								/>
 							</Grid>
 							<Grid item xs={12}>
@@ -54,6 +114,7 @@ const DialogBanner = ({ open, onClose, data }: DialogBannerProps) => {
 									label="Judul Banner"
 									placeholder="Masukan judul banner"
 									autoFocus={false}
+									required
 								/>
 							</Grid>
 							<Grid item xs={12}>
@@ -64,7 +125,7 @@ const DialogBanner = ({ open, onClose, data }: DialogBannerProps) => {
 									rows={5}
 								/>
 							</Grid>
-							<Grid item xs={12}>
+							<Grid item xs={7}>
 								<RHFDatePicker
 									name="date"
 									label="Tanggal Terbit"
@@ -78,8 +139,28 @@ const DialogBanner = ({ open, onClose, data }: DialogBannerProps) => {
 									}}
 								/>
 							</Grid>
+							<Grid item xs={12}>
+								<RHFTextField
+									name="link"
+									label="Link URL"
+									placeholder="Masukan link url"
+									autoFocus={false}
+									required
+								/>
+							</Grid>
 							<Grid item xs={12} className="flex justify-end">
-								<Button>Tambahkan</Button>
+								<Button
+									loading={pendingEdit || pendingPost}
+									onClick={() => {
+										methods.trigger().then((isValid) => {
+											if (isValid) {
+												onSubmit();
+											}
+										});
+									}}
+								>
+									Tambahkan
+								</Button>
 							</Grid>
 						</Grid>
 					</FormProvider>

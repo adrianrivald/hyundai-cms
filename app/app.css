@@ -235,7 +235,8 @@ body {
 
   *::-webkit-scrollbar-thumb {
     @apply bg-background rounded-full hover:bg-gray-400 transition-colors;
-    border: 2px solid #d9d9d9;
+    border: 1px solid #d9d9d9;
+    background-color: #153263;
   }
 
   *::-webkit-scrollbar-track {

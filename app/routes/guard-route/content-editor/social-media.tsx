@@ -9,7 +9,7 @@ export function meta({}: Route.MetaArgs) {
 export default function ContentEditorSocialMedia() {
 	return (
 		<PageAuthorization>
-			<SocialMediaPage />;
+			<SocialMediaPage />
 		</PageAuthorization>
 	);
 }

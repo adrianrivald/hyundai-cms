@@ -9,7 +9,7 @@ export function meta({}: Route.MetaArgs) {
 export default function Whistleblower() {
 	return (
 		<PageAuthorization>
-			<WhistleblowerPage />;
+			<WhistleblowerPage />
 		</PageAuthorization>
 	);
 }

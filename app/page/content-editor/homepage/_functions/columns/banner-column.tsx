@@ -7,13 +7,16 @@ import type { ColumnDef, Row, Table } from "@tanstack/react-table";
 import { format } from "date-fns";
 import DialogBanner from "../components/dialog-banner";
 import { useState } from "react";
+import type { BannerType } from "../models/banner";
 
-export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
+export const dataBannerColumn: ColumnDef<BannerType>[] = [
 	{
 		accessorKey: "title",
 		header: "Gambar",
 		cell: ({ row }) => (
-			<CellText className="text-left">{row?.original?.title || "-"}</CellText>
+			<CellText className="text-left">
+				{row?.original?.image_path || "-"}
+			</CellText>
 		),
 		meta: {
 			cellProps: {
@@ -27,7 +30,7 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 	{
 		accessorKey: "completed",
 		header: "Judul",
-		cell: ({ row }) => <CellText className="">{row.original?.title}</CellText>,
+		cell: ({ row }) => <CellText className="">{row.original?.name}</CellText>,
 		meta: {
 			cellProps: {
 				style: {
@@ -41,7 +44,9 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 		accessorKey: "title",
 		header: "Deskripsi",
 		cell: ({ row }) => (
-			<CellText className="text-left">{row?.original?.title || "-"}</CellText>
+			<CellText className="text-left">
+				{row?.original?.description || "-"}
+			</CellText>
 		),
 		meta: {
 			cellProps: {
@@ -57,7 +62,7 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 		header: "Tanggal Terbit",
 		cell: ({ row }) => (
 			<CellText className="text-left">
-				{format(new Date(), "dd/MM/yyyy")}
+				{format(row.original?.published_at, "dd/MM/yyyy")}
 			</CellText>
 		),
 		meta: {
@@ -97,7 +102,13 @@ export const dataBannerColumn: ColumnDef<AlbumTypes>[] = [
 						Tambah
 					</Button>
 
-					<DialogBanner open={open} onClose={() => setOpen(false)} />
+					<DialogBanner
+						open={open}
+						onClose={() => setOpen(false)}
+						refetch={() => {
+							table.resetPageIndex();
+						}}
+					/>
 				</div>
 			);
 		},
@@ -117,8 +128,8 @@ const ActionCell = ({
 	row,
 	table,
 }: {
-	row: Row<AlbumTypes>;
-	table: Table<AlbumTypes>;
+	row: Row<BannerType>;
+	table: Table<BannerType>;
 }) => {
 	return (
 		<div className="flex gap-2">
