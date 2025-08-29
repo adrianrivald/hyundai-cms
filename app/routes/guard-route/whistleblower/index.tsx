@@ -1,3 +1,4 @@
+import PageAuthorization from "@/components/page-authorization";
 import type { Route } from "./+types";
 import WhistleblowerPage from "@/page/whistleblower";
 
@@ -6,5 +7,9 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Whistleblower() {
-	return <WhistleblowerPage />;
+	return (
+		<PageAuthorization>
+			<WhistleblowerPage />
+		</PageAuthorization>
+	);
 }

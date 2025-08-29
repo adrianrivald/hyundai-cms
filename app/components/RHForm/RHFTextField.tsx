@@ -37,7 +37,7 @@ export default function RHFTextField({
 			case "highlighted":
 				return "bg-yellow-50 border-yellow-200 text-yellow-800 placeholder:text-yellow-400";
 			default:
-				return "bg-white border-gray-200 text-gray-700 placeholder:text-gray-400 disabled:bg-gray-200";
+				return "bg-white border-gray-200 text-gray-700 placeholder:text-muted-foreground disabled:bg-gray-200";
 		}
 	};
 

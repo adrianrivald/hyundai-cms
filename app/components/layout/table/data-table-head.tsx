@@ -8,7 +8,7 @@ export default function DataTableHead<T extends RowData>({
 	headerGroups: HeaderGroup<T>[];
 }) {
 	return (
-		<TableHeader className="sticky top-0 z-2 ">
+		<TableHeader className="">
 			{headerGroups.map((headerGroup) => (
 				<TableRow key={headerGroup.id}>
 					{headerGroup.headers.map((header, index) => {

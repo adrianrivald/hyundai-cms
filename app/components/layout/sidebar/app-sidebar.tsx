@@ -24,6 +24,8 @@ import { cn } from "@/lib/utils";
 import { SIDEBAR_MENU, type Items } from "./sidebar-config";
 import { Typography } from "../../typography";
 import { useLocation, useNavigate } from "react-router";
+import Cookies from "js-cookie";
+import type { PersonTypes } from "@/types/AuthTypes";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { state, open } = useSidebar();
@@ -47,6 +49,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
 		// Recursively check nested items
 		return item.items?.some(isItemActive) ?? false;
+	};
+
+	const logout = () => {
+		Cookies.remove("token");
+		Cookies.remove("info");
+
+		navigate("/login", { replace: true });
 	};
 
 	return (
@@ -179,7 +188,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarFooter className="bg-[#0D254D] pl-5">
 				<SidebarMenuButton
 					onClick={() => {
-						//setDialogOpen(true)
+						logout();
 					}}
 					className={cn("rounded-md bg-[#0D254D] z-10 text-white")}
 					tooltip={"Logout"}

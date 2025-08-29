@@ -1,5 +1,6 @@
 import Container from "@/components/container";
 import { Stack } from "@/components/stack";
+import { Typography } from "@/components/typography";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import {
 	Dialog,
@@ -44,6 +45,9 @@ interface DialogModalProps {
 		| "secondary"
 		| "ghost"
 		| "success"
+		| "hmmiPrimary"
+		| "hmmiOutline"
+		| "hmmiGhost"
 		| null
 		| undefined;
 	variantBtnRight?:
@@ -55,6 +59,9 @@ interface DialogModalProps {
 		| "secondary"
 		| "ghost"
 		| "success"
+		| "hmmiPrimary"
+		| "hmmiOutline"
+		| "hmmiGhost"
 		| null
 		| undefined;
 	overlayProps?: string;
@@ -75,8 +82,8 @@ const DialogModal = ({
 	rightButtonTitle,
 	textAlign = "center",
 	content,
-	variantBtnLeft = "outline",
-	variantBtnRight = "default",
+	variantBtnLeft = "hmmiPrimary",
+	variantBtnRight = "hmmiOutline",
 	leftButtonProps,
 	rightButtonProps,
 	imageClassName,
@@ -118,10 +125,16 @@ const DialogModal = ({
 							image
 						)}
 
-						<Label className={`mt-5 ${alignText} text-[20px] font-bold`}>
+						<Typography
+							className={` ${alignText} text-[16px] font-bold font-sans mt-[-20px]`}
+						>
 							{title}
-						</Label>
-						<Label className={`${alignText} text-md`}>{subtitle}</Label>
+						</Typography>
+						<Typography
+							className={`${alignText} text-sm font-sans text-[#6D717F]`}
+						>
+							{subtitle}
+						</Typography>
 					</Container>
 				)}
 				<Stack direction="row" className="gap-3">
