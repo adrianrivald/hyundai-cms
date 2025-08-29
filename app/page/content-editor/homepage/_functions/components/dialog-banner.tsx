@@ -13,6 +13,7 @@ import { BannerSchema, type BannerType } from "../models/banner";
 import { usePostBanner, usePutBanner } from "@/api/banner";
 import { enqueueSnackbar, useSnackbar } from "notistack";
 import { format } from "date-fns";
+import { useEffect } from "react";
 
 interface DialogBannerProps {
 	open: boolean;
@@ -85,6 +86,18 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 			});
 		}
 	};
+
+	useEffect(() => {
+		if (data && open) {
+			methods.reset({
+				image: data?.image_path,
+				title: data?.name,
+				link: data?.link_url,
+				date: data?.published_at,
+				description: data?.description,
+			});
+		}
+	}, [data, open]);
 
 	return (
 		<DialogModal
@@ -159,7 +172,7 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 										});
 									}}
 								>
-									Tambahkan
+									{data?.id ? "Ubah" : "Tambahkan"}
 								</Button>
 							</Grid>
 						</Grid>

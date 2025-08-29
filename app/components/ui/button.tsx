@@ -25,7 +25,7 @@ const buttonVariants = cva(
 				hmmiPrimary:
 					"bg-hmmi-primary-900 text-white hover:bg-hmmi-primary-700 disabled:bg-hmmi-grey-200 disabled:text-hmmi-grey-400",
 				hmmiOutline:
-					"border border-hmmi-primary-500 bg-background text-hmmi-primary-500 hover:bg-hmmi-primary-50 disabled:border-hmmi-grey-200 disabled:text-hmmi-grey-400",
+					"border border-hmmi-primary-900 bg-background text-hmmi-primary-900 hover:bg-hmmi-primary-50 disabled:border-hmmi-grey-200 disabled:text-hmmi-grey-400",
 				hmmiGhost:
 					"hover:bg-hmmi-primary-50 hover:text-accent-foreground text-hmmi-primary-500",
 			},

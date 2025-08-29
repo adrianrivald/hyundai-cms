@@ -61,6 +61,25 @@ export const usePostBanner = (
 	});
 };
 
+export const useDeleteBanner = (
+	options?: MutationObserverOptions<{ message: string }, Error, { id: string }>
+) => {
+	return useMutation<{ message: string }, Error, { id: string }>({
+		mutationKey: ["banner-post"],
+		mutationFn: async ({ id }) => {
+			const response = await deleteBanner(id);
+			queryClient.removeQueries({
+				predicate: (query) =>
+					typeof query.queryKey[0] === "string" &&
+					query.queryKey[0].startsWith("banner-"),
+			});
+
+			return response;
+		},
+		...options,
+	});
+};
+
 export const usePutBanner = (
 	options?: MutationObserverOptions<BannerType, Error, BannerType>
 ) => {

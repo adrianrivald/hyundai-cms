@@ -30,10 +30,16 @@ export default function RHFUploadFile({
 	slug,
 	...other
 }: RHFUploadFileProps) {
-	const { control, setError } = useFormContext();
+	const { control, setError, getValues } = useFormContext();
 	const [preview, setPreview] = useState<string | null>("" ?? null);
 	const [loading, setLoading] = useState(false);
 	const token = useToken();
+
+	useEffect(() => {
+		if (getValues(name)) {
+			setPreview(getValues(name));
+		}
+	}, []);
 
 	const uploadFile = async (
 		file: File,

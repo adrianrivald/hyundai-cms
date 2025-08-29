@@ -17,7 +17,7 @@ export async function postLogin(
 	});
 }
 
-async function postMe(): Promise<AxiosResponse<PersonTypes, AxiosError>> {
+export async function getMe(): Promise<AxiosResponse<PersonTypes, AxiosError>> {
 	return await apiConfig.get("auth/me");
 }
 
@@ -38,7 +38,7 @@ export const useLogin = (
 				sameSite: "strict",
 			});
 
-			const me = await postMe();
+			const me = await getMe();
 
 			Cookies.set("info", JSON.stringify(me.data), {
 				sameSite: "strict",
