@@ -58,7 +58,7 @@ const SnackbarComponent = forwardRef<HTMLDivElement, any>(
 		const getColorClass = () => {
 			switch (props.variant) {
 				case "success":
-					return "text-emerald-500";
+					return "text-green-500";
 				case "error":
 					return "text-red-500";
 				case "info":
@@ -84,12 +84,12 @@ const SnackbarComponent = forwardRef<HTMLDivElement, any>(
 							className="mr-2"
 							color={iconColor()}
 						/>
-						<div className={cn("text-md", getColorClass())}>
+						<div className={cn("text-md font-sans font-bold", getColorClass())}>
 							{headerTitle()}
 						</div>
 					</div>
 
-					<AlertDescription className="text-sm">
+					<AlertDescription className="text-sm font-sans font-medium">
 						{props.message}
 					</AlertDescription>
 				</Alert>

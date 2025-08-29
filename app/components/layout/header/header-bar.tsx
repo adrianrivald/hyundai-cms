@@ -12,10 +12,12 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { Separator } from "@radix-ui/react-separator";
 import type { Items } from "../sidebar/sidebar-config";
 import { useActiveSidebarItem } from "./title-bar";
+import useUser from "@/hooks/use-user";
 
 export default function HeaderBar() {
 	const { toggleSidebar } = useSidebar();
 	const title = useActiveSidebarItem();
+	const user = useUser();
 	return (
 		<header className="bg-background sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2  px-4 border-hmmi-primary-800">
 			<div className="pt-2 flex flex-row items-center justify-between w-full">
@@ -43,16 +45,18 @@ export default function HeaderBar() {
 						<div className="flex flex-row gap-3 items-center cursor-pointer">
 							<div>
 								<Typography className="font-bold text-hmmi-primary-900 text-[14px] text-right">
-									Gilang A R
+									{user.name}
 								</Typography>
 								<Typography className="text-[12px] text-right">
 									Welcome!
 								</Typography>
 							</div>
 							<div className="cursor-pointer">
-								<img
-									src="/favicon.ico"
-									className="rounded-full h-[38px] w-[38px]"
+								<Icon
+									icon="fluent:person-32-filled"
+									width="38"
+									height="38"
+									className="border-[1px] border-black rounded-[19px]"
 								/>
 							</div>
 						</div>
@@ -60,15 +64,16 @@ export default function HeaderBar() {
 					<PopoverContent>
 						<Stack spacing={4}>
 							<Stack direction="column" alignItems="center" spacing={3}>
-								<H4 className="text-sm font-medium ">email@email.com</H4>
-								<img
-									className="w-[36px] h-[36px] rounded-[18px] object-fill"
-									src={`/favicon.ico`}
-									aria-label="profile-person"
+								<H4 className="text-sm font-medium ">{user.email}</H4>
+								<Icon
+									icon="fluent:person-32-filled"
+									width="38"
+									height="38"
+									className="border-[1px] border-black rounded-[19px]"
 								/>
 								<Stack spacing={1} alignItems="center">
 									<H4 className="text-base font-medium text-center">
-										Gilang A R
+										{user.name}
 									</H4>
 									<H4 className="text-base font-medium text-center">
 										Role Name

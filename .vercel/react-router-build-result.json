@@ -114,6 +114,12 @@
         "file": "./routes/guard-route/post/post-detail.tsx",
         "path": "post/detail/:id"
       },
+      "routes/guard-route/whistleblower/index": {
+        "id": "routes/guard-route/whistleblower/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/whistleblower/index.tsx",
+        "path": "whistleblower"
+      },
       "routes/guard-route/qr-scan/index": {
         "id": "routes/guard-route/qr-scan/index",
         "parentId": "root",
@@ -259,6 +265,12 @@
         "parentId": "routes/__layout/__auth.layout",
         "file": "./routes/guard-route/post/post-detail.tsx",
         "path": "post/detail/:id"
+      },
+      "routes/guard-route/whistleblower/index": {
+        "id": "routes/guard-route/whistleblower/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/whistleblower/index.tsx",
+        "path": "whistleblower"
       },
       "routes/guard-route/qr-scan/index": {
         "id": "routes/guard-route/qr-scan/index",

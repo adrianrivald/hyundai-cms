@@ -78,7 +78,7 @@ export const dataSocmedColumn: ColumnDef<AlbumTypes>[] = [
 		header: () => {
 			return (
 				<Button
-					className="bg-amber-500 hover:bg-amber-600 my-2"
+					className="bg-amber-500 hover:bg-amber-600 my-2 max-w-[150px] min-w-[150px]"
 					startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 				>
 					Tambah
