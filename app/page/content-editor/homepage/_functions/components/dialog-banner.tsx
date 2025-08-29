@@ -107,19 +107,14 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 				methods.clearErrors();
 				methods.reset();
 			}}
-			headerTitle={data?.id ? "Edit Banner" : "Tambah Banner"}
+			headerTitle={data?.id ? "Ubah Banner" : "Tambah Banner"}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
 				<div className="">
 					<FormProvider methods={methods}>
 						<Grid container spacing={4}>
 							<Grid item xs={12}>
-								<RHFUploadFile
-									name="image"
-									label="Upload Banner"
-									slug="banner"
-									required
-								/>
+								<RHFUploadFile name="image" slug="banner" required />
 							</Grid>
 							<Grid item xs={12}>
 								<RHFTextField

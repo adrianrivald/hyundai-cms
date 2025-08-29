@@ -1,10 +1,11 @@
 import CellText from "@/components/layout/table/data-table-cell";
 import { Button } from "@/components/ui/button";
-
 import type { AlbumTypes } from "@/types/PostTypes";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import type { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
+import { useState } from "react";
+import DialogBanner from "../components/dialog-banner";
+import DialogFactory from "../components/dialog-factory";
 
 export const dataFactoryColumn: ColumnDef<AlbumTypes>[] = [
 	{
@@ -79,14 +80,27 @@ export const dataFactoryColumn: ColumnDef<AlbumTypes>[] = [
 	},
 	{
 		accessorKey: "ACTION_BUTTON",
-		header: () => {
+		header: ({ table }) => {
+			const [open, setOpen] = useState(false);
 			return (
-				<Button
-					className="bg-amber-500 hover:bg-amber-600 my-2"
-					startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
-				>
-					Tambah
-				</Button>
+				<>
+					<Button
+						onClick={() => {
+							setOpen(true);
+						}}
+						className="bg-amber-500 hover:bg-amber-600 my-2"
+						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
+					>
+						Tambah
+					</Button>
+					<DialogFactory
+						open={open}
+						onClose={() => setOpen}
+						refetch={() => {
+							table.resetPageIndex();
+						}}
+					/>
+				</>
 			);
 		},
 
