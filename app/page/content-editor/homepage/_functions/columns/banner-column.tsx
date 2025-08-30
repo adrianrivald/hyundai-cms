@@ -99,7 +99,7 @@ export const dataBannerColumn: ColumnDef<BannerType>[] = [
 				<div>
 					<Button
 						onClick={() => setOpen(true)}
-						className="bg-amber-500 hover:bg-amber-600 my-2"
+						className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 					>
 						Tambah

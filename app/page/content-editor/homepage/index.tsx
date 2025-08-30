@@ -49,19 +49,10 @@ export default function Homepage() {
 
 			<Tabs defaultValue="youtube" className={"mt-5"}>
 				<TabsList className="w-[calc(100%/3)]">
-					<TabsTrigger value="youtube">Youtube Section</TabsTrigger>
+					<TabsTrigger value="youtube">YouTube Section</TabsTrigger>
 				</TabsList>
 				<TabsContent value="youtube">
 					<ListYoutube />
-				</TabsContent>
-			</Tabs>
-
-			<Tabs defaultValue="social-media" className={"mt-5"}>
-				<TabsList className="w-[calc(100%/3)]">
-					<TabsTrigger value="social-media">Social Media</TabsTrigger>
-				</TabsList>
-				<TabsContent value="social-media">
-					<ListSocialMedia />
 				</TabsContent>
 			</Tabs>
 		</Container>

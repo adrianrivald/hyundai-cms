@@ -95,7 +95,7 @@ export const dataFactoryColumn: ColumnDef<AlbumTypes>[] = [
 					</Button>
 					<DialogFactory
 						open={open}
-						onClose={() => setOpen}
+						onClose={() => setOpen(false)}
 						refetch={() => {
 							table.resetPageIndex();
 						}}

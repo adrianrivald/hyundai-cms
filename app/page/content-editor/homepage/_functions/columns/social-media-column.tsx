@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import type { AlbumTypes } from "@/types/PostTypes";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import type { ColumnDef } from "@tanstack/react-table";
+import { useState } from "react";
+import DialogSocialMedia from "../components/dialog-social-media";
 
 export const dataSocmedColumn: ColumnDef<AlbumTypes>[] = [
 	{
@@ -75,14 +77,27 @@ export const dataSocmedColumn: ColumnDef<AlbumTypes>[] = [
 	},
 	{
 		accessorKey: "ACTION_BUTTON",
-		header: () => {
+		header: ({ table }) => {
+			const [open, setOpen] = useState(false);
 			return (
-				<Button
-					className="bg-amber-500 hover:bg-amber-600 my-2 max-w-[150px] min-w-[150px]"
-					startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
-				>
-					Tambah
-				</Button>
+				<>
+					<Button
+						onClick={() => {
+							setOpen(true);
+						}}
+						className="bg-amber-500 hover:bg-amber-600 my-2 max-w-[150px] min-w-[150px]"
+						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
+					>
+						Tambah
+					</Button>
+					<DialogSocialMedia
+						open={open}
+						onClose={() => setOpen(false)}
+						refetch={() => {
+							table.resetPageIndex();
+						}}
+					/>
+				</>
 			);
 		},
 

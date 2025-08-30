@@ -1,19 +1,25 @@
-import { useTodosList } from "@/api/todos";
 import { useTableConfig } from "@/hooks/use-table-config";
 import { useTableState } from "@/hooks/use-table-state";
-import type { AlbumTypes } from "@/types/PostTypes";
+
 import { dataYoutubeColumn } from "../columns/youtube-column";
+import { useGetGlobalVariables } from "@/api/global-variable";
+import type { GlobalVariableTypes } from "@/types/GlobalVariableTypes";
 
 export function useListYoutube() {
 	const tableState = useTableState({});
 
-	const { data, refetch } = useTodosList({
+	const { data, refetch } = useGetGlobalVariables({
 		queryKey: ["youtube-list"],
 		staleTime: 5 * 60 * 1000,
 	});
 
 	const table = useTableConfig({
-		data: (data?.slice(0, 10) as [] as AlbumTypes[]) ?? [],
+		data:
+			(data?.data
+				.filter((item) => item.name === "ytb_link_video")
+				.filter(
+					(item) => item.var_value !== "" || item.var_value !== null
+				) as GlobalVariableTypes[]) ?? [],
 		columns: dataYoutubeColumn,
 		tableState,
 		// pageCount: data?.meta?.totalPages ?? -1,
