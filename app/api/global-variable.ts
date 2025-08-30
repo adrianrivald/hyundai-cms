@@ -73,7 +73,7 @@ export const usePostGlobalVariable = (
 			queryClient.removeQueries({
 				predicate: (query) =>
 					typeof query.queryKey[0] === "string" &&
-					query.queryKey[0].startsWith("global-variables-"),
+					query.queryKey[0].startsWith("global-variable-"),
 			});
 
 			return response.data;
@@ -115,7 +115,7 @@ export const usePutGlobalVariable = (
 			queryClient.removeQueries({
 				predicate: (query) =>
 					typeof query.queryKey[0] === "string" &&
-					query.queryKey[0].startsWith("banner-"),
+					query.queryKey[0].startsWith("global-variable-"),
 			});
 
 			return response.data;

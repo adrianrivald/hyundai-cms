@@ -9,7 +9,7 @@ export function useListYoutube() {
 	const tableState = useTableState({});
 
 	const { data, refetch } = useGetGlobalVariables({
-		queryKey: ["youtube-list"],
+		queryKey: ["global-variable-youtube"],
 		staleTime: 5 * 60 * 1000,
 	});
 
@@ -22,8 +22,6 @@ export function useListYoutube() {
 				) as GlobalVariableTypes[]) ?? [],
 		columns: dataYoutubeColumn,
 		tableState,
-		// pageCount: data?.meta?.totalPages ?? -1,
-		// meta: data?.meta,
 	});
 
 	return {
