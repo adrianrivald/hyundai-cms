@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import type { AlbumTypes } from "@/types/PostTypes";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import type { ColumnDef } from "@tanstack/react-table";
+import DialogAboutUs from "../components/dialog-about-us";
+import { useState } from "react";
 
 export const dataAboutUsColumn: ColumnDef<AlbumTypes>[] = [
 	{
@@ -85,14 +87,25 @@ export const dataAboutUsColumn: ColumnDef<AlbumTypes>[] = [
 	},
 	{
 		accessorKey: "ACTION_BUTTON",
-		header: () => {
+		header: ({ table }) => {
+			const [open, setOpen] = useState(false);
 			return (
-				<Button
-					className="bg-amber-500 hover:bg-amber-600 my-2"
-					startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
-				>
-					Tambah
-				</Button>
+				<>
+					<Button
+						onClick={() => {
+							setOpen(true);
+						}}
+						className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
+						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
+					>
+						Tambah
+					</Button>
+					<DialogAboutUs
+						open={open}
+						onClose={() => setOpen(false)}
+						refetch={() => table.resetPageIndex()}
+					/>
+				</>
 			);
 		},
 		cell: ({ row }) => (

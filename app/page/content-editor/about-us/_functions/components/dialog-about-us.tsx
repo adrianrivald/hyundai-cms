@@ -14,11 +14,10 @@ import {
 import type { GlobalVariableTypes } from "@/types/GlobalVariableTypes";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-
 import { QuillEditor } from "@/components/RHForm/RHFQuillEditor";
 import { Typography } from "@/components/typography";
 import { cn } from "@/lib/utils";
-import { LegalContentSchema } from "../models/legal";
+import { AboutContentSchema } from "../models/about-us";
 
 interface DialogSocialMediaProps {
 	open: boolean;
@@ -28,7 +27,7 @@ interface DialogSocialMediaProps {
 	isEditMode?: boolean;
 }
 
-const DialogLegal = ({
+const DialogAboutUs = ({
 	open,
 	onClose,
 	data,
@@ -46,7 +45,7 @@ const DialogLegal = ({
 		},
 		shouldFocusError: false,
 		mode: "onChange",
-		resolver: yupResolver(LegalContentSchema),
+		resolver: yupResolver(AboutContentSchema),
 	});
 
 	const { mutate: mutatePost, isPending: pendingPost } =
@@ -114,7 +113,11 @@ const DialogLegal = ({
 				methods.reset();
 			}}
 			headerTitle={
-				isEditMode ? "Lihat Legal" : data?.id ? "Ubah Legal" : "Tambah Legal"
+				isEditMode
+					? "Lihat About Us"
+					: data?.id
+						? "Ubah About Us"
+						: "Tambah About Us"
 			}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
@@ -228,4 +231,4 @@ const DialogLegal = ({
 	);
 };
 
-export default DialogLegal;
+export default DialogAboutUs;
