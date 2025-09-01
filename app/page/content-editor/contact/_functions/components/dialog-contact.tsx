@@ -6,10 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useForm } from "react-hook-form";
 import RHFTextField from "@/components/RHForm/RHFTextField";
-
-import RHFSelect from "@/components/RHForm/RHFSelect";
 import {
-	useGetGlobalVariables,
 	usePostGlobalVariable,
 	usePutGlobalVariable,
 } from "@/api/global-variable";
@@ -61,6 +58,7 @@ const DialogContact = ({
 			is_active: true,
 			var_value: JSON.stringify(form),
 		};
+
 		if (data?.id) {
 			mutateEdit(dataForm, {
 				onSuccess: () => {

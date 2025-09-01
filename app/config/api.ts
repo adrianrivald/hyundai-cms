@@ -65,7 +65,7 @@ async function handleRefreshToken(): Promise<string | null> {
 
 		// update cookies
 		Cookies.set("token", newToken, {
-			expires: res.data.expires_in / 86400,
+			//expires: res.data.expires_in / 86400,
 			sameSite: "strict",
 		});
 
