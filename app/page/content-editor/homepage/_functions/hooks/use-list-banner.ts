@@ -1,7 +1,5 @@
-import { useTodosList } from "@/api/todos";
 import { useTableConfig } from "@/hooks/use-table-config";
 import { useTableState } from "@/hooks/use-table-state";
-import type { AlbumTypes } from "@/types/PostTypes";
 import { dataBannerColumn } from "../columns/banner-column";
 import { useGetBanners } from "@/api/banner";
 

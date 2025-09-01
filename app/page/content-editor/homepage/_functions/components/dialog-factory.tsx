@@ -1,7 +1,4 @@
 import FormProvider from "@/components/RHForm/FormProvider";
-import RHFDatePicker from "@/components/RHForm/RHFDatePicker";
-import RHFTextArea from "@/components/RHForm/RHFTextArea";
-import RHFTextField from "@/components/RHForm/RHFTextField";
 import RHFUploadFile from "@/components/RHForm/RHFUploadFile";
 import DialogModal from "@/components/custom/dialog/dialog-modal";
 import { Grid } from "@/components/grid";
@@ -9,46 +6,48 @@ import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useForm } from "react-hook-form";
-import { BannerSchema, type BannerType } from "../models/banner";
-import { usePostBanner, usePutBanner } from "@/api/banner";
+import { FactorySchema } from "../models/factory";
+import RHFTextField from "@/components/RHForm/RHFTextField";
+import RHFTextArea from "@/components/RHForm/RHFTextArea";
+import { usePostFactory, usePutFactory, type FactoryType } from "@/api/factory";
 import { enqueueSnackbar } from "notistack";
-import { format } from "date-fns";
 import { useEffect } from "react";
 
-interface DialogBannerProps {
+interface DialogFactoryProps {
 	open: boolean;
 	onClose: () => void;
-	data?: BannerType;
+	data?: FactoryType;
 	refetch?: () => void;
 }
 
-const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
+const DialogFactory = ({
+	open,
+	onClose,
+	data,
+	refetch,
+}: DialogFactoryProps) => {
 	const methods = useForm({
 		defaultValues: {
+			id: "",
 			image: "",
-			title: "",
+			factory_name: "",
 			description: "",
-			date: "",
-			link: "",
 		},
 		shouldFocusError: false,
 		mode: "onChange",
-		resolver: yupResolver(BannerSchema),
+		resolver: yupResolver(FactorySchema),
 	});
 
-	const { mutate: mutatePost, isPending: pendingPost } = usePostBanner();
-	const { mutate: mutateEdit, isPending: pendingEdit } = usePutBanner();
+	const { mutate: mutatePost, isPending: pendingPost } = usePostFactory();
+	const { mutate: mutateEdit, isPending: pendingEdit } = usePutFactory();
 
 	const onSubmit = () => {
 		const form = methods.watch();
-		const dataForm: BannerType = {
+		const dataForm: FactoryType = {
 			id: data?.id,
-			name: form.title,
-			description: form.description,
 			image_path: form.image,
-			link_url: form.link,
-			is_active: false,
-			published_at: format(new Date(form.date), "yyyy/MM/dd"),
+			name: form.factory_name,
+			description: form.description,
 		};
 		if (data?.id) {
 			mutateEdit(dataForm, {
@@ -88,16 +87,15 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 	};
 
 	useEffect(() => {
-		if (data && open) {
+		if (open && data) {
 			methods.reset({
+				factory_name: data?.name,
+				id: data?.id,
 				image: data?.image_path,
-				title: data?.name,
-				link: data?.link_url,
-				date: data?.published_at,
 				description: data?.description,
 			});
 		}
-	}, [data, open]);
+	}, [open, data]);
 
 	return (
 		<DialogModal
@@ -107,20 +105,20 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 				methods.clearErrors();
 				methods.reset();
 			}}
-			headerTitle={data?.id ? "Ubah Banner" : "Tambah Banner"}
+			headerTitle={data?.id ? "Ubah Pabrik" : "Tambah Pabrik"}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
 				<div className="">
 					<FormProvider methods={methods}>
 						<Grid container spacing={4}>
 							<Grid item xs={12}>
-								<RHFUploadFile name="image" slug="banner" required />
+								<RHFUploadFile name="image" slug="factory" required />
 							</Grid>
 							<Grid item xs={12}>
 								<RHFTextField
-									name="title"
-									label="Judul Banner"
-									placeholder="Masukan judul banner"
+									name="factory_name"
+									label="Nama Pabrik"
+									placeholder="Masukan nama pabrik"
 									autoFocus={false}
 									required
 								/>
@@ -133,29 +131,7 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 									rows={5}
 								/>
 							</Grid>
-							<Grid item xs={7}>
-								<RHFDatePicker
-									name="date"
-									label="Tanggal Terbit"
-									required
-									placeholder="Pilih Tanggal Terbit"
-									format="dd/MM/yyyy"
-									onChange={(date) => {
-										if (date) {
-											methods.setValue("date", date.toISOString());
-										}
-									}}
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<RHFTextField
-									name="link"
-									label="Link URL"
-									placeholder="Masukan link url"
-									autoFocus={false}
-									required
-								/>
-							</Grid>
+
 							<Grid item xs={12} className="flex justify-end">
 								<Button
 									loading={pendingEdit || pendingPost}
@@ -178,4 +154,4 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 	);
 };
 
-export default DialogBanner;
+export default DialogFactory;

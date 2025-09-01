@@ -12,7 +12,7 @@ const SocialMediaPage = () => {
 		<Container>
 			<Tabs defaultValue="social-media">
 				<TabsList className="w-[calc(100%/3)]">
-					<TabsTrigger value="social-media">Social Media</TabsTrigger>
+					<TabsTrigger value="social-media">Sosial Media</TabsTrigger>
 				</TabsList>
 				<TabsContent value="social-media">
 					<DataTable table={table} showPagination={false} />
