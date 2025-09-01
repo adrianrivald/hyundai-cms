@@ -174,7 +174,7 @@ export default function RHFUploadFile({
 										? "Mengunggah gambar..."
 										: "Seret dan letakkan gambar, atau pilih dari file"}
 								</Typography>
-								<Typography className="px-[200px] text-center text-[10px] text-[#9A9A9A]">
+								<Typography className="px-[100px] md:px-[200px] text-center text-[10px] text-[#9A9A9A]">
 									Gunakan gambar dengan lebar minimal 1600px. Ukuran maksimal
 									10MB (20MB untuk video)
 								</Typography>

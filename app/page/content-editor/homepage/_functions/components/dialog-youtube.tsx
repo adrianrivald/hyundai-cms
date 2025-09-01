@@ -1,54 +1,56 @@
 import FormProvider from "@/components/RHForm/FormProvider";
-import RHFDatePicker from "@/components/RHForm/RHFDatePicker";
-import RHFTextArea from "@/components/RHForm/RHFTextArea";
-import RHFTextField from "@/components/RHForm/RHFTextField";
-import RHFUploadFile from "@/components/RHForm/RHFUploadFile";
 import DialogModal from "@/components/custom/dialog/dialog-modal";
 import { Grid } from "@/components/grid";
 import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useForm } from "react-hook-form";
-import { BannerSchema, type BannerType } from "../models/banner";
-import { usePostBanner, usePutBanner } from "@/api/banner";
+import RHFTextField from "@/components/RHForm/RHFTextField";
+import { YoutubeSchema } from "../models/youtube";
+import ReactPlayer from "react-player";
+import {
+	usePostGlobalVariable,
+	usePutGlobalVariable,
+} from "@/api/global-variable";
 import { enqueueSnackbar } from "notistack";
-import { format } from "date-fns";
+import type { GlobalVariableTypes } from "@/types/GlobalVariableTypes";
 import { useEffect } from "react";
 
-interface DialogBannerProps {
+interface DialogYoutubeProps {
 	open: boolean;
 	onClose: () => void;
-	data?: BannerType;
+	data?: GlobalVariableTypes;
 	refetch?: () => void;
 }
 
-const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
+const DialogYoutube = ({
+	open,
+	onClose,
+	data,
+	refetch,
+}: DialogYoutubeProps) => {
 	const methods = useForm({
 		defaultValues: {
-			image: "",
 			title: "",
-			description: "",
-			date: "",
 			link: "",
 		},
 		shouldFocusError: false,
 		mode: "onChange",
-		resolver: yupResolver(BannerSchema),
+		resolver: yupResolver(YoutubeSchema),
 	});
 
-	const { mutate: mutatePost, isPending: pendingPost } = usePostBanner();
-	const { mutate: mutateEdit, isPending: pendingEdit } = usePutBanner();
+	const { mutate: mutatePost, isPending: pendingPost } =
+		usePostGlobalVariable();
+	const { mutate: mutateEdit, isPending: pendingEdit } = usePutGlobalVariable();
 
 	const onSubmit = () => {
 		const form = methods.watch();
-		const dataForm: BannerType = {
-			id: data?.id,
-			name: form.title,
-			description: form.description,
-			image_path: form.image,
-			link_url: form.link,
-			is_active: false,
-			published_at: format(new Date(form.date), "yyyy/MM/dd"),
+		const dataForm: GlobalVariableTypes = {
+			id: data?.id || "",
+			name: "ytb_link_video",
+			description: form?.title,
+			is_active: true,
+			var_value: form?.link,
 		};
 		if (data?.id) {
 			mutateEdit(dataForm, {
@@ -62,7 +64,7 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 					});
 				},
 				onError: () => {
-					enqueueSnackbar("Error: Ubah banner gagal", {
+					enqueueSnackbar("Error: Ubah data gagal", {
 						variant: "error",
 					});
 				},
@@ -79,7 +81,7 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 					});
 				},
 				onError: () => {
-					enqueueSnackbar("Error: Pembuatan banner gagal", {
+					enqueueSnackbar("Error: Pembuatan data gagal", {
 						variant: "error",
 					});
 				},
@@ -90,11 +92,8 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 	useEffect(() => {
 		if (data && open) {
 			methods.reset({
-				image: data?.image_path,
-				title: data?.name,
-				link: data?.link_url,
-				date: data?.published_at,
-				description: data?.description,
+				title: data?.description,
+				link: data?.var_value,
 			});
 		}
 	}, [data, open]);
@@ -107,55 +106,50 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 				methods.clearErrors();
 				methods.reset();
 			}}
-			headerTitle={data?.id ? "Ubah Banner" : "Tambah Banner"}
+			headerTitle={data?.id ? "Ubah Video YouTube" : "Tambah Video YouTube"}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
 				<div className="">
 					<FormProvider methods={methods}>
 						<Grid container spacing={4}>
 							<Grid item xs={12}>
-								<RHFUploadFile name="image" slug="banner" required />
-							</Grid>
-							<Grid item xs={12}>
 								<RHFTextField
 									name="title"
-									label="Judul Banner"
-									placeholder="Masukan judul banner"
+									label="Judul"
+									placeholder="Masukan judul"
 									autoFocus={false}
 									required
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<RHFTextArea
-									name="description"
-									label="Deskripsi"
-									placeholder="Masukan deskripsi"
-									rows={5}
-								/>
-							</Grid>
-							<Grid item xs={7}>
-								<RHFDatePicker
-									name="date"
-									label="Tanggal Terbit"
-									required
-									placeholder="Pilih Tanggal Terbit"
-									format="dd/MM/yyyy"
-									onChange={(date) => {
-										if (date) {
-											methods.setValue("date", date.toISOString());
-										}
-									}}
 								/>
 							</Grid>
 							<Grid item xs={12}>
 								<RHFTextField
 									name="link"
-									label="Link URL"
-									placeholder="Masukan link url"
+									label="Link Video"
+									placeholder="Masukan link video"
 									autoFocus={false}
 									required
 								/>
 							</Grid>
+
+							{methods.watch("link") &&
+								!methods?.formState?.errors?.["link"]?.message && (
+									<Grid item xs={12} className="rounded-lg">
+										<ReactPlayer
+											style={{ borderRadius: 20 }}
+											width={"100%"}
+											height={300}
+											src={methods.watch("link")}
+											onError={(e) => {
+												methods.setError("link", {
+													type: "manual",
+													message:
+														"Video tidak dapat diputar. Periksa link YouTube.",
+												});
+											}}
+										/>
+									</Grid>
+								)}
+
 							<Grid item xs={12} className="flex justify-end">
 								<Button
 									loading={pendingEdit || pendingPost}
@@ -178,4 +172,4 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 	);
 };
 
-export default DialogBanner;
+export default DialogYoutube;

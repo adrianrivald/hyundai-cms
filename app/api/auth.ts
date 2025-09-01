@@ -17,6 +17,10 @@ export async function postLogin(
 	});
 }
 
+export async function getLogout() {
+	return await apiConfig.get("auth/logout");
+}
+
 export async function getMe(): Promise<AxiosResponse<PersonTypes, AxiosError>> {
 	return await apiConfig.get("auth/me");
 }

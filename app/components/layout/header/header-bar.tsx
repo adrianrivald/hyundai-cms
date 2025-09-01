@@ -10,14 +10,27 @@ import {
 import { useSidebar } from "@/components/ui/sidebar";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Separator } from "@radix-ui/react-separator";
-import type { Items } from "../sidebar/sidebar-config";
 import { useActiveSidebarItem } from "./title-bar";
 import useUser from "@/hooks/use-user";
+import { getLogout } from "@/api/auth";
+import { useNavigate } from "react-router";
+import Cookies from "js-cookie";
 
 export default function HeaderBar() {
 	const { toggleSidebar } = useSidebar();
 	const title = useActiveSidebarItem();
+	const navigate = useNavigate();
 	const user = useUser();
+
+	const logout = async () => {
+		getLogout().then(() => {
+			Cookies.remove("token");
+			Cookies.remove("info");
+
+			navigate("/login", { replace: true });
+		});
+	};
+
 	return (
 		<header className="bg-background sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2  px-4 border-hmmi-primary-800">
 			<div className="pt-2 flex flex-row items-center justify-between w-full">
@@ -83,7 +96,7 @@ export default function HeaderBar() {
 							<Separator />
 							<div
 								className="flex flex-row gap-2 justify-start cursor-pointer hover:bg-sidebar-accent hover:text-white px-2 py-1 rounded-md items-center"
-								//onClick={() => setOpen(true)}
+								onClick={() => logout()}
 							>
 								<Icon icon="mdi:logout" width="20" height="20" />
 								<Typography>Logout</Typography>

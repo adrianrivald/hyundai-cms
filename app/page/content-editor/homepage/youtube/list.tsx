@@ -1,5 +1,4 @@
 import { DataTable } from "@/components/layout/table/data-table";
-import { useListTour } from "../_functions/hooks/use-list-tour";
 import { useListYoutube } from "../_functions/hooks/use-list-youtube";
 import Container from "@/components/container";
 
