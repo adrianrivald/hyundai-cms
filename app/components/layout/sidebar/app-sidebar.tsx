@@ -26,6 +26,7 @@ import { Typography } from "../../typography";
 import { useLocation, useNavigate } from "react-router";
 import Cookies from "js-cookie";
 import type { PersonTypes } from "@/types/AuthTypes";
+import { getLogout } from "@/api/auth";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { state, open } = useSidebar();
@@ -51,11 +52,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		return item.items?.some(isItemActive) ?? false;
 	};
 
-	const logout = () => {
-		Cookies.remove("token");
-		Cookies.remove("info");
+	const logout = async () => {
+		getLogout().then(() => {
+			Cookies.remove("token");
+			Cookies.remove("info");
 
-		navigate("/login", { replace: true });
+			navigate("/login", { replace: true });
+		});
 	};
 
 	return (
