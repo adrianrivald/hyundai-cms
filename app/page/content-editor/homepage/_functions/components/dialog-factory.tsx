@@ -9,11 +9,14 @@ import { useForm } from "react-hook-form";
 import { FactorySchema } from "../models/factory";
 import RHFTextField from "@/components/RHForm/RHFTextField";
 import RHFTextArea from "@/components/RHForm/RHFTextArea";
+import { usePostFactory, usePutFactory, type FactoryType } from "@/api/factory";
+import { enqueueSnackbar } from "notistack";
+import { useEffect } from "react";
 
 interface DialogFactoryProps {
 	open: boolean;
 	onClose: () => void;
-	data?: any;
+	data?: FactoryType;
 	refetch?: () => void;
 }
 
@@ -25,6 +28,7 @@ const DialogFactory = ({
 }: DialogFactoryProps) => {
 	const methods = useForm({
 		defaultValues: {
+			id: "",
 			image: "",
 			factory_name: "",
 			description: "",
@@ -33,6 +37,65 @@ const DialogFactory = ({
 		mode: "onChange",
 		resolver: yupResolver(FactorySchema),
 	});
+
+	const { mutate: mutatePost, isPending: pendingPost } = usePostFactory();
+	const { mutate: mutateEdit, isPending: pendingEdit } = usePutFactory();
+
+	const onSubmit = () => {
+		const form = methods.watch();
+		const dataForm: FactoryType = {
+			id: data?.id,
+			image_path: form.image,
+			name: form.factory_name,
+			description: form.description,
+		};
+		if (data?.id) {
+			mutateEdit(dataForm, {
+				onSuccess: () => {
+					onClose();
+					methods.clearErrors();
+					methods.reset();
+					refetch && refetch();
+					enqueueSnackbar("Data telah diubah", {
+						variant: "success",
+					});
+				},
+				onError: () => {
+					enqueueSnackbar("Error: Ubah banner gagal", {
+						variant: "error",
+					});
+				},
+			});
+		} else {
+			mutatePost(dataForm, {
+				onSuccess: () => {
+					onClose();
+					methods.clearErrors();
+					methods.reset();
+					refetch && refetch();
+					enqueueSnackbar("Data telah ditambahkan", {
+						variant: "success",
+					});
+				},
+				onError: () => {
+					enqueueSnackbar("Error: Pembuatan banner gagal", {
+						variant: "error",
+					});
+				},
+			});
+		}
+	};
+
+	useEffect(() => {
+		if (open && data) {
+			methods.reset({
+				factory_name: data?.name,
+				id: data?.id,
+				image: data?.image_path,
+				description: data?.description,
+			});
+		}
+	}, [open, data]);
 
 	return (
 		<DialogModal
@@ -71,11 +134,11 @@ const DialogFactory = ({
 
 							<Grid item xs={12} className="flex justify-end">
 								<Button
-									//loading={pendingEdit || pendingPost}
+									loading={pendingEdit || pendingPost}
 									onClick={() => {
 										methods.trigger().then((isValid) => {
 											if (isValid) {
-												//onSubmit();
+												onSubmit();
 											}
 										});
 									}}
