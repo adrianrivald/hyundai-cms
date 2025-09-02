@@ -60,8 +60,8 @@ const DialogAboutUs = ({
 		const form = methods.watch();
 		const dataForm: GlobalVariableTypes = {
 			id: form?.id || "",
-			name: "about_us",
-			description: "The contact on microsite",
+			name: "registration_guide",
+			description: "The registration guide on microsite",
 			is_active: true,
 			var_value: JSON.stringify(form.data),
 		};
@@ -121,10 +121,10 @@ const DialogAboutUs = ({
 			}}
 			headerTitle={
 				isEditMode
-					? "Lihat About Us"
+					? "Lihat Registration Guide"
 					: methods.watch("id")
-						? "Ubah About Us"
-						: "Tambah About Us"
+						? "Ubah Registration Guide"
+						: "Tambah Registration Guide"
 			}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
