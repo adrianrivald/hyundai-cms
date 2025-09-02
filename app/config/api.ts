@@ -65,7 +65,7 @@ async function handleRefreshToken(): Promise<string | null> {
 
 		// update cookies
 		Cookies.set("token", newToken, {
-			//expires: res.data.expires_in / 86400,
+			expires: res.data.expires_in / 86400,
 			sameSite: "strict",
 		});
 
@@ -131,21 +131,21 @@ const responseFulfilled = (res: AxiosResponse) => res;
 const responseRejected = async (error: AxiosError) => {
 	const originalRequest = error.config;
 
-	// Case: token expired
-	if (
-		error.response?.status === 401 &&
-		(error.response.data as any)?.message === "Token has expired"
-	) {
-		try {
-			const newToken = await handleRefreshToken();
-			if (originalRequest && newToken) {
-				originalRequest.headers.Authorization = `Bearer ${newToken}`;
-				return apiConfig.request(originalRequest);
-			}
-		} catch (refreshError) {
-			return Promise.reject(refreshError);
-		}
-	}
+	// // Case: token expired
+	// if (
+	// 	error.response?.status === 401 &&
+	// 	(error.response.data as any)?.message === "Token has expired"
+	// ) {
+	// 	try {
+	// 		const newToken = await handleRefreshToken();
+	// 		if (originalRequest && newToken) {
+	// 			originalRequest.headers.Authorization = `Bearer ${newToken}`;
+	// 			return apiConfig.request(originalRequest);
+	// 		}
+	// 	} catch (refreshError) {
+	// 		return Promise.reject(refreshError);
+	// 	}
+	// }
 
 	// Case: invalid/expired refresh or forbidden
 	if (error.response?.status === 401 || error.response?.status === 403) {

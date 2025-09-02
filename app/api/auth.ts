@@ -38,7 +38,7 @@ export const useLogin = (
 			const response = await postLogin(email, password);
 
 			Cookies.set("token", response?.data?.access_token, {
-				//expires: response?.data?.expires_in / 86400,
+				expires: response?.data?.expires_in / 86400,
 				sameSite: "strict",
 			});
 
@@ -46,7 +46,7 @@ export const useLogin = (
 
 			Cookies.set("info", JSON.stringify(me.data), {
 				sameSite: "strict",
-				//expires: response?.data?.expires_in / 86400,
+				expires: response?.data?.expires_in / 86400,
 			});
 
 			return response.data;

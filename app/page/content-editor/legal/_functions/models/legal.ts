@@ -1,8 +1,10 @@
 import * as yup from "yup";
 
 export type LegalContentType = {
-	id?: string;
-	data: { title: string; language: string; content: string }[];
+	id: string;
+	title: string;
+	language: string;
+	content: string;
 };
 
 export const LegalContentSchema = yup.object({

@@ -1,13 +1,42 @@
 import CellText from "@/components/layout/table/data-table-cell";
 import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
-import type { AlbumTypes } from "@/types/PostTypes";
+
 import { Icon } from "@iconify/react/dist/iconify.js";
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, Row, Table } from "@tanstack/react-table";
 import { useState } from "react";
 import DialogLegal from "../components/dialog-legal";
+import type { LegalContentType } from "../models/legal";
+import {
+	useDeleteGlobalVariable,
+	useGetGlobalVariables,
+	usePutGlobalVariable,
+} from "@/api/global-variable";
+import DialogDelete from "@/components/custom/dialog/dialog-delete";
+import DialogContact from "@/page/content-editor/contact/_functions/components/dialog-contact";
+import type { ContactType } from "@/page/content-editor/contact/_functions/models/contact";
+import { enqueueSnackbar } from "notistack";
+import type { GlobalVariableTypes } from "@/types/GlobalVariableTypes";
+import DialogDetailContent from "@/components/custom/dialog/dialog-detail";
 
-export const dataLegalColumn: ColumnDef<AlbumTypes>[] = [
+export const dataLegalColumn: ColumnDef<LegalContentType>[] = [
+	{
+		accessorKey: "language",
+		header: "Bahasa",
+		cell: ({ row }) => (
+			<CellText className="text-left">
+				{row?.original?.language === "en" ? "English" : "Indonesia" || "-"}
+			</CellText>
+		),
+		meta: {
+			cellProps: {
+				style: {
+					minWidth: 120,
+					maxWidth: 125,
+				},
+			},
+		},
+	},
 	{
 		accessorKey: "title",
 		header: "Judul",
@@ -24,28 +53,13 @@ export const dataLegalColumn: ColumnDef<AlbumTypes>[] = [
 		},
 	},
 	{
-		accessorKey: "completed",
+		accessorKey: "content",
 		header: "Main Content",
 		cell: ({ row }) => (
 			<CellText className="text-pretty line-clamp-none">
-				{row.original?.title} lorem ipsum dolor sit amet lorem ipsum dolor sit
-				amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum
-				dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet
-				lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor
-				sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem
-				ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit
-				amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum
-				dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet{" "}
-				lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor
-				sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem
-				ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit
-				amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum
-				dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet
-				lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor
-				sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem
-				ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit
-				amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum
-				dolor sit amet{" "}
+				<div
+					dangerouslySetInnerHTML={{ __html: row.original?.content || "-" }}
+				/>
 			</CellText>
 		),
 		meta: {
@@ -61,21 +75,7 @@ export const dataLegalColumn: ColumnDef<AlbumTypes>[] = [
 	{
 		accessorKey: "completed",
 		header: "Aksi",
-		cell: ({ row }) => (
-			<div className="flex gap-2">
-				<div className="cursor-pointer">
-					<Icon
-						icon="basil:edit-outline"
-						width="24"
-						height="24"
-						color="#153263"
-					/>
-				</div>
-				<div className="cursor-pointer">
-					<Icon icon="mage:trash" width="24" height="24" color="#FF3B30" />
-				</div>
-			</div>
-		),
+		cell: ({ row, table }) => <ActionCell table={table} row={row} />,
 		meta: {
 			cellProps: {
 				style: {
@@ -89,13 +89,16 @@ export const dataLegalColumn: ColumnDef<AlbumTypes>[] = [
 		accessorKey: "ACTION_BUTTON",
 		header: ({ table }) => {
 			const [open, setOpen] = useState(false);
-
+			const hasVarValue = table
+				.getRowModel()
+				.rows.map((row) => row.original.language);
 			return (
 				<>
 					<Button
 						onClick={() => {
 							setOpen(true);
 						}}
+						disabled={hasVarValue.length === 2}
 						className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 					>
@@ -110,13 +113,34 @@ export const dataLegalColumn: ColumnDef<AlbumTypes>[] = [
 				</>
 			);
 		},
-		cell: ({ row }) => (
-			<div className="flex gap-2">
-				<Typography className="text-blue-500 underline cursor-pointer">
-					Lihat Detail
-				</Typography>
-			</div>
-		),
+		cell: ({ row }) => {
+			const [open, setOpen] = useState(false);
+			return (
+				<div className="flex gap-2">
+					{row.original?.content && row.original?.title && (
+						<Typography
+							className="text-blue-500 underline cursor-pointer"
+							onClick={() => {
+								setOpen(true);
+							}}
+						>
+							Lihat Detail
+						</Typography>
+					)}
+
+					<DialogDetailContent
+						open={open}
+						onClose={() => {
+							setOpen(false);
+						}}
+						title={row.original.title}
+						content={row.original.content}
+						language={row.original.language}
+						type={"Legal"}
+					/>
+				</div>
+			);
+		},
 
 		meta: {
 			headerCellProps: {
@@ -128,3 +152,109 @@ export const dataLegalColumn: ColumnDef<AlbumTypes>[] = [
 		},
 	},
 ];
+
+const ActionCell = ({
+	row,
+	table,
+}: {
+	row: Row<LegalContentType>;
+	table: Table<LegalContentType>;
+}) => {
+	const { data } = useGetGlobalVariables({
+		queryKey: ["global-variable-legal"],
+		staleTime: 5 * 60 * 1000,
+	});
+	const [openDelete, setOpenDelete] = useState(false);
+	const [openUpdate, setOpenUpdate] = useState(false);
+	const { mutate: mutateEdit } = usePutGlobalVariable();
+	//const { mutate: mutateDelete } = useDeleteGlobalVariable();
+
+	const dataLegal =
+		(data?.data
+			.filter((item) => item.name === "legal")
+			.filter((item) => item.var_value !== "" && item.var_value !== null)
+			.flatMap((item) => {
+				try {
+					const parsed = JSON.parse(item.var_value) as any;
+					return parsed.map((itm: any) => ({ ...itm, id: String(item.id) }));
+				} catch {
+					return [];
+				}
+			}) as LegalContentType[]) ?? [];
+
+	const onDelete = () => {
+		let legalRemove = dataLegal
+			//.filter((item) => item.language !== row.original.language)
+			.map((item) => ({
+				language: item.language,
+				title: item.language === row.original.language ? "" : item.title,
+				content: item.language === row.original.language ? "" : item.content,
+			}));
+
+		const dataForm: GlobalVariableTypes = {
+			id: row?.original?.id || "",
+			name: "legal",
+			description: "The legal on microsite",
+			is_active: true,
+			var_value: JSON.stringify(legalRemove),
+		};
+
+		mutateEdit(dataForm, {
+			onSuccess: () => {
+				enqueueSnackbar("Data telah dihapus", {
+					variant: "success",
+				});
+				setOpenDelete(false);
+				table.resetPageIndex();
+			},
+			onError: () => {
+				enqueueSnackbar("Error: Ubah data gagal", {
+					variant: "error",
+				});
+				setOpenDelete(false);
+				table.resetPageIndex();
+			},
+		});
+	};
+
+	return (
+		<div className="flex gap-2">
+			<div
+				className="cursor-pointer"
+				onClick={() => {
+					setOpenUpdate(true);
+				}}
+			>
+				<Icon
+					icon="basil:edit-outline"
+					width="24"
+					height="24"
+					color="#153263"
+				/>
+			</div>
+			{row.original?.content && row.original?.title && (
+				<div className="cursor-pointer " onClick={() => setOpenDelete(true)}>
+					<Icon icon="mage:trash" width="24" height="24" color="#FF3B30" />
+				</div>
+			)}
+
+			<DialogDelete
+				open={openDelete}
+				onClose={() => {
+					setOpenDelete(false);
+				}}
+				onSubmit={() => {
+					onDelete();
+				}}
+			/>
+			<DialogLegal
+				open={openUpdate}
+				onClose={() => setOpenUpdate(false)}
+				refetch={() => {
+					table.resetPageIndex();
+				}}
+				data={dataLegal}
+			/>
+		</div>
+	);
+};

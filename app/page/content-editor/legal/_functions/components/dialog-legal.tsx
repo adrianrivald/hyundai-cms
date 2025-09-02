@@ -18,12 +18,12 @@ import { useEffect, useState } from "react";
 import { QuillEditor } from "@/components/RHForm/RHFQuillEditor";
 import { Typography } from "@/components/typography";
 import { cn } from "@/lib/utils";
-import { LegalContentSchema } from "../models/legal";
+import { LegalContentSchema, type LegalContentType } from "../models/legal";
 
 interface DialogSocialMediaProps {
 	open: boolean;
 	onClose: () => void;
-	data?: any;
+	data?: LegalContentType[];
 	refetch?: () => void;
 	isEditMode?: boolean;
 }
@@ -54,56 +54,59 @@ const DialogLegal = ({
 	const { mutate: mutateEdit, isPending: pendingEdit } = usePutGlobalVariable();
 
 	const onSubmit = () => {
-		// const form = methods.watch();
-		// const dataForm: GlobalVariableTypes = {
-		// 	id: data?.id || "",
-		// 	name: "contact",
-		// 	description: "The contact on microsite",
-		// 	is_active: true,
-		// 	var_value: JSON.stringify(form),
-		// };
-		// if (data?.id) {
-		// 	mutateEdit(dataForm, {
-		// 		onSuccess: () => {
-		// 			onClose();
-		// 			methods.clearErrors();
-		// 			methods.reset();
-		// 			refetch && refetch();
-		// 			enqueueSnackbar("Data telah diubah", {
-		// 				variant: "success",
-		// 			});
-		// 		},
-		// 		onError: () => {
-		// 			enqueueSnackbar("Error: Ubah data gagal", {
-		// 				variant: "error",
-		// 			});
-		// 		},
-		// 	});
-		// } else {
-		// 	mutatePost(dataForm, {
-		// 		onSuccess: () => {
-		// 			onClose();
-		// 			methods.clearErrors();
-		// 			methods.reset();
-		// 			refetch && refetch();
-		// 			enqueueSnackbar("Data telah ditambahkan", {
-		// 				variant: "success",
-		// 			});
-		// 		},
-		// 		onError: () => {
-		// 			enqueueSnackbar("Error: Pembuatan data gagal", {
-		// 				variant: "error",
-		// 			});
-		// 		},
-		// 	});
-		// }
+		const form = methods.watch();
+		const dataForm: GlobalVariableTypes = {
+			id: form?.id || "",
+			name: "legal",
+			description: "The contact on microsite",
+			is_active: true,
+			var_value: JSON.stringify(form.data),
+		};
+		if (form?.id) {
+			mutateEdit(dataForm, {
+				onSuccess: () => {
+					onClose();
+					methods.clearErrors();
+					methods.reset();
+					refetch && refetch();
+					enqueueSnackbar("Data telah diubah", {
+						variant: "success",
+					});
+				},
+				onError: () => {
+					enqueueSnackbar("Error: Ubah data gagal", {
+						variant: "error",
+					});
+				},
+			});
+		} else {
+			mutatePost(dataForm, {
+				onSuccess: () => {
+					onClose();
+					methods.clearErrors();
+					methods.reset();
+					refetch && refetch();
+					enqueueSnackbar("Data telah ditambahkan", {
+						variant: "success",
+					});
+				},
+				onError: () => {
+					enqueueSnackbar("Error: Pembuatan data gagal", {
+						variant: "error",
+					});
+				},
+			});
+		}
 	};
 
-	// useEffect(() => {
-	// 	if (open && data) {
-	// 		methods.reset(data);
-	// 	}
-	// }, [open, data]);
+	useEffect(() => {
+		if (open && data) {
+			methods.reset({
+				id: data?.[0].id,
+				data: data,
+			});
+		}
+	}, [open, data]);
 
 	return (
 		<DialogModal
@@ -114,7 +117,11 @@ const DialogLegal = ({
 				methods.reset();
 			}}
 			headerTitle={
-				isEditMode ? "Lihat Legal" : data?.id ? "Ubah Legal" : "Tambah Legal"
+				isEditMode
+					? "Lihat Legal"
+					: methods.watch("id")
+						? "Ubah Legal"
+						: "Tambah Legal"
 			}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
@@ -167,7 +174,6 @@ const DialogLegal = ({
 											placeholder="Masukan Judul"
 											autoFocus={false}
 											required
-											type="number"
 										/>
 									</Grid>
 
@@ -191,7 +197,6 @@ const DialogLegal = ({
 											placeholder="Masukan Judul"
 											autoFocus={false}
 											required
-											type="number"
 										/>
 									</Grid>
 
@@ -217,7 +222,7 @@ const DialogLegal = ({
 										});
 									}}
 								>
-									{data?.id ? "Ubah" : "Tambahkan"}
+									{methods.watch("id") ? "Ubah" : "Tambahkan"}
 								</Button>
 							</Grid>
 						</Grid>
