@@ -46,7 +46,7 @@ const DialogLegal = ({
 		},
 		shouldFocusError: false,
 		mode: "onChange",
-		resolver: yupResolver(LegalContentSchema),
+		//resolver: yupResolver(LegalContentSchema),
 	});
 
 	const { mutate: mutatePost, isPending: pendingPost } =
