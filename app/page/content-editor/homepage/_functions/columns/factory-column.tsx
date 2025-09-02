@@ -1,10 +1,8 @@
 import CellText from "@/components/layout/table/data-table-cell";
 import { Button } from "@/components/ui/button";
-import type { AlbumTypes } from "@/types/PostTypes";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import type { ColumnDef, Row, Table } from "@tanstack/react-table";
 import { useState } from "react";
-import DialogBanner from "../components/dialog-banner";
 import DialogFactory from "../components/dialog-factory";
 import { useDeleteFactory, type FactoryType } from "@/api/factory";
 import DialogDelete from "@/components/custom/dialog/dialog-delete";
@@ -125,7 +123,7 @@ const ActionCell = ({
 			{
 				onSuccess: () => {
 					setOpenDelete(false);
-					enqueueSnackbar("Data telah diubah", {
+					enqueueSnackbar("Data telah dihapus", {
 						variant: "success",
 					});
 					table.resetPageIndex();

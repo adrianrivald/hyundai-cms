@@ -1,6 +1,6 @@
 import PageAuthorization from "@/components/page-authorization";
 import type { Route } from "./+types/registration-guide";
-import SocialMediaPage from "@/page/content-editor/social-media";
+import RegistrationGuidePage from "@/page/content-editor/registration-guide";
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -11,7 +11,7 @@ export function meta({}: Route.MetaArgs) {
 export default function ContentEditorRegistrationGuide() {
 	return (
 		<PageAuthorization>
-			<SocialMediaPage />
+			<RegistrationGuidePage />
 		</PageAuthorization>
 	);
 }

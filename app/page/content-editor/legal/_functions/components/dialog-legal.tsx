@@ -10,38 +10,43 @@ import {
 	usePostGlobalVariable,
 	usePutGlobalVariable,
 } from "@/api/global-variable";
-import { ContactSchema, type ContactType } from "../models/contact";
+
 import type { GlobalVariableTypes } from "@/types/GlobalVariableTypes";
 import { enqueueSnackbar } from "notistack";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import { QuillEditor } from "@/components/RHForm/RHFQuillEditor";
+import { Typography } from "@/components/typography";
+import { cn } from "@/lib/utils";
+import { LegalContentSchema, type LegalContentType } from "../models/legal";
 
 interface DialogSocialMediaProps {
 	open: boolean;
 	onClose: () => void;
-	data?: ContactType;
+	data?: LegalContentType[];
 	refetch?: () => void;
 	isEditMode?: boolean;
 }
 
-const DialogContact = ({
+const DialogLegal = ({
 	open,
 	onClose,
 	data,
 	refetch,
 	isEditMode,
 }: DialogSocialMediaProps) => {
+	const [tab, setTabs] = useState("id");
 	const methods = useForm({
 		defaultValues: {
 			id: "",
-			address: "",
-			contact: [
-				{ id: "", phone: "", email: "" },
-				{ id: "", phone: "", email: "" },
+			data: [
+				{ title: "", language: "id", content: "" },
+				{ title: "", language: "en", content: "" },
 			],
 		},
 		shouldFocusError: false,
 		mode: "onChange",
-		resolver: yupResolver(ContactSchema),
+		//resolver: yupResolver(LegalContentSchema),
 	});
 
 	const { mutate: mutatePost, isPending: pendingPost } =
@@ -50,16 +55,14 @@ const DialogContact = ({
 
 	const onSubmit = () => {
 		const form = methods.watch();
-
 		const dataForm: GlobalVariableTypes = {
-			id: data?.id || "",
-			name: "contact",
+			id: form?.id || "",
+			name: "legal",
 			description: "The contact on microsite",
 			is_active: true,
-			var_value: JSON.stringify(form),
+			var_value: JSON.stringify(form.data),
 		};
-
-		if (data?.id) {
+		if (form?.id) {
 			mutateEdit(dataForm, {
 				onSuccess: () => {
 					onClose();
@@ -98,7 +101,10 @@ const DialogContact = ({
 
 	useEffect(() => {
 		if (open && data) {
-			methods.reset(data);
+			methods.reset({
+				id: data?.[0].id,
+				data: data,
+			});
 		}
 	}, [open, data]);
 
@@ -111,66 +117,98 @@ const DialogContact = ({
 				methods.reset();
 			}}
 			headerTitle={
-				isEditMode ? "Lihat Kontak" : data?.id ? "Ubah Kontak" : "Tambah Kontak"
+				isEditMode
+					? "Lihat Legal"
+					: methods.watch("id")
+						? "Ubah Legal"
+						: "Tambah Legal"
 			}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
 				<div className="">
 					<FormProvider methods={methods}>
+						<Grid container className="mb-5">
+							<Grid
+								item
+								xs={6}
+								onClick={() => {
+									setTabs("id");
+								}}
+								className={cn(
+									"py-4 px-5 cursor-pointer",
+									tab === "id" ? "bg-[#153263]" : "bg-[#1532630D]"
+								)}
+							>
+								<Typography
+									className={cn(tab !== "id" ? "text-[#6B8BC1]" : "text-white")}
+								>
+									Indonesia
+								</Typography>
+							</Grid>
+							<Grid
+								item
+								xs={6}
+								onClick={() => {
+									setTabs("en");
+								}}
+								className={cn(
+									"py-4 px-5 cursor-pointer",
+									tab === "en" ? "bg-[#153263]" : "bg-[#1532630D]"
+								)}
+							>
+								<Typography
+									className={cn(tab !== "en" ? "text-[#6B8BC1]" : "text-white")}
+								>
+									English
+								</Typography>
+							</Grid>
+						</Grid>
 						<Grid container spacing={4}>
-							<Grid item xs={6}>
-								<RHFTextField
-									disabled={isEditMode}
-									name="contact.0.phone"
-									label="Nomor Telpon 1"
-									placeholder="Masukan Nomor Telfon"
-									autoFocus={false}
-									required
-									type="number"
-								/>
-							</Grid>
-							<Grid item xs={6}>
-								<RHFTextField
-									disabled={isEditMode}
-									name="contact.1.phone"
-									label="Nomor Telpon 2"
-									placeholder="Masukan Nomor Telfon"
-									autoFocus={false}
-									required
-									type="number"
-								/>
-							</Grid>
-							<Grid item xs={6}>
-								<RHFTextField
-									disabled={isEditMode}
-									name="contact.0.email"
-									label="Alamat Email 1"
-									placeholder="Masukan Alamat Email"
-									autoFocus={false}
-									required
-								/>
-							</Grid>
-							<Grid item xs={6}>
-								<RHFTextField
-									disabled={isEditMode}
-									name="contact.1.email"
-									label="Alamat Email 2"
-									placeholder="Masukan Alamat Email"
-									autoFocus={false}
-									required
-								/>
-							</Grid>
+							{tab === "id" && (
+								<>
+									<Grid item xs={12}>
+										<RHFTextField
+											disabled={isEditMode}
+											name="data.0.title"
+											label="Judul"
+											placeholder="Masukan Judul"
+											autoFocus={false}
+											required
+										/>
+									</Grid>
 
-							<Grid item xs={12}>
-								<RHFTextField
-									disabled={isEditMode}
-									name="address"
-									label="Alamat"
-									placeholder="Masukan alamat"
-									autoFocus={false}
-									required
-								/>
-							</Grid>
+									<Grid item xs={12}>
+										<QuillEditor
+											name="data.0.content"
+											control={methods.control}
+											placeholder={"Masukan isi konten"}
+										/>
+									</Grid>
+								</>
+							)}
+
+							{tab === "en" && (
+								<>
+									<Grid item xs={12}>
+										<RHFTextField
+											disabled={isEditMode}
+											name="data.1.title"
+											label="Judul"
+											placeholder="Masukan Judul"
+											autoFocus={false}
+											required
+										/>
+									</Grid>
+
+									<Grid item xs={12}>
+										<QuillEditor
+											name="data.1.content"
+											control={methods.control}
+											placeholder={"Masukan isi konten"}
+										/>
+									</Grid>
+								</>
+							)}
 
 							<Grid item xs={12} className="flex justify-end">
 								<Button
@@ -184,7 +222,7 @@ const DialogContact = ({
 										});
 									}}
 								>
-									{data?.id ? "Ubah" : "Tambahkan"}
+									{methods.watch("id") ? "Ubah" : "Tambahkan"}
 								</Button>
 							</Grid>
 						</Grid>
@@ -195,4 +233,4 @@ const DialogContact = ({
 	);
 };
 
-export default DialogContact;
+export default DialogLegal;
