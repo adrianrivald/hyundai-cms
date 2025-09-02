@@ -64,8 +64,8 @@ export default function RHFUploadFile({
 			if (!res.ok) throw new Error("Upload failed");
 			const data = await res.json();
 
-			setPreview(data.data.url);
-			onChange(data.data.url);
+			setPreview(import.meta.env.VITE_APP_IMAGE_URL + data.data.url);
+			onChange(import.meta.env.VITE_APP_IMAGE_URL + data.data.url);
 		} catch (err) {
 			console.error(err);
 			setError(name, {

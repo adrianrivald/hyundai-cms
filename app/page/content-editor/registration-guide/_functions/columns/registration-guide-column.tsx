@@ -15,7 +15,7 @@ import type { GlobalVariableTypes } from "@/types/GlobalVariableTypes";
 import DialogDetailContent from "@/components/custom/dialog/dialog-detail";
 
 import type { LegalContentType } from "@/page/content-editor/legal/_functions/models/legal";
-import DialogAboutUs from "../components/dialog-about-us";
+import DialogAboutUs from "../components/dialog-registration-guide";
 
 export const dataAboutUsColumn: ColumnDef<LegalContentType>[] = [
 	{
@@ -169,7 +169,7 @@ const ActionCell = ({
 
 	const dataLegal =
 		(data?.data
-			.filter((item) => item.name === "about_us")
+			.filter((item) => item.name === "registration_guide")
 			.filter((item) => item.var_value !== "" && item.var_value !== null)
 			.flatMap((item) => {
 				try {
@@ -191,7 +191,7 @@ const ActionCell = ({
 
 		const dataForm: GlobalVariableTypes = {
 			id: row?.original?.id || "",
-			name: "about_us",
+			name: "registration_guide",
 			description: "The legal on microsite",
 			is_active: true,
 			var_value: JSON.stringify(legalRemove),

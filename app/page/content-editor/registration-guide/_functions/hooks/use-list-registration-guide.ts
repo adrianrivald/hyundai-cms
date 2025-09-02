@@ -1,21 +1,22 @@
 import { useTableConfig } from "@/hooks/use-table-config";
 import { useTableState } from "@/hooks/use-table-state";
-import { dataLegalColumn } from "../columns/legal-column";
-import { useGetGlobalVariables } from "@/api/global-variable";
-import type { LegalContentType } from "../models/legal";
 
-export function useListLegal() {
+import { dataAboutUsColumn } from "../columns/registration-guide-column";
+import { useGetGlobalVariables } from "@/api/global-variable";
+import type { LegalContentType } from "@/page/content-editor/legal/_functions/models/legal";
+
+export function useListAboutUs() {
 	const tableState = useTableState({});
 
 	const { data, refetch } = useGetGlobalVariables({
-		queryKey: ["global-variable-legal"],
+		queryKey: ["global-variable-registration-guide"],
 		staleTime: 5 * 60 * 1000,
 	});
 
 	const table = useTableConfig({
 		data:
 			(data?.data
-				.filter((item) => item.name === "legal")
+				.filter((item) => item.name === "registration_guide")
 				.filter((item) => item.var_value !== "" && item.var_value !== null)
 				.flatMap((item) => {
 					try {
@@ -25,7 +26,7 @@ export function useListLegal() {
 						return [];
 					}
 				}) as LegalContentType[]) ?? [],
-		columns: dataLegalColumn,
+		columns: dataAboutUsColumn,
 		tableState,
 	});
 
