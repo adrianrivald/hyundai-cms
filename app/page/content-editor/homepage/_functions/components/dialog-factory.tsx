@@ -27,6 +27,7 @@ interface DialogFactoryProps {
 	onClose: () => void;
 	data?: FactoryType;
 	refetch?: () => void;
+	isDisabled?: boolean;
 }
 
 const DialogFactory = ({
@@ -34,6 +35,7 @@ const DialogFactory = ({
 	onClose,
 	data,
 	refetch,
+	isDisabled = false,
 }: DialogFactoryProps) => {
 	const [deleteRoute, setDeleteRoute] = useState({ isOpen: false, id: "" });
 	const methods = useForm({
@@ -197,7 +199,13 @@ const DialogFactory = ({
 				methods.clearErrors();
 				methods.reset();
 			}}
-			headerTitle={data?.id ? "Ubah Pabrik" : "Tambah Pabrik"}
+			headerTitle={
+				isDisabled
+					? "Detail Pabrik"
+					: data?.id
+						? "Ubah Pabrik"
+						: "Tambah Pabrik"
+			}
 			contentProps="w-[700px] max-h-[750px]"
 			content={
 				<div className="">
@@ -259,7 +267,12 @@ const DialogFactory = ({
 						{methods.watch("step") === "reg_factory" && (
 							<Grid container spacing={4}>
 								<Grid item xs={12}>
-									<RHFUploadFile name="image" slug="factory" required />
+									<RHFUploadFile
+										name="image"
+										slug="factory"
+										required
+										disabled={isDisabled}
+									/>
 								</Grid>
 								<Grid item xs={12}>
 									<RHFTextField
@@ -268,6 +281,7 @@ const DialogFactory = ({
 										placeholder="Masukan nama pabrik"
 										autoFocus={false}
 										required
+										disabled={isDisabled}
 									/>
 								</Grid>
 								<Grid item xs={12}>
@@ -276,12 +290,14 @@ const DialogFactory = ({
 										label="Deskripsi"
 										placeholder="Masukan deskripsi"
 										rows={4}
+										disabled={isDisabled}
 									/>
 								</Grid>
 
 								<Grid item xs={12} className="flex justify-end">
 									<Button
 										loading={pendingEdit || pendingPost}
+										disabled={isDisabled}
 										onClick={() => {
 											methods.trigger().then((isValid) => {
 												if (isValid) {
@@ -313,18 +329,19 @@ const DialogFactory = ({
 												{item.id && (
 													<div
 														className="cursor-pointer"
-														onClick={() =>
+														onClick={() => {
+															if (isDisabled) return;
 															setDeleteRoute({
 																isOpen: true,
 																id: item.id || "",
-															})
-														}
+															});
+														}}
 													>
 														<Icon
 															icon="mage:trash"
 															width="22"
 															height="22"
-															color="#FF3B30"
+															color={"#FF3B30"}
 														/>
 													</div>
 												)}
@@ -334,6 +351,7 @@ const DialogFactory = ({
 													name={`route.${index}.image`}
 													slug="factory"
 													required
+													disabled={isDisabled}
 												/>
 											</Grid>
 											<Grid item xs={12}>
@@ -343,6 +361,7 @@ const DialogFactory = ({
 													placeholder="Masukan nama rute"
 													autoFocus={false}
 													required
+													disabled={isDisabled}
 												/>
 											</Grid>
 											<Grid item xs={12}>
@@ -351,6 +370,7 @@ const DialogFactory = ({
 													label="Deskripsi"
 													placeholder="Masukan deskripsi"
 													rows={4}
+													disabled={isDisabled}
 												/>
 											</Grid>
 										</Grid>
@@ -360,6 +380,7 @@ const DialogFactory = ({
 								<div
 									className="mt-5 flex-row flex items-center justify-end cursor-pointer gap-1"
 									onClick={() => {
+										if (isDisabled) return;
 										let data = methodRoutes.watch("route");
 										methodRoutes.setValue("route", [
 											...(data || []),
@@ -368,11 +389,12 @@ const DialogFactory = ({
 									}}
 								>
 									<Icon icon="ic:outline-plus" width="24" height="24" />
-									<Typography className="font-bold">Tambah Rute </Typography>
+									<Typography className="font-bold">Tambah Rute</Typography>
 								</div>
 								<div className="flex justify-end mt-3">
 									<Button
 										loading={pendingRoutes}
+										disabled={isDisabled}
 										onClick={() => {
 											methodRoutes.trigger().then((isValid) => {
 												if (isValid) {

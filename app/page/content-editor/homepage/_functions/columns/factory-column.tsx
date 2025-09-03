@@ -7,6 +7,7 @@ import DialogFactory from "../components/dialog-factory";
 import { useDeleteFactory, type FactoryType } from "@/api/factory";
 import DialogDelete from "@/components/custom/dialog/dialog-delete";
 import { enqueueSnackbar } from "notistack";
+import { Typography } from "@/components/typography";
 
 export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 	{
@@ -95,6 +96,27 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 						}}
 					/>
 				</>
+			);
+		},
+		cell: ({ row }) => {
+			const [open, setOpen] = useState(false);
+			return (
+				<div className="mt-5">
+					<Typography
+						className="text-blue-500 underline cursor-pointer"
+						onClick={() => {
+							setOpen(true);
+						}}
+					>
+						Lihat Detail
+					</Typography>
+					<DialogFactory
+						open={open}
+						onClose={() => setOpen(false)}
+						data={row.original}
+						isDisabled
+					/>
+				</div>
 			);
 		},
 
