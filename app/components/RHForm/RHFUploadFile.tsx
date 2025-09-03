@@ -64,8 +64,8 @@ export default function RHFUploadFile({
 			if (!res.ok) throw new Error("Upload failed");
 			const data = await res.json();
 
-			setPreview(import.meta.env.VITE_APP_IMAGE_URL + data.data.url);
-			onChange(import.meta.env.VITE_APP_IMAGE_URL + data.data.url);
+			setPreview(data.data.url);
+			onChange(data.data.url);
 		} catch (err) {
 			console.error(err);
 			setError(name, {
@@ -122,7 +122,7 @@ export default function RHFUploadFile({
 
 					<div
 						className={cn(
-							"h-[170px] w-full border-2 border-dashed rounded-lg flex justify-center items-center cursor-pointer transition hover:border-primary",
+							"h-[150px] w-full border-2 border-dashed rounded-lg flex justify-center items-center cursor-pointer transition hover:border-primary",
 							className,
 							error && "border-destructive"
 						)}
