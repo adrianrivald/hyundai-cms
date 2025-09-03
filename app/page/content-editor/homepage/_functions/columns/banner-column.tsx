@@ -18,7 +18,10 @@ export const dataBannerColumn: ColumnDef<BannerType>[] = [
 		header: "Gambar",
 		cell: ({ row }) => (
 			<CellText className="text-left">
-				{row?.original?.image_path || "-"}
+				<img
+					src={row?.original?.image_path || "-"}
+					className="h-[30px] w-[85px] object-cover"
+				/>
 			</CellText>
 		),
 		meta: {

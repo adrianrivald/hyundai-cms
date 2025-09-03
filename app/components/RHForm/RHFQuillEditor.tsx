@@ -93,7 +93,7 @@ export function QuillEditor({
 			if (!res.ok) throw new Error("Upload failed");
 			const data = await res.json();
 
-			return import.meta.env.VITE_APP_IMAGE_URL + data.data.url;
+			return data.data.url;
 		} catch (err) {
 			console.error("Image upload error:", err);
 			return null;
