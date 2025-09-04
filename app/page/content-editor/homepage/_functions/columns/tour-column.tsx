@@ -5,6 +5,8 @@ import type { AlbumTypes } from "@/types/PostTypes";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
+import DialogTour from "../components/dialog-tour";
+import { useState } from "react";
 
 export const dataTourColumn: ColumnDef<AlbumTypes>[] = [
 	{
@@ -119,13 +121,18 @@ export const dataTourColumn: ColumnDef<AlbumTypes>[] = [
 	{
 		accessorKey: "ACTION_BUTTON",
 		header: () => {
+			const [open, setOpen] = useState(false);
 			return (
-				<Button
-					className="bg-amber-500 hover:bg-amber-600 my-2"
-					startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
-				>
-					Tambah
-				</Button>
+				<div>
+					<Button
+						onClick={() => setOpen(true)}
+						className="bg-amber-500 hover:bg-amber-600 my-2"
+						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
+					>
+						Tambah
+					</Button>
+					<DialogTour open={open} onClose={() => setOpen(false)} />
+				</div>
 			);
 		},
 

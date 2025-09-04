@@ -2,6 +2,7 @@ export type FactoryRouteType = {
 	id?: string;
 	name: string;
 	description: string;
+	image_path: string;
 	factory_id?: string;
 };
 

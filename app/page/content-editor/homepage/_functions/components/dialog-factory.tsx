@@ -121,6 +121,7 @@ const DialogFactory = ({
 				...item,
 				factory_id: methods.watch("id"),
 				name: methods.watch("factory_name"),
+				image_path: item.image,
 			})) || [];
 
 		mutateRoutes(formData, {
@@ -168,7 +169,7 @@ const DialogFactory = ({
 						...item,
 						route_name: item.name,
 						description: item.description,
-						image: "",
+						image: item.image_path,
 					})) || [],
 			});
 		}
