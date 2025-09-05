@@ -147,7 +147,7 @@ const ActionCell = ({
 			{
 				onSuccess: () => {
 					setOpenDelete(false);
-					enqueueSnackbar("Data telah diubah", {
+					enqueueSnackbar("Data telah dihapus", {
 						variant: "success",
 					});
 					table.resetPageIndex();

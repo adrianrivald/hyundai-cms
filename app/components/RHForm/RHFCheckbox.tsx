@@ -12,12 +12,13 @@ import type { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
 
 interface Props {
-	name: string;
+	name?: string;
 	label?: ReactNode;
 	description?: string;
 	className?: string;
 	disabled?: boolean;
 	onChange?: (checked: boolean) => void;
+	defaultChecked?: boolean;
 }
 
 export default function RHFCheckbox({
@@ -27,6 +28,7 @@ export default function RHFCheckbox({
 	className,
 	disabled,
 	onChange,
+	defaultChecked = false,
 	...other
 }: Props) {
 	const { control } = useFormContext();
@@ -34,7 +36,7 @@ export default function RHFCheckbox({
 	return (
 		<FormField
 			control={control}
-			name={name}
+			name={name || ""}
 			render={({ field }) => (
 				<FormItem
 					className={cn(
@@ -44,12 +46,13 @@ export default function RHFCheckbox({
 				>
 					<FormControl>
 						<Checkbox
-							checked={field.value}
+							checked={defaultChecked ?? field.value}
 							onCheckedChange={(checked) => {
 								if (onChange) {
 									onChange(checked as boolean);
+								} else {
+									field.onChange(checked);
 								}
-								field.onChange(checked);
 							}}
 							disabled={disabled}
 							{...other}
