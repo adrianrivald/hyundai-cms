@@ -3,13 +3,11 @@ import { Tabs } from "@/components/custom/tabs/tabs";
 import { TabsContent } from "@/components/custom/tabs/tabs-content";
 import { TabsList } from "@/components/custom/tabs/tabs-list";
 import { TabsTrigger } from "@/components/custom/tabs/tabs-trigger";
-import { Typography } from "@/components/typography";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import ListBanner from "./banner/list";
 import ListTour from "./tour/list";
 import ListFactory from "./factory/list";
 import ListYoutube from "./youtube/list";
-import ListSocialMedia from "./social-media/list";
 
 export default function Homepage() {
 	return (

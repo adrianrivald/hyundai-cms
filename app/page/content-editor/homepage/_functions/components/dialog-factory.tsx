@@ -379,7 +379,7 @@ const DialogFactory = ({
 								</div>
 
 								<div
-									className="mt-5 flex-row flex items-center justify-end cursor-pointer gap-1"
+									className="mt-5 flex-row flex items-center justify-start cursor-pointer gap-1"
 									onClick={() => {
 										if (isDisabled) return;
 										let data = methodRoutes.watch("route");
