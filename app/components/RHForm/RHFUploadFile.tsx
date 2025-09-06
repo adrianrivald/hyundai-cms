@@ -67,7 +67,6 @@ export default function RHFUploadFile({
 			setPreview(data.data.url);
 			onChange(data.data.url);
 		} catch (err) {
-			console.error(err);
 			setError(name, {
 				type: "manual",
 				message: "Gagal mengunggah gambar",
@@ -128,7 +127,7 @@ export default function RHFUploadFile({
 						)}
 						onDragOver={(e) => e.preventDefault()}
 						// @ts-ignore
-						onDrop={(e) => handleDrop(e, (f) => handleFileChange(f, onChange))}
+						onDrop={(e) => handleDrop(e, onChange)}
 					>
 						<input
 							type="file"

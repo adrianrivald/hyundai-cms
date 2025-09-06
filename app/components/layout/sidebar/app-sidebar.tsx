@@ -52,15 +52,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		return item.items?.some(isItemActive) ?? false;
 	};
 
-	const logout = async () => {
-		getLogout().then(() => {
-			Cookies.remove("token");
-			Cookies.remove("info");
-
-			navigate("/login", { replace: true });
-		});
-	};
-
 	return (
 		<Sidebar
 			{...props}
@@ -71,7 +62,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarHeader className={``}>
 				<SidebarMenu
 					className={cn(
-						" px-2 py-2 rounded-lg flex items-center justify-between mt-1",
+						" px-2 py-2 flex items-center justify-between mt-1",
 						!open && "px-0 py-1 "
 					)}
 				>
@@ -82,7 +73,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarHeader>
 			<SidebarContent className="bg-[#f4f8ff] sidebar">
 				<SidebarGroup
-					className={`z-[10] gap-0 h-[120vh] pt-8 ${(state === "expanded" || state === "collapsed") && "w-60"} rounded-tr-[70px] bg-[#0D254D]`}
+					className={`z-[10] gap-0 h-[120vh] pt-8 ${(state === "expanded" || state === "collapsed") && "w-60"} bg-[#0D254D]`}
 				>
 					<SidebarMenu>
 						{SIDEBAR_MENU.map((item, index) => {
@@ -189,7 +180,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				/> */}
 			</SidebarContent>
 			<SidebarFooter className="bg-[#0D254D] pl-5">
-				<SidebarMenuButton
+				{/* <SidebarMenuButton
 					onClick={() => {
 						logout();
 					}}
@@ -197,7 +188,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					tooltip={"Logout"}
 				>
 					<Typography className={cn("text-sm text-white ")}>Logout</Typography>
-				</SidebarMenuButton>
+				</SidebarMenuButton> */}
 			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>

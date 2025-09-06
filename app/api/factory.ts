@@ -14,6 +14,14 @@ export type FactoryType = {
 	name: string;
 	description: string;
 	image_path: string;
+	routes?: {
+		id: number;
+		name: string;
+		description: string;
+		image_path: string;
+		factory_id: string;
+	}[];
+	routes_count?: number;
 };
 
 export async function postFactory(
@@ -106,7 +114,10 @@ export const usePutFactory = (
 
 export const useGetFactories = (
 	search_query: string,
-	options?: QueryObserverOptions<{ data: FactoryType[]; meta: Meta }>
+	options?: QueryObserverOptions<{
+		data: any[] | FactoryType[] | any;
+		meta: Meta;
+	}>
 ) => {
 	return useQuery<{ data: FactoryType[]; meta: Meta }>({
 		queryKey: ["factory-get-all", search_query],
