@@ -75,7 +75,7 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 			image_path: form.image,
 			minimum_participant: form.min_occupy,
 			maximum_participant: form.max_occupy,
-			factories: (form.factory_id || []).map(Number),
+			factories: (form.route_id || []).map((r) => Number(r.factory_id)),
 			routes: (form.route_id || []).map((r) => Number(r.id)),
 		};
 
@@ -111,12 +111,13 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 			methods.reset({
 				id: data?.id,
 				name: data?.name,
+				image: data?.image_path,
 				max_occupy: data?.maximum_participant,
 				min_occupy: data?.minimum_participant,
 				factory_id: data?.factories.map((item) => item.id),
 				route_id: data?.routes?.map((item) => ({
 					id: item.id,
-					factory_id: item.id,
+					factory_id: item.factory_id,
 				})),
 				description: data?.description,
 			});
