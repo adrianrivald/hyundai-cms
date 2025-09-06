@@ -1,89 +1,85 @@
 import CellText from "@/components/layout/table/data-table-cell";
+import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
-
-import type { AlbumTypes } from "@/types/PostTypes";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import type { ColumnDef, Row, Table } from "@tanstack/react-table";
-import { format } from "date-fns";
-import DialogBanner from "../components/dialog-banner";
+import DialogContact from "../components/dialog-faq";
 import { useState } from "react";
-import type { BannerType } from "../models/banner";
+import { useDeleteGlobalVariable } from "@/api/global-variable";
 import DialogDelete from "@/components/custom/dialog/dialog-delete";
-import { useDeleteBanner } from "@/api/banner";
 import { enqueueSnackbar } from "notistack";
+import { useDeleteFaq, type FAQType } from "@/api/faq";
 
-export const dataBannerColumn: ColumnDef<BannerType>[] = [
+export const dataContactColumn: ColumnDef<FAQType>[] = [
 	{
-		accessorKey: "title",
-		header: "Gambar",
+		accessorKey: "no",
+		header: "No",
+		cell: ({ cell, table }) => {
+			//const pageSize = table.getState().pagination.pageSize
+			// const pageIndex = table.getState().pagination.pageIndex
+			const index = cell.row.index + 1; //+ 1 + pageIndex * pageSize
+			return <CellText className="text-left font-light">{index}</CellText>;
+		},
+		meta: {
+			filterComponent: () => {
+				return null;
+			},
+			headerCellProps: {
+				style: {
+					minWidth: 20,
+				},
+			},
+		},
+	},
+	{
+		accessorKey: "question",
+		header: "Question",
 		cell: ({ row }) => (
-			<CellText className="text-left">
-				<img
-					src={row?.original?.image_path || "-"}
-					className="h-[30px] w-[85px] object-cover"
-				/>
-			</CellText>
+			<div>
+				<div>
+					<Typography>{row?.original?.question_id}</Typography>
+				</div>
+				<div className="mt-3">
+					<Typography>{row?.original?.question_en}</Typography>
+				</div>
+			</div>
 		),
 		meta: {
 			cellProps: {
 				style: {
-					minWidth: 120,
-					maxWidth: 125,
+					minWidth: 200,
+					maxWidth: 205,
 				},
 			},
 		},
 	},
 	{
-		accessorKey: "completed",
-		header: "Judul",
-		cell: ({ row }) => <CellText className="">{row.original?.name}</CellText>,
-		meta: {
-			cellProps: {
-				style: {
-					minWidth: 170,
-					maxWidth: 175,
-				},
-			},
-		},
-	},
-	{
-		accessorKey: "title",
-		header: "Deskripsi",
+		accessorKey: "answer",
+		header: "Answer",
 		cell: ({ row }) => (
-			<CellText className="text-left">
-				{row?.original?.description || "-"}
-			</CellText>
+			<div>
+				<div>
+					<Typography>{row?.original?.answer_id}</Typography>
+				</div>
+				<div className="mt-3">
+					<Typography>{row?.original?.answer_en}</Typography>
+				</div>
+			</div>
 		),
 		meta: {
 			cellProps: {
 				style: {
-					minWidth: 170,
-					maxWidth: 175,
+					minWidth: 200,
+					maxWidth: 205,
 				},
 			},
 		},
 	},
-	{
-		accessorKey: "title",
-		header: "Tanggal Terbit",
-		cell: ({ row }) => (
-			<CellText className="text-left">
-				{format(row.original?.published_at, "dd/MM/yyyy")}
-			</CellText>
-		),
-		meta: {
-			cellProps: {
-				style: {
-					minWidth: 100,
-					maxWidth: 105,
-				},
-			},
-		},
-	},
+
 	{
 		accessorKey: "completed",
 		header: "Aksi",
-		cell: ({ row, table }) => <ActionCell row={row} table={table} />,
+		cell: ({ row, table }) => <ActionCell table={table} row={row} />,
 		meta: {
 			cellProps: {
 				style: {
@@ -99,7 +95,7 @@ export const dataBannerColumn: ColumnDef<BannerType>[] = [
 			const [open, setOpen] = useState(false);
 
 			return (
-				<div>
+				<>
 					<Button
 						onClick={() => setOpen(true)}
 						className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
@@ -107,23 +103,22 @@ export const dataBannerColumn: ColumnDef<BannerType>[] = [
 					>
 						Tambah
 					</Button>
-
-					<DialogBanner
+					<DialogContact
 						open={open}
 						onClose={() => setOpen(false)}
 						refetch={() => {
 							table.resetPageIndex();
 						}}
 					/>
-				</div>
+				</>
 			);
 		},
 
 		meta: {
 			headerCellProps: {
 				style: {
-					minWidth: 130,
-					maxWidth: 135,
+					minWidth: 80,
+					maxWidth: 80,
 				},
 			},
 		},
@@ -134,16 +129,16 @@ const ActionCell = ({
 	row,
 	table,
 }: {
-	row: Row<BannerType>;
-	table: Table<BannerType>;
+	row: Row<FAQType>;
+	table: Table<FAQType>;
 }) => {
 	const [openDelete, setOpenDelete] = useState(false);
 	const [openUpdate, setOpenUpdate] = useState(false);
-	const { mutate: mutateDelete } = useDeleteBanner();
+	const { mutate: mutateDelete } = useDeleteFaq();
 
 	const onDelete = () => {
 		mutateDelete(
-			{ id: row.original.id || "" },
+			{ id: String(row.original.id) || "" },
 			{
 				onSuccess: () => {
 					setOpenDelete(false);
@@ -153,10 +148,9 @@ const ActionCell = ({
 					table.resetPageIndex();
 				},
 				onError: () => {
-					enqueueSnackbar("Error: Hapus banner gagal", {
+					enqueueSnackbar("Error: Hapus data gagal", {
 						variant: "error",
 					});
-					table.resetPageIndex();
 				},
 			}
 		);
@@ -190,7 +184,7 @@ const ActionCell = ({
 					onDelete();
 				}}
 			/>
-			<DialogBanner
+			<DialogContact
 				open={openUpdate}
 				onClose={() => setOpenUpdate(false)}
 				refetch={() => {

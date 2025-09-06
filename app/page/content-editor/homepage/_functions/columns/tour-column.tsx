@@ -1,17 +1,30 @@
 import CellText from "@/components/layout/table/data-table-cell";
 import { Button } from "@/components/ui/button";
-
-import type { AlbumTypes } from "@/types/PostTypes";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import type { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
+import type { ColumnDef, Row, Table } from "@tanstack/react-table";
 
-export const dataTourColumn: ColumnDef<AlbumTypes>[] = [
+import DialogTour from "../components/dialog-tour";
+import { useState } from "react";
+import { useDeleteTourPackage, type TourPackageType } from "@/api/tour-package";
+import { Typography } from "@/components/typography";
+import DialogDelete from "@/components/custom/dialog/dialog-delete";
+import { enqueueSnackbar } from "notistack";
+
+export const dataTourColumn: ColumnDef<TourPackageType>[] = [
 	{
 		accessorKey: "title",
 		header: "Gambar",
 		cell: ({ row }) => (
-			<CellText className="text-left">{row?.original?.title || "-"}</CellText>
+			<CellText className="text-left">
+				{row.original?.image_path ? (
+					<img
+						src={row?.original?.image_path || "-"}
+						className="h-[30px] w-[85px] object-cover"
+					/>
+				) : (
+					"-"
+				)}
+			</CellText>
 		),
 		meta: {
 			cellProps: {
@@ -23,9 +36,9 @@ export const dataTourColumn: ColumnDef<AlbumTypes>[] = [
 		},
 	},
 	{
-		accessorKey: "completed",
+		accessorKey: "name",
 		header: "Nama Tour",
-		cell: ({ row }) => <CellText className="">{row.original?.title}</CellText>,
+		cell: ({ row }) => <CellText className="">{row.original?.name}</CellText>,
 		meta: {
 			cellProps: {
 				style: {
@@ -36,10 +49,12 @@ export const dataTourColumn: ColumnDef<AlbumTypes>[] = [
 		},
 	},
 	{
-		accessorKey: "title",
+		accessorKey: "description",
 		header: "Deskripsi",
 		cell: ({ row }) => (
-			<CellText className="text-left">{row?.original?.title || "-"}</CellText>
+			<CellText className="text-left">
+				{row?.original?.description || "-"}
+			</CellText>
 		),
 		meta: {
 			cellProps: {
@@ -51,9 +66,13 @@ export const dataTourColumn: ColumnDef<AlbumTypes>[] = [
 		},
 	},
 	{
-		accessorKey: "title",
+		accessorKey: "participant",
 		header: "Peserta",
-		cell: ({ row }) => <CellText className="text-left">10 - 40</CellText>,
+		cell: ({ row }) => (
+			<CellText className="text-left">
+				{row.original.minimum_participant} - {row.original.maximum_participant}
+			</CellText>
+		),
 		meta: {
 			cellProps: {
 				style: {
@@ -64,9 +83,15 @@ export const dataTourColumn: ColumnDef<AlbumTypes>[] = [
 		},
 	},
 	{
-		accessorKey: "title",
+		accessorKey: "factories",
 		header: "Pabrik",
-		cell: ({ row }) => <CellText className="text-left">HMMI</CellText>,
+		cell: ({ row }) => (
+			<CellText className="text-left line-clamp-none">
+				{row.original.factories.map((item, index) => {
+					return <Typography key={index}>- {item.name}</Typography>;
+				})}
+			</CellText>
+		),
 		meta: {
 			cellProps: {
 				style: {
@@ -77,9 +102,11 @@ export const dataTourColumn: ColumnDef<AlbumTypes>[] = [
 		},
 	},
 	{
-		accessorKey: "title",
+		accessorKey: "routes",
 		header: "Jml Rute",
-		cell: ({ row }) => <CellText className="text-left">5</CellText>,
+		cell: ({ row }) => (
+			<CellText className="text-left">{row.original.routes.length}</CellText>
+		),
 		meta: {
 			cellProps: {
 				style: {
@@ -92,21 +119,7 @@ export const dataTourColumn: ColumnDef<AlbumTypes>[] = [
 	{
 		accessorKey: "completed",
 		header: "Aksi",
-		cell: ({ row }) => (
-			<div className="flex gap-2">
-				<div className="cursor-pointer">
-					<Icon
-						icon="basil:edit-outline"
-						width="24"
-						height="24"
-						color="#153263"
-					/>
-				</div>
-				<div className="cursor-pointer">
-					<Icon icon="mage:trash" width="24" height="24" color="#FF3B30" />
-				</div>
-			</div>
-		),
+		cell: ({ row, table }) => <ActionCell row={row} table={table} />,
 		meta: {
 			cellProps: {
 				style: {
@@ -118,14 +131,23 @@ export const dataTourColumn: ColumnDef<AlbumTypes>[] = [
 	},
 	{
 		accessorKey: "ACTION_BUTTON",
-		header: () => {
+		header: ({ table }) => {
+			const [open, setOpen] = useState(false);
 			return (
-				<Button
-					className="bg-amber-500 hover:bg-amber-600 my-2"
-					startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
-				>
-					Tambah
-				</Button>
+				<div>
+					<Button
+						onClick={() => setOpen(true)}
+						className="bg-amber-500 hover:bg-amber-600 my-2"
+						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
+					>
+						Tambah
+					</Button>
+					<DialogTour
+						open={open}
+						onClose={() => setOpen(false)}
+						refetch={() => table.resetPageIndex()}
+					/>
+				</div>
 			);
 		},
 
@@ -139,3 +161,74 @@ export const dataTourColumn: ColumnDef<AlbumTypes>[] = [
 		},
 	},
 ];
+
+const ActionCell = ({
+	row,
+	table,
+}: {
+	row: Row<TourPackageType>;
+	table: Table<TourPackageType>;
+}) => {
+	const [openDelete, setOpenDelete] = useState(false);
+	const [openUpdate, setOpenUpdate] = useState(false);
+	const { mutate: mutateDelete } = useDeleteTourPackage();
+
+	const onDelete = () => {
+		mutateDelete(
+			{ id: row.original.id || "" },
+			{
+				onSuccess: () => {
+					setOpenDelete(false);
+					enqueueSnackbar("Data telah dihapus", {
+						variant: "success",
+					});
+					table.resetPageIndex();
+				},
+				onError: () => {
+					enqueueSnackbar("Error: Hapus banner gagal", {
+						variant: "error",
+					});
+					table.resetPageIndex();
+				},
+			}
+		);
+	};
+
+	return (
+		<div className="flex gap-2">
+			<div
+				className="cursor-pointer"
+				onClick={() => {
+					setOpenUpdate(true);
+				}}
+			>
+				<Icon
+					icon="basil:edit-outline"
+					width="24"
+					height="24"
+					color="#153263"
+				/>
+			</div>
+			<div className="cursor-pointer" onClick={() => setOpenDelete(true)}>
+				<Icon icon="mage:trash" width="24" height="24" color="#FF3B30" />
+			</div>
+
+			<DialogDelete
+				open={openDelete}
+				onClose={() => {
+					setOpenDelete(false);
+				}}
+				onSubmit={() => {
+					onDelete();
+				}}
+			/>
+
+			<DialogTour
+				open={openUpdate}
+				onClose={() => setOpenUpdate(false)}
+				refetch={() => table.resetPageIndex()}
+				data={row.original}
+			/>
+		</div>
+	);
+};

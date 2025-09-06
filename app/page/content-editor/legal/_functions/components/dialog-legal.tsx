@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import { QuillEditor } from "@/components/RHForm/RHFQuillEditor";
 import { Typography } from "@/components/typography";
 import { cn } from "@/lib/utils";
-import { LegalContentSchema, type LegalContentType } from "../models/legal";
+import { type LegalContentType } from "../models/legal";
 
 interface DialogSocialMediaProps {
 	open: boolean;

@@ -143,11 +143,11 @@ export const SIDEBAR_MENU: Items[] = [
 		items: [],
 		authorized: ["all"],
 	},
-	{
-		id: "7",
-		title: "Logout",
-		url: "/dashboard",
-		items: [],
-		authorized: ["all"],
-	},
+	// {
+	// 	id: "7",
+	// 	title: "Logout",
+	// 	url: "/dashboard",
+	// 	items: [],
+	// 	authorized: ["all"],
+	// },
 ];
