@@ -49,14 +49,19 @@ const DialogUser = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 
 	const onSubmit = () => {
 		const form = methods.watch();
-		const dataForm: PostUserType = {
+		const rawForm: PostUserType = {
 			id: data?.id,
 			name: form.name || "",
 			email: form.email || "",
-			role: Number(form.role),
+			role: form.role ? Number(form.role) : 0,
 			password: form.password || "",
 		};
+
+		const dataForm: Partial<PostUserType> = Object.fromEntries(
+			Object.entries(rawForm).filter(([_, value]) => value !== "")
+		);
 		if (data?.id) {
+			// @ts-ignore
 			mutateEdit(dataForm, {
 				onSuccess: () => {
 					onClose();
@@ -74,6 +79,7 @@ const DialogUser = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 				},
 			});
 		} else {
+			// @ts-ignore
 			mutatePost(dataForm, {
 				onSuccess: () => {
 					onClose();
