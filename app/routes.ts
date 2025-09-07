@@ -37,7 +37,18 @@ export default [
 				"social-media",
 				"./routes/guard-route/content-editor/social-media.tsx"
 			),
-			route("article", "./routes/guard-route/content-editor/article.tsx"),
+			...prefix("article", [
+				route("/", "./routes/guard-route/content-editor/article/index.tsx"),
+				route(
+					"create",
+					"./routes/guard-route/content-editor/article/create.tsx"
+				),
+				route(
+					"update/:id",
+					"./routes/guard-route/content-editor/article/update.$id.tsx"
+				),
+			]),
+
 			route("contact", "./routes/guard-route/content-editor/contact.tsx"),
 			route("about-us", "./routes/guard-route/content-editor/about-us.tsx"),
 			route("faq", "./routes/guard-route/content-editor/faq.tsx"),

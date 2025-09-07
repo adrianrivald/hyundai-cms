@@ -1,19 +1,19 @@
+import type { ArticleType } from "@/api/article";
 import CellText from "@/components/layout/table/data-table-cell";
-import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
-import type { AlbumTypes } from "@/types/PostTypes";
+import { cn } from "@/lib/utils";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import type { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 
-export const dataArticleList: ColumnDef<AlbumTypes>[] = [
+export const dataArticleList: ColumnDef<ArticleType>[] = [
 	{
 		accessorKey: "no",
 		header: "No",
 		cell: ({ cell, table }) => {
-			//const pageSize = table.getState().pagination.pageSize
-			// const pageIndex = table.getState().pagination.pageIndex
-			const index = cell.row.index + 1; //+ 1 + pageIndex * pageSize
+			const pageSize = 10;
+			const pageIndex = table.getState().pagination.pageIndex;
+			const index = cell.row.index + 1 + pageIndex * pageSize;
 			return <CellText className="text-left font-light">{index}</CellText>;
 		},
 		meta: {
@@ -28,10 +28,15 @@ export const dataArticleList: ColumnDef<AlbumTypes>[] = [
 		},
 	},
 	{
-		accessorKey: "title",
+		accessorKey: "image_path",
 		header: "Gambar",
 		cell: ({ row }) => (
-			<CellText className="text-left">{row?.original?.title || "-"}</CellText>
+			<CellText className="text-left">
+				<img
+					src={row?.original?.image_path || "-"}
+					className="h-[30px] w-[85px] object-cover"
+				/>
+			</CellText>
 		),
 		meta: {
 			cellProps: {
@@ -43,48 +48,64 @@ export const dataArticleList: ColumnDef<AlbumTypes>[] = [
 		},
 	},
 	{
-		accessorKey: "completed",
+		accessorKey: "name",
 		header: "Judul",
-		cell: ({ row }) => <CellText className="">{row.original?.title}</CellText>,
-		meta: {
-			cellProps: {
-				style: {
-					minWidth: 210,
-					maxWidth: 210,
-				},
-			},
-		},
-	},
-	{
-		accessorKey: "completed",
-		header: "Konten",
-		cell: ({ row }) => <CellText className="">{row.original?.title}</CellText>,
+		cell: ({ row }) => <CellText className="">{row.original?.name}</CellText>,
 		meta: {
 			cellProps: {
 				style: {
 					minWidth: 240,
-					maxWidth: 240,
+					maxWidth: 245,
 				},
 			},
 		},
 	},
 	{
-		accessorKey: "completed",
-		header: "Status",
-		cell: ({ row }) => <CellText className="">{row.original?.title}</CellText>,
+		accessorKey: "blurb",
+		header: "Konten",
+		cell: ({ row }) => (
+			<CellText className="">
+				<div dangerouslySetInnerHTML={{ __html: row.original?.blurb || "" }} />
+			</CellText>
+		),
 		meta: {
 			cellProps: {
 				style: {
-					minWidth: 120,
-					maxWidth: 120,
+					minWidth: 240,
+					maxWidth: 245,
 				},
 			},
 		},
 	},
 	{
-		accessorKey: "completed",
+		accessorKey: "status",
+		header: "Status",
+		cell: ({ row }) => (
+			<CellText
+				color={row.original.status == "draft" ? "red-500" : "white"}
+				className={cn(
+					"text-center rounded-sm font-bold text-sm px-2",
+					row.original.status == "draft" &&
+						"border-[1px] border-[#FF3B30] text-red-500",
+					row.original.status === "published" && "bg-[#00A30E]"
+				)}
+			>
+				{row.original?.status === "draft" ? "Draft" : "Published"}
+			</CellText>
+		),
+		meta: {
+			cellProps: {
+				style: {
+					minWidth: 140,
+					maxWidth: 140,
+				},
+			},
+		},
+	},
+	{
+		accessorKey: "author",
 		header: "Author",
-		cell: ({ row }) => <CellText className="">Admin</CellText>,
+		cell: ({ row }) => <CellText className="">{row.original?.author}</CellText>,
 		meta: {
 			cellProps: {
 				style: {
@@ -98,13 +119,18 @@ export const dataArticleList: ColumnDef<AlbumTypes>[] = [
 		accessorKey: "completed",
 		header: "Tanggal Terbit",
 		cell: ({ row }) => (
-			<CellText className="">{format(new Date(), "dd/MM/yyyy")}</CellText>
+			<CellText className="">
+				{row.original.published_at &&
+				isValid(new Date(row.original.published_at))
+					? format(row.original.published_at, "dd/MM/yyyy")
+					: "-"}
+			</CellText>
 		),
 		meta: {
 			cellProps: {
 				style: {
-					minWidth: 140,
-					maxWidth: 140,
+					minWidth: 150,
+					maxWidth: 155,
 				},
 			},
 		},
@@ -112,6 +138,7 @@ export const dataArticleList: ColumnDef<AlbumTypes>[] = [
 	{
 		accessorKey: "completed",
 		header: "Aksi",
+
 		cell: ({ row }) => (
 			<div className="flex gap-2">
 				<div className="cursor-pointer">
@@ -130,7 +157,7 @@ export const dataArticleList: ColumnDef<AlbumTypes>[] = [
 		meta: {
 			cellProps: {
 				style: {
-					minWidth: 80,
+					minWidth: 100,
 				},
 			},
 		},
@@ -140,14 +167,14 @@ export const dataArticleList: ColumnDef<AlbumTypes>[] = [
 		header: () => {
 			return (
 				<Button
-					className="bg-amber-500 hover:bg-amber-600 my-2"
+					className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 					startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 				>
 					Tambah
 				</Button>
 			);
 		},
-
+		minSize: 130,
 		meta: {
 			headerCellProps: {
 				style: {

@@ -51,12 +51,12 @@ function LeftSidePagination({
 }: LeftSidePaginationProps) {
 	return (
 		<div className="flex flex-row items-baseline space-x-[10px]">
-			<p className="text-sm">Show</p>
+			{/* <p className="text-sm">Show</p>
 			<PageSizeOptions
 				pageSizeOptions={pageSizeOptions}
 				setPageSize={setPageSize}
 				pageSize={pageSize}
-			/>
+			/> */}
 			<p className="text-sm">
 				{`Entries. Showing ${rowsLength} of ${totalItems} data `}
 			</p>
