@@ -72,11 +72,23 @@
         "file": "./routes/guard-route/content-editor/social-media.tsx",
         "path": "content-editor/social-media"
       },
-      "routes/guard-route/content-editor/article": {
-        "id": "routes/guard-route/content-editor/article",
+      "routes/guard-route/content-editor/article/index": {
+        "id": "routes/guard-route/content-editor/article/index",
         "parentId": "routes/__layout/__auth.layout",
-        "file": "./routes/guard-route/content-editor/article.tsx",
-        "path": "content-editor/article"
+        "file": "./routes/guard-route/content-editor/article/index.tsx",
+        "path": "content-editor/article/"
+      },
+      "routes/guard-route/content-editor/article/create": {
+        "id": "routes/guard-route/content-editor/article/create",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/article/create.tsx",
+        "path": "content-editor/article/create"
+      },
+      "routes/guard-route/content-editor/article/update.$id": {
+        "id": "routes/guard-route/content-editor/article/update.$id",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/article/update.$id.tsx",
+        "path": "content-editor/article/update/:id"
       },
       "routes/guard-route/content-editor/contact": {
         "id": "routes/guard-route/content-editor/contact",
@@ -224,11 +236,23 @@
         "file": "./routes/guard-route/content-editor/social-media.tsx",
         "path": "content-editor/social-media"
       },
-      "routes/guard-route/content-editor/article": {
-        "id": "routes/guard-route/content-editor/article",
+      "routes/guard-route/content-editor/article/index": {
+        "id": "routes/guard-route/content-editor/article/index",
         "parentId": "routes/__layout/__auth.layout",
-        "file": "./routes/guard-route/content-editor/article.tsx",
-        "path": "content-editor/article"
+        "file": "./routes/guard-route/content-editor/article/index.tsx",
+        "path": "content-editor/article/"
+      },
+      "routes/guard-route/content-editor/article/create": {
+        "id": "routes/guard-route/content-editor/article/create",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/article/create.tsx",
+        "path": "content-editor/article/create"
+      },
+      "routes/guard-route/content-editor/article/update.$id": {
+        "id": "routes/guard-route/content-editor/article/update.$id",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/article/update.$id.tsx",
+        "path": "content-editor/article/update/:id"
       },
       "routes/guard-route/content-editor/contact": {
         "id": "routes/guard-route/content-editor/contact",

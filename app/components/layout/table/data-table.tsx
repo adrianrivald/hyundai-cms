@@ -34,7 +34,7 @@ export function DataTable<T extends RowData>({
 }: Props<T>) {
 	return (
 		<div className="">
-			<Table className="">
+			<Table className="w-full">
 				<DataTableHead headerGroups={table.getHeaderGroups()} />
 				<DataTableBody table={table} onRowClick={onRowClick} />
 			</Table>
