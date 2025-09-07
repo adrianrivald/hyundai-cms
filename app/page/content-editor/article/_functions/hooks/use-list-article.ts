@@ -3,55 +3,48 @@ import { useTableConfig } from "@/hooks/use-table-config";
 import { useTableState } from "@/hooks/use-table-state";
 import type { AlbumTypes } from "@/types/PostTypes";
 import { dataArticleList } from "../columns/article-column";
-import { convertPagination } from "@/lib/convertPagination";
+import { convertPagination, type Meta } from "@/lib/convertPagination";
+import { useGetArticles } from "@/api/article";
+import { useTableFilter } from "@/hooks/use-table-filter";
+import { useEffect } from "react";
 
 export function useListArticle() {
 	const tableState = useTableState({});
 
-	const { data, refetch } = useTodosList({
-		queryKey: ["article-list"],
+	const { PageNumber, setTableState } = useTableFilter();
+
+	useEffect(() => {
+		setTableState({
+			PageSize: tableState.pagination.pageSize,
+			PageNumber: tableState.pagination.pageIndex + 1,
+			SearchValue: tableState.searchValue,
+		});
+	}, [
+		tableState.sorting,
+		tableState.pagination,
+		tableState.searchValue,
+		setTableState,
+	]);
+
+	const { data, refetch } = useGetArticles("", PageNumber, {
+		queryKey: ["article-get-all", PageNumber],
 		staleTime: 5 * 60 * 1000,
 	});
 
-	const meta = {
-		current_page: 1,
-		from: 1,
-		last_page: 4,
-		links: [
-			{
-				url: null,
-				label: "&laquo; Previous",
-				active: false,
-			},
-			{
-				url: "http://hmmi-api.test/api/admin/articles?page=1",
-				label: "1",
-				active: true,
-			},
-			{
-				url: null,
-				label: "Next &raquo;",
-				active: false,
-			},
-		],
-		path: "http://hmmi-api.test/api/admin/articles",
-		per_page: 10,
-		to: 10,
-		total: 10,
-	};
+	console.log("dataa", PageNumber);
 
 	const table = useTableConfig({
-		data: (data?.slice(0, 10) as [] as AlbumTypes[]) ?? [],
+		data: data?.data ?? [],
 		columns: dataArticleList,
 		tableState,
-		pageCount: convertPagination(meta).totalPages,
-		meta: convertPagination(meta),
+		pageCount: convertPagination(data?.meta || ({} as Meta)).totalPages,
+		meta: convertPagination(data?.meta || ({} as Meta)),
 	});
 
 	return {
 		table,
 		data,
 		refetch,
-		metadata: convertPagination(meta),
+		metadata: convertPagination(data?.meta || ({} as Meta)),
 	};
 }

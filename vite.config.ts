@@ -8,4 +8,12 @@ export default defineConfig({
 	optimizeDeps: {
 		include: ["react-big-calendar/lib/addons/dragAndDrop"],
 	},
+	build: {
+		chunkSizeWarningLimit: 2000,
+		// rollupOptions: {
+		// 	output: {
+		// 		c
+		// 	}
+		// }
+	},
 });

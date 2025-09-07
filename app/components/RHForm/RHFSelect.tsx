@@ -84,7 +84,7 @@ export default function RHFSelect<T>({
 								>
 									<SelectValue placeholder={placeholder} />
 								</SelectTrigger>
-								<SelectContent className="h-[250px]">
+								<SelectContent className="">
 									{options.map((option) => {
 										const value = getOptionValue(option);
 										const label = getOptionLabel(option);
