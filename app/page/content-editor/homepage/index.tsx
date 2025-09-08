@@ -46,8 +46,10 @@ export default function Homepage() {
 			</Tabs>
 
 			<Tabs defaultValue="youtube" className={"mt-5"}>
-				<TabsList className="w-[calc(100%/3)]">
-					<TabsTrigger value="youtube">YouTube Section</TabsTrigger>
+				<TabsList className="w-[calc(100%/3)] ">
+					<TabsTrigger value="youtube" className="cursor-default">
+						YouTube Section
+					</TabsTrigger>
 				</TabsList>
 				<TabsContent value="youtube">
 					<ListYoutube />
