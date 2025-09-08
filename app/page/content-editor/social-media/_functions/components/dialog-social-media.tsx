@@ -177,7 +177,7 @@ const DialogSocialMedia = ({
 								<RHFTextField
 									name="link"
 									label="Social Media Link"
-									placeholder="Masukan link video"
+									placeholder="Masukan social media link"
 									autoFocus={false}
 									required
 								/>

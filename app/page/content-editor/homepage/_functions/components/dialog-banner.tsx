@@ -143,8 +143,10 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 									onChange={(date) => {
 										if (date) {
 											methods.setValue("date", date.toISOString());
+											methods.clearErrors("date");
 										}
 									}}
+									minDate={new Date()}
 								/>
 							</Grid>
 							<Grid item xs={12}>
