@@ -15,12 +15,13 @@ export type ArticleType = {
 	id: number;
 	author: string;
 	name: string;
-	blurb: null;
+	blurb: string;
 	image_path: string;
-	status: string;
-	published_at: string;
-	is_active: number;
-	created_at: string;
+	content?: string;
+	status?: string;
+	published_at?: string;
+	is_active?: number;
+	created_at?: string;
 };
 
 export type PostArticleType = {
@@ -46,7 +47,7 @@ export async function putArticle(
 export async function getArticle(id: string): Promise<ArticleType> {
 	const response = await apiConfig.get(`admin/articles/${id}`);
 
-	return response.data;
+	return response.data.data;
 }
 
 export async function getArticles(

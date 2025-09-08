@@ -13,9 +13,10 @@ const CellText = ({ color = "black", children, className }: CellTextProps) => {
 			className={cn(
 				"text-[14px] text-left py-2 overflow-hidden text-ellipsis font-light",
 				"line-clamp-2",
+				`text-${color}`,
 				className
 			)}
-			style={{ color }}
+			//style={{ color }}
 		>
 			{children}
 		</div>
