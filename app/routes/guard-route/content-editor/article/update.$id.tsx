@@ -1,7 +1,6 @@
-import ArticlePage from "@/page/content-editor/article";
-
 import PageAuthorization from "@/components/page-authorization";
 import type { Route } from "./+types";
+import ArticleUpdatePage from "@/page/content-editor/article/update";
 
 export function meta({}: Route.MetaArgs) {
 	return [{ title: "Update Article | Hyundai Factory Tour" }];
@@ -10,7 +9,7 @@ export function meta({}: Route.MetaArgs) {
 export default function UpdateContentEditorArticle() {
 	return (
 		<PageAuthorization>
-			<ArticlePage />
+			<ArticleUpdatePage />
 		</PageAuthorization>
 	);
 }

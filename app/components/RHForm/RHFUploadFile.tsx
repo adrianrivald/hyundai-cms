@@ -31,7 +31,7 @@ export default function RHFUploadFile({
 	...other
 }: RHFUploadFileProps) {
 	const { control, setError, getValues } = useFormContext();
-	const [preview, setPreview] = useState<string | null>("" ?? null);
+	const [preview, setPreview] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);
 	const token = useToken();
 
@@ -39,7 +39,7 @@ export default function RHFUploadFile({
 		if (getValues(name)) {
 			setPreview(getValues(name));
 		}
-	}, []);
+	}, [getValues(name)]);
 
 	const uploadFile = async (
 		file: File,

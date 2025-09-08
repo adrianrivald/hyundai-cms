@@ -1,10 +1,16 @@
-import type { ArticleType } from "@/api/article";
+import { useDeleteArticle, type ArticleType } from "@/api/article";
+import DialogDelete from "@/components/custom/dialog/dialog-delete";
+import DialogDetailArticle from "@/components/custom/dialog/dialog-detail-article";
 import CellText from "@/components/layout/table/data-table-cell";
+import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, Row, Table } from "@tanstack/react-table";
 import { format, isValid } from "date-fns";
+import { enqueueSnackbar } from "notistack";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export const dataArticleList: ColumnDef<ArticleType>[] = [
 	{
@@ -136,24 +142,10 @@ export const dataArticleList: ColumnDef<ArticleType>[] = [
 		},
 	},
 	{
-		accessorKey: "completed",
+		accessorKey: "action",
 		header: "Aksi",
 
-		cell: ({ row }) => (
-			<div className="flex gap-2">
-				<div className="cursor-pointer">
-					<Icon
-						icon="basil:edit-outline"
-						width="24"
-						height="24"
-						color="#153263"
-					/>
-				</div>
-				<div className="cursor-pointer">
-					<Icon icon="mage:trash" width="24" height="24" color="#FF3B30" />
-				</div>
-			</div>
-		),
+		cell: ({ row, table }) => <ActionCell row={row} table={table} />,
 		meta: {
 			cellProps: {
 				style: {
@@ -165,13 +157,38 @@ export const dataArticleList: ColumnDef<ArticleType>[] = [
 	{
 		accessorKey: "ACTION_BUTTON",
 		header: () => {
+			const navigate = useNavigate();
 			return (
 				<Button
+					onClick={() => {
+						navigate("/content-editor/article/create");
+					}}
 					className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 					startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 				>
 					Tambah
 				</Button>
+			);
+		},
+		cell: ({ row }) => {
+			const [openDetail, setOpenDetail] = useState(false);
+			return (
+				<div className="flex gap-2">
+					<Typography
+						className="text-blue-500 underline cursor-pointer"
+						onClick={() => {
+							setOpenDetail(true);
+						}}
+					>
+						Lihat Detail
+					</Typography>
+
+					<DialogDetailArticle
+						open={openDetail}
+						onClose={() => setOpenDetail(false)}
+						data={row.original}
+					/>
+				</div>
 			);
 		},
 		minSize: 130,
@@ -184,3 +201,74 @@ export const dataArticleList: ColumnDef<ArticleType>[] = [
 		},
 	},
 ];
+
+const ActionCell = ({
+	row,
+	table,
+}: {
+	row: Row<ArticleType>;
+	table: Table<ArticleType>;
+}) => {
+	const [openDelete, setOpenDelete] = useState(false);
+	const navigate = useNavigate();
+	const { mutate: mutateDelete } = useDeleteArticle();
+
+	const onDelete = () => {
+		mutateDelete(
+			{ id: String(row.original.id) || "" },
+			{
+				onSuccess: () => {
+					setOpenDelete(false);
+					enqueueSnackbar("Data telah dihapus", {
+						variant: "success",
+					});
+					table.resetPageIndex();
+				},
+				onError: () => {
+					enqueueSnackbar("Error: Hapus banner gagal", {
+						variant: "error",
+					});
+					table.resetPageIndex();
+				},
+			}
+		);
+	};
+
+	return (
+		<div className="flex gap-2">
+			<div
+				className="cursor-pointer"
+				onClick={() => {
+					navigate(`/content-editor/article/update/${row.original.id}`);
+				}}
+			>
+				<Icon
+					icon="basil:edit-outline"
+					width="24"
+					height="24"
+					color="#153263"
+				/>
+			</div>
+			<div className="cursor-pointer" onClick={() => setOpenDelete(true)}>
+				<Icon icon="mage:trash" width="24" height="24" color="#FF3B30" />
+			</div>
+
+			<DialogDelete
+				open={openDelete}
+				onClose={() => {
+					setOpenDelete(false);
+				}}
+				onSubmit={() => {
+					onDelete();
+				}}
+			/>
+
+			{/* <DialogTour
+				open={openUpdate}
+				onClose={() => setOpenUpdate(false)}
+				refetch={() => table.resetPageIndex()}
+				data={row.original}
+			/> */}
+		</div>
+	);
+};
