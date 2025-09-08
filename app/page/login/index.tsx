@@ -25,15 +25,18 @@ const LoginPage = () => {
 			email: "",
 			password: "",
 		},
-		mode: "all",
+		mode: "onSubmit",
 		reValidateMode: "onChange",
 		resolver: yupResolver(
 			yup.object().shape({
-				email: yup.string().required("Email must be filled"),
+				email: yup
+					.string()
+					.required("Email harus di isi")
+					.email("Email tidak valid"),
 				password: yup
 					.string()
-					.min(4, "Password must more than 4 character")
-					.required("Password must be filled"),
+					.min(4, "Password harus lebih dari 4 karakter")
+					.required("Password harus di isi"),
 			})
 		),
 	});

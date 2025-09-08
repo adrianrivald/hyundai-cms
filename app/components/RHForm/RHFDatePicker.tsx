@@ -87,8 +87,6 @@ export default function RHFDatePicker({
 						</PopoverTrigger>
 						<PopoverContent className="p-0" align="start">
 							<Calendar
-								fromDate={minDate}
-								toDate={maxDate}
 								mode="single"
 								selected={field.value}
 								onSelect={(date) => {
@@ -97,7 +95,8 @@ export default function RHFDatePicker({
 										onChange(date);
 									}
 								}}
-								disabled={disabled}
+								//@ts-ignore
+								disabled={{ before: minDate, after: maxDate }}
 								className="w-full rounded-none"
 							/>
 						</PopoverContent>
