@@ -30,5 +30,5 @@ export const useActiveSidebarItem = (): Items | null => {
 	const location = useLocation();
 	const pathname = location.pathname;
 
-	return findActiveItem(SIDEBAR_MENU, pathname);
+	return findActiveItem(SIDEBAR_MENU(), pathname);
 };

@@ -8,7 +8,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function ContentEditorLegal() {
 	return (
-		<PageAuthorization>
+		<PageAuthorization role={["Super", "CMS"]}>
 			<LegalPage />
 		</PageAuthorization>
 	);
