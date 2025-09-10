@@ -49,6 +49,10 @@ export default [
 				),
 			]),
 
+			route(
+				"setting-visit",
+				"./routes/guard-route/content-editor/setting-visit.tsx"
+			),
 			route("contact", "./routes/guard-route/content-editor/contact.tsx"),
 			route("about-us", "./routes/guard-route/content-editor/about-us.tsx"),
 			route("faq", "./routes/guard-route/content-editor/faq.tsx"),
