@@ -103,7 +103,7 @@ export default function CalendarPage() {
 				selectable
 				onNavigate={(date) => setCurrentDate(date)}
 				//enableAutoScroll={true}
-				style={{ height: "85vh" }}
+				style={{ height: "95vh" }}
 				date={currentDate}
 				dayPropGetter={highlightWeekendAndCustomDays}
 				components={{
