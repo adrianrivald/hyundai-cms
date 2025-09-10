@@ -1,20 +1,25 @@
+import type { PublicHolidayType } from "@/api/public-holiday";
 import { type Event } from "react-big-calendar";
 
 export const CustomDateCellWrapper =
-	(events: Event[], currentMonth: Date) =>
+	(currentMonth: Date, holiday: PublicHolidayType[]) =>
 	({ value, children }: { value: Date; children: React.ReactNode }) => {
-		// const isSameDate = (a: Date, b: Date) =>
-		// 	a.getFullYear() === b.getFullYear() &&
-		// 	a.getMonth() === b.getMonth() &&
-		// 	a.getDate() === b.getDate();
+		const isSameDate = (a: Date, b: Date) => {
+			return (
+				a.getFullYear() === b.getFullYear() &&
+				a.getMonth() === b.getMonth() &&
+				a.getDate() === b.getDate()
+			);
+		};
+
 		const isWeekend = value.getDay() === 0 || value.getDay() === 6;
 		const isOutsideMonth = value.getMonth() !== currentMonth.getMonth();
 
-		// const isCustomWeekend = customWeekendDates.some((d) =>
-		// 	isSameDate(d, value)
-		// );
+		const isCustomWeekend = holiday
+			.map((item) => new Date(item.start_date))
+			.some((d) => isSameDate(d, value));
 
-		const isSpecialDay = isWeekend; //|| isCustomWeekend;
+		const isSpecialDay = isWeekend || isCustomWeekend;
 
 		return (
 			<div
@@ -30,7 +35,6 @@ export const CustomDateCellWrapper =
 					padding: 2,
 				}}
 			>
-				{/* Date number */}
 				<div
 					className={`relative top-1 text-center left-1 text-xs font-semibold z-10 ${
 						isSpecialDay ? "text-red-500" : "text-gray-800"
@@ -40,7 +44,7 @@ export const CustomDateCellWrapper =
 				</div>
 
 				{/* Events passed through children (still rendered by RBC) */}
-				<div className="pt-4">{children}</div>
+				<div className="">{children}</div>
 			</div>
 		);
 	};
