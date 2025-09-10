@@ -16,6 +16,13 @@ export const SIDEBAR_MENU: Items[] = [
 		authorized: ["all"],
 	},
 	{
+		id: "2",
+		title: "Calendar",
+		url: "/calendar",
+		items: [],
+		authorized: ["all"],
+	},
+	{
 		id: "4",
 		title: "Content Editor",
 		url: "/content-editor",
@@ -36,7 +43,7 @@ export const SIDEBAR_MENU: Items[] = [
 			},
 			{
 				id: "3",
-				title: "Artikel",
+				title: "Article",
 				url: "/content-editor/article",
 				items: [],
 				authorized: ["all"],
@@ -86,13 +93,7 @@ export const SIDEBAR_MENU: Items[] = [
 		],
 		authorized: ["all"],
 	},
-	{
-		id: "2",
-		title: "Calendar",
-		url: "/calendar",
-		items: [],
-		authorized: ["all"],
-	},
+
 	{
 		id: "3",
 		title: "Report",

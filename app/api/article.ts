@@ -1,7 +1,6 @@
 import apiConfig from "@/config/api";
 import type { Meta } from "@/lib/convertPagination";
 import { queryClient } from "@/lib/queryClient";
-import type { BannerType } from "@/page/content-editor/homepage/_functions/models/banner";
 
 import {
 	useMutation,

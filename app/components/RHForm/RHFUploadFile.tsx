@@ -131,7 +131,7 @@ export default function RHFUploadFile({
 					>
 						<input
 							type="file"
-							accept="image/*"
+							accept="image/jpeg, image/png"
 							hidden
 							id={name}
 							onChange={(e) => {

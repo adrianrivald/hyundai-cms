@@ -294,23 +294,24 @@ const DialogFactory = ({
 										disabled={isDisabled}
 									/>
 								</Grid>
-
-								<Grid item xs={12} className="flex justify-end">
-									<Button
-										loading={pendingEdit || pendingPost}
-										disabled={isDisabled}
-										onClick={() => {
-											methods.trigger().then((isValid) => {
-												if (isValid) {
-													onSubmit();
-												}
-											});
-										}}
-									>
-										{/* {data?.id ? "Ubah" : "Tambahkan"} */}
-										Selanjutnya
-									</Button>
-								</Grid>
+								{!isDisabled && (
+									<Grid item xs={12} className="flex justify-end">
+										<Button
+											loading={pendingEdit || pendingPost}
+											disabled={isDisabled}
+											onClick={() => {
+												methods.trigger().then((isValid) => {
+													if (isValid) {
+														onSubmit();
+													}
+												});
+											}}
+										>
+											{/* {data?.id ? "Ubah" : "Tambahkan"} */}
+											Selanjutnya
+										</Button>
+									</Grid>
+								)}
 							</Grid>
 						)}
 
@@ -329,7 +330,10 @@ const DialogFactory = ({
 												</Typography>
 												{item.id && (
 													<div
-														className="cursor-pointer"
+														className={cn(
+															`cursor-pointer`,
+															isDisabled ? "hidden" : "block"
+														)}
 														onClick={() => {
 															if (isDisabled) return;
 															setDeleteRoute({
@@ -377,36 +381,40 @@ const DialogFactory = ({
 										</Grid>
 									))}
 								</div>
-
-								<div
-									className="mt-5 flex-row flex items-center justify-start cursor-pointer gap-1"
-									onClick={() => {
-										if (isDisabled) return;
-										let data = methodRoutes.watch("route");
-										methodRoutes.setValue("route", [
-											...(data || []),
-											{ route_name: "", description: "", image: "", id: "" },
-										]);
-									}}
-								>
-									<Icon icon="ic:outline-plus" width="24" height="24" />
-									<Typography className="font-bold">Tambah Rute</Typography>
-								</div>
-								<div className="flex justify-end mt-3">
-									<Button
-										loading={pendingRoutes}
-										disabled={isDisabled}
+								{!isDisabled && (
+									<div
+										className="mt-5 flex-row flex items-center justify-start cursor-pointer gap-1"
 										onClick={() => {
-											methodRoutes.trigger().then((isValid) => {
-												if (isValid) {
-													onSubmitRoute();
-												}
-											});
+											if (isDisabled) return;
+											let data = methodRoutes.watch("route");
+											methodRoutes.setValue("route", [
+												...(data || []),
+												{ route_name: "", description: "", image: "", id: "" },
+											]);
 										}}
 									>
-										Simpan
-									</Button>
-								</div>
+										<Icon icon="ic:outline-plus" width="24" height="24" />
+										<Typography className="font-bold">Tambah Rute</Typography>
+									</div>
+								)}
+
+								{!isDisabled && (
+									<div className="flex justify-end mt-3">
+										<Button
+											loading={pendingRoutes}
+											disabled={isDisabled}
+											onClick={() => {
+												methodRoutes.trigger().then((isValid) => {
+													if (isValid) {
+														onSubmitRoute();
+													}
+												});
+											}}
+										>
+											Simpan
+										</Button>
+									</div>
+								)}
 							</FormProvider>
 						)}
 					</FormProvider>

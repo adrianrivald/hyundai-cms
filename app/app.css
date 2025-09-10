@@ -230,7 +230,8 @@ body {
   }
 
   *::-webkit-scrollbar {
-    @apply h-2 w-2;
+    /* /@apply h-[1,5px] w-[1,5px]; */
+    @apply h-2 w-2
   }
 
   *::-webkit-scrollbar-thumb {
