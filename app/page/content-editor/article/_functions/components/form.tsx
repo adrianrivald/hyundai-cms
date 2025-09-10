@@ -78,7 +78,7 @@ const Form = () => {
 						enqueueSnackbar("Data telah diubah", { variant: "success" });
 					},
 					onError: () => {
-						enqueueSnackbar("Error: Ubah tour gagal", { variant: "error" });
+						enqueueSnackbar("Error: Ubah artikel gagal", { variant: "error" });
 					},
 				}
 			);
@@ -90,7 +90,9 @@ const Form = () => {
 					enqueueSnackbar("Data telah ditambahkan", { variant: "success" });
 				},
 				onError: () => {
-					enqueueSnackbar("Error: Pembuatan tour gagal", { variant: "error" });
+					enqueueSnackbar("Error: Pembuatan artikel gagal", {
+						variant: "error",
+					});
 				},
 			});
 		}
@@ -154,6 +156,7 @@ const Form = () => {
 								label="Judul"
 								placeholder="Masukan judul artikel"
 								required
+								maxLength={50}
 							/>
 						</Grid>
 						<Grid item xs={12} md={6}>
@@ -177,6 +180,7 @@ const Form = () => {
 								name="content"
 								control={methods.control}
 								placeholder={"Masukan isi konten"}
+								maxWords={500}
 							/>
 						</Grid>
 					</Grid>
