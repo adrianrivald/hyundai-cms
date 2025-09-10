@@ -76,6 +76,13 @@ export const SIDEBAR_MENU: Items[] = [
 				items: [],
 				authorized: ["all"],
 			},
+			{
+				id: "6",
+				title: "Setting Kunjungan",
+				url: "/content-editor/setting-visit",
+				items: [],
+				authorized: ["all"],
+			},
 		],
 		authorized: ["all"],
 	},
