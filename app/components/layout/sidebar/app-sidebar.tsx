@@ -24,9 +24,6 @@ import { cn } from "@/lib/utils";
 import { SIDEBAR_MENU, type Items } from "./sidebar-config";
 import { Typography } from "../../typography";
 import { useLocation, useNavigate } from "react-router";
-import Cookies from "js-cookie";
-import type { PersonTypes } from "@/types/AuthTypes";
-import { getLogout } from "@/api/auth";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { state, open } = useSidebar();
@@ -90,10 +87,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 											<CollapsibleTrigger asChild>
 												<SidebarMenuButton
 													className={cn(
-														"rounded-none px-4 h-10 ",
+														"rounded-none px-4 h-10 cursor-pointer ",
 														// itemIsActive && 'bg-yellow-300',
 														!open &&
-															"flex items-center group-data-[collapsible=icon]:!w-full cursor-pointer"
+															"flex items-center group-data-[collapsible=icon]:!w-full "
 													)}
 													tooltip={item.title}
 												>
@@ -153,7 +150,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 								>
 									<SidebarMenuButton
 										className={cn(
-											" rounded-none px-4 h-10 group-data-[collapsible=icon]:!w-full  cursor-pointer hover:bg-transparent ",
+											" rounded-none px-4 h-10 group-data-[collapsible=icon]:!w-full  cursor-pointer ",
 											open && "justify-start"
 										)}
 										tooltip={item.title}

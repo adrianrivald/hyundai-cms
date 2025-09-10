@@ -32,7 +32,7 @@ const LoginPage = () => {
 				email: yup
 					.string()
 					.required("Email harus di isi")
-					.email("Email tidak valid"),
+					.matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Email harus valid"),
 				password: yup
 					.string()
 					.min(4, "Password harus lebih dari 4 karakter")

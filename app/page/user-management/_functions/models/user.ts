@@ -11,9 +11,15 @@ export const UserSchema = yup.object({
 
 	email: yup.string().when("id", {
 		is: (val: unknown) => !!val,
-		then: (schema) => schema.optional().nullable().email("Email tidak valid"),
+		then: (schema) =>
+			schema
+				.optional()
+				.nullable()
+				.matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Email harus valid"),
 		otherwise: (schema) =>
-			schema.required("Email harus di isi").email("Email tidak valid"),
+			schema
+				.required("Email harus di isi")
+				.matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Email harus valid"),
 	}),
 
 	role: yup.string().when("id", {

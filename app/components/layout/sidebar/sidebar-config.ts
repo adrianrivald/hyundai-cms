@@ -43,7 +43,7 @@ export const SIDEBAR_MENU: Items[] = [
 			},
 			{
 				id: "3",
-				title: "Artikel",
+				title: "Article",
 				url: "/content-editor/article",
 				items: [],
 				authorized: ["all"],

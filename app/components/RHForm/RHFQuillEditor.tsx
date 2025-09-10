@@ -53,6 +53,7 @@ export const modules = {
 	history: {
 		delay: 500,
 		maxStack: 100,
+
 		userOnly: true,
 	},
 };
@@ -63,15 +64,33 @@ type Props = {
 	name: string;
 	control: any;
 	placeholder: string;
+	maxWords?: number;
 };
 
 export function QuillEditor({
 	name,
 	control,
 	placeholder = "Masukan konten",
+	maxWords,
 }: Props) {
 	const quillRef = useRef<ReactQuill>(null);
 	const token = useToken();
+
+	const handleMaxWords = useCallback(() => {
+		if (!quillRef.current || !maxWords) return;
+
+		const quill = quillRef.current.getEditor();
+		const text = quill.getText().trim();
+		const words = text.split(/\s+/).filter(Boolean);
+
+		if (words.length > maxWords) {
+			const allowed = words.slice(0, maxWords).join(" ");
+
+			// reset editor with allowed words only
+			quill.setText(allowed + " ");
+			quill.setSelection(allowed.length + 1);
+		}
+	}, [maxWords]);
 
 	const uploadFile = async (file: File): Promise<string | null> => {
 		try {
@@ -152,6 +171,14 @@ export function QuillEditor({
 								ref={quillRef}
 								value={field.value}
 								onChange={field.onChange}
+								onChangeSelection={() => {
+									// hook into text-change via editor
+									const editor = quillRef.current?.getEditor();
+									if (editor) {
+										editor.off("text-change", handleMaxWords); // prevent duplicate binding
+										editor.on("text-change", handleMaxWords);
+									}
+								}}
 								modules={customModules}
 								formats={[
 									"header",
@@ -173,6 +200,17 @@ export function QuillEditor({
 							/>
 						</div>
 					</FormControl>
+					{maxWords && (
+						<p className="mt-1 text-xs text-gray-500">
+							{quillRef.current
+								?.getEditor()
+								.getText()
+								.trim()
+								.split(/\s+/)
+								.filter(Boolean).length ?? 0}{" "}
+							/ {maxWords} words
+						</p>
+					)}
 					<FormMessage />
 				</FormItem>
 			)}

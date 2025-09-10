@@ -125,7 +125,7 @@ const DialogContact = ({
 									label="Nomor Telpon 1"
 									placeholder="Masukan Nomor Telfon"
 									autoFocus={false}
-									required
+									required={!isEditMode}
 									type="number"
 								/>
 							</Grid>
@@ -136,7 +136,7 @@ const DialogContact = ({
 									label="Nomor Telpon 2"
 									placeholder="Masukan Nomor Telfon"
 									autoFocus={false}
-									required
+									required={!isEditMode}
 									type="number"
 								/>
 							</Grid>
@@ -147,7 +147,8 @@ const DialogContact = ({
 									label="Alamat Email 1"
 									placeholder="Masukan Alamat Email"
 									autoFocus={false}
-									required
+									required={!isEditMode}
+									type="email"
 								/>
 							</Grid>
 							<Grid item xs={6}>
@@ -157,7 +158,8 @@ const DialogContact = ({
 									label="Alamat Email 2"
 									placeholder="Masukan Alamat Email"
 									autoFocus={false}
-									required
+									required={!isEditMode}
+									type="email"
 								/>
 							</Grid>
 
@@ -168,7 +170,7 @@ const DialogContact = ({
 									label="Alamat"
 									placeholder="Masukan alamat"
 									autoFocus={false}
-									required
+									required={!isEditMode}
 								/>
 							</Grid>
 

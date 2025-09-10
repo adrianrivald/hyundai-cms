@@ -23,7 +23,7 @@ export const ContactSchema = yup.object({
 					.min(11, "Nomor telpon tidak boleh kurang dari 11 karakter"),
 				email: yup
 					.string()
-					.email("Email harus valid")
+					.matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Email harus valid")
 					.required("Email harus di isi"),
 			})
 		)
