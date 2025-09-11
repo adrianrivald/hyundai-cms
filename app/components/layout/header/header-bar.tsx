@@ -89,7 +89,7 @@ export default function HeaderBar() {
 										{user.name}
 									</H4>
 									<H4 className="text-base font-medium text-center">
-										Role Name
+										{user.roles?.[0]?.name || "Unknown"}
 									</H4>
 								</Stack>
 							</Stack>
