@@ -156,7 +156,7 @@ const Form = () => {
 								label="Judul"
 								placeholder="Masukan judul artikel"
 								required
-								maxLength={50}
+								maxLength={80}
 							/>
 						</Grid>
 						<Grid item xs={12} md={6}>
@@ -180,7 +180,7 @@ const Form = () => {
 								name="content"
 								control={methods.control}
 								placeholder={"Masukan isi konten"}
-								maxWords={500}
+								maxWords={1000}
 							/>
 						</Grid>
 					</Grid>

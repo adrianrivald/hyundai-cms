@@ -55,13 +55,13 @@ export const usePostHoliday = (
 	options?: MutationObserverOptions<PublicHolidayType, Error, PublicHolidayType>
 ) => {
 	return useMutation<PublicHolidayType, Error, PublicHolidayType>({
-		mutationKey: ["article-post"],
+		mutationKey: ["holiday-post"],
 		mutationFn: async (data: PublicHolidayType) => {
 			const response = await postHoliday(data);
 			queryClient.removeQueries({
 				predicate: (query) =>
 					typeof query.queryKey[0] === "string" &&
-					query.queryKey[0].startsWith("article-"),
+					query.queryKey[0].startsWith("holiday-"),
 			});
 
 			return response.data;
@@ -135,6 +135,27 @@ export const useGetHoliday = (
 			return response;
 		},
 		placeholderData: (prev) => prev,
+		...options,
+	});
+};
+
+export const useSaveHoliday = (
+	options?: MutationObserverOptions<void, Error, PublicHolidayType[]>
+) => {
+	const postMutation = usePostHoliday();
+	const putMutation = usePutHoliday();
+
+	return useMutation<void, Error, PublicHolidayType[]>({
+		mutationKey: ["holiday-post"],
+		mutationFn: async (routes: PublicHolidayType[]) => {
+			for (const route of routes) {
+				if (!route.id) {
+					await postMutation.mutateAsync(route);
+				} else {
+					await putMutation.mutateAsync(route);
+				}
+			}
+		},
 		...options,
 	});
 };

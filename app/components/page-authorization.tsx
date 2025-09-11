@@ -20,10 +20,10 @@ const PageAuthorization = ({ role, children }: PageAuthorizationProps) => {
 			return;
 		}
 
-		// if (!role?.includes("all") && !role?.includes(userRole)) {
-		// 	navigate("/not-authorized"); // ⬅️ create this page or redirect somewhere safe
-		// 	return;
-		// }
+		if (!role?.includes("all") && !role?.includes(userRole)) {
+			navigate("/not-authorized"); // ⬅️ create this page or redirect somewhere safe
+			return;
+		}
 	}, [token]);
 
 	return <div>{children}</div>;
