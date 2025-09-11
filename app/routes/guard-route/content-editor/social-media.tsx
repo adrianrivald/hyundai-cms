@@ -8,7 +8,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function ContentEditorSocialMedia() {
 	return (
-		<PageAuthorization>
+		<PageAuthorization role={["Super", "CMS"]}>
 			<SocialMediaPage />
 		</PageAuthorization>
 	);

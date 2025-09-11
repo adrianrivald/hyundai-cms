@@ -73,7 +73,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					className={`z-[10] gap-0 h-[120vh] pt-8 ${(state === "expanded" || state === "collapsed") && "w-60"} bg-[#0D254D]`}
 				>
 					<SidebarMenu>
-						{SIDEBAR_MENU.map((item, index) => {
+						{SIDEBAR_MENU().map((item: Items, index: number) => {
 							const itemIsActive = isItemActive(item);
 							if ((item.items?.length || 0) > 0) {
 								return (

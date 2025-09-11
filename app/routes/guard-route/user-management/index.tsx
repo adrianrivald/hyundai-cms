@@ -10,7 +10,7 @@ export const ssr = false;
 
 export default function UserManagement() {
 	return (
-		<PageAuthorization>
+		<PageAuthorization role={["Super"]}>
 			<UserManagementPage />
 		</PageAuthorization>
 	);

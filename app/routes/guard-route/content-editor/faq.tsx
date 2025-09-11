@@ -9,7 +9,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function ContentEditorFaq() {
 	return (
-		<PageAuthorization>
+		<PageAuthorization role={["Super", "CMS"]}>
 			<FAQListPage />
 		</PageAuthorization>
 	);

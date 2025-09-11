@@ -14,4 +14,5 @@ export type PersonTypes = {
 	created_at: string;
 	updated_at: string;
 	deleted_at: null;
+	roles: { id: number; name: string }[];
 };
