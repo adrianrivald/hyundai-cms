@@ -46,7 +46,7 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 			name: form.title,
 			description: form.description,
 			image_path: form.image,
-			link_url: form.link,
+			link_url: form.link || "",
 			is_active: false,
 			published_at: format(new Date(form.date), "yyyy/MM/dd"),
 		};

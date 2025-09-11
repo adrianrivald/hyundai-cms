@@ -8,7 +8,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function UpdateContentEditorArticle() {
 	return (
-		<PageAuthorization>
+		<PageAuthorization role={["Super", "CMS"]}>
 			<ArticleUpdatePage />
 		</PageAuthorization>
 	);

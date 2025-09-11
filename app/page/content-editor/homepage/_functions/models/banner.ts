@@ -18,6 +18,7 @@ export const BannerSchema = yup.object({
 	link: yup
 		.string()
 		.url("Link harus berupa URL yang valid")
-		.required("Link harus di isi"),
+		.optional()
+		.nullable(),
 	is_active: yup.string().optional().nullable(),
 });

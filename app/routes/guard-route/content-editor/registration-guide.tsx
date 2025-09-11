@@ -10,7 +10,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function ContentEditorRegistrationGuide() {
 	return (
-		<PageAuthorization>
+		<PageAuthorization role={["Super", "CMS"]}>
 			<RegistrationGuidePage />
 		</PageAuthorization>
 	);

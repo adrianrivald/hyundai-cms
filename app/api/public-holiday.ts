@@ -39,10 +39,10 @@ export async function getHoliday(id: string): Promise<PublicHolidayType> {
 
 export async function getHolidays(
 	search_query?: string,
-	page?: number
+	paginate?: boolean
 ): Promise<{ data: PublicHolidayType[]; meta: Meta }> {
 	const response = await apiConfig.get(
-		`admin/public-holidays?search_query=${search_query}&page=${page}`
+		`admin/public-holidays?search_query=${search_query}` //&paginate=${paginate}`
 	);
 	return response.data;
 }
@@ -110,13 +110,13 @@ export const usePutHoliday = (
 
 export const useGetHolidays = (
 	search_query: string,
-	page?: number,
+	paginate?: boolean,
 	options?: QueryObserverOptions<{ data: PublicHolidayType[]; meta: Meta }>
 ) => {
 	return useQuery<{ data: PublicHolidayType[]; meta: Meta }>({
-		queryKey: ["holiday-get-all", search_query, page],
+		queryKey: ["holiday-get-all", search_query, paginate],
 		queryFn: async () => {
-			const response = await getHolidays(search_query, page);
+			const response = await getHolidays(search_query, paginate);
 			return response;
 		},
 		placeholderData: (prev) => prev,

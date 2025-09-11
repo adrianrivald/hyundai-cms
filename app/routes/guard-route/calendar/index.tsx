@@ -1,3 +1,4 @@
+import PageAuthorization from "@/components/page-authorization";
 import type { Route } from "./+types";
 import CalendarPage from "@/page/calendar";
 
@@ -6,5 +7,9 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Calendar() {
-	return <CalendarPage />;
+	return (
+		<PageAuthorization role={["Super", "PIC", "CMS"]}>
+			<CalendarPage />
+		</PageAuthorization>
+	);
 }
