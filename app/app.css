@@ -259,4 +259,21 @@ body {
       /* @apply bg-[#D9D9D9] rounded-full; */
       all: unset;
   }
+
+  .article-content h1 {
+    @apply text-3xl font-bold mb-2;
+  }
+
+  .article-content h2 {
+    @apply text-2xl font-semibold mb-2;
+  }
+
+  .article-content p {
+    @apply text-base leading-relaxed mb-1;
+  }
+  
+  .article-content img { 
+    @apply h-full w-full bg-cover
+  }
 }
+
