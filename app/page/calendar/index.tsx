@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 import DialogPublicHoliday from "./functions/components/dialog-public-holiday";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Button } from "@/components/ui/button";
+import DialogDetailHoliday from "./functions/components/dialog-detail-holiday";
 
 const locales = {
 	id: id,
@@ -41,7 +42,7 @@ const localizer = dateFnsLocalizer({
 
 export default function CalendarPage() {
 	//Will remove TBD
-
+	const [openHoliday, setOpenHoliday] = useState({ isOpen: false, event: {} });
 	const { data, refetch } = useGetHolidays("", false);
 
 	const now = new Date(
@@ -55,6 +56,7 @@ export default function CalendarPage() {
 			type: "TOUR",
 			index: 0,
 			description: "",
+			id: "",
 		},
 		{
 			title: "Student Course",
@@ -63,6 +65,7 @@ export default function CalendarPage() {
 			type: "TOUR",
 			index: 1,
 			description: "",
+			id: "",
 		},
 	];
 	const [events, setEvents] = useState<Event[]>(initialEvents);
@@ -107,6 +110,7 @@ export default function CalendarPage() {
 				type: "HOLIDAY",
 				index: events.length + (index + 1),
 				description: item.description,
+				id: item.id,
 			}));
 			let dataEvent = [...initialEvents, ...holiday];
 			setEvents(dataEvent);
@@ -133,6 +137,7 @@ export default function CalendarPage() {
 				type: item.type,
 				index,
 				description: item.description,
+				id: item.id,
 			}))
 		);
 
@@ -156,7 +161,6 @@ export default function CalendarPage() {
 						</div>
 
 						<span className="rbc-toolbar-label font-bold">
-							{/* use label if available (localized), otherwise format the date */}
 							{label ?? format(date, "MMMM yyyy")}
 						</span>
 
@@ -211,44 +215,58 @@ export default function CalendarPage() {
 					header: CustomDateHeader,
 					toolbar: CustomToolbar,
 					dateCellWrapper: CustomDateCellWrapper(currentDate, data?.data || []),
-					event: ({ event }: { event: any }) => (
-						<div className="text-[11px] text-white flex flex-row gap-1 items-center">
-							<div
-								className={cn(
-									`min-h-[9px] min-w-[9px]  rounded-lg`,
-									event.type === "HOLIDAY" ? "bg-red-600" : "bg-green-600"
-								)}
-							/>
-							{format(event.start || new Date(), "HH:mm")} {event.title}
-						</div>
-					),
+					event: ({ event }: { event: any }) => {
+						return (
+							<div className="text-[11px] cursor-pointer text-white flex flex-row gap-1 items-center">
+								<div
+									className={cn(
+										`min-h-[9px] min-w-[9px]  rounded-lg`,
+										event.type === "HOLIDAY" ? "bg-red-600" : "bg-green-600"
+									)}
+								/>
+								{format(event.start || new Date(), "HH:mm")} {event.title}
+							</div>
+						);
+					},
 					eventContainerWrapper: ({ children, ...props }: any) => {
 						return <div style={{ marginTop: 2 }}>{children}</div>;
 					},
 					eventWrapper: ({ event, children }: any) => {
-						const isTour = event.type === "TOUR";
-
 						return (
-							<div
-								onClick={() => {
-									alert("Clicked");
-								}}
-								key={event.index}
-								className={`${event.index === 0 ? "mt-6" : ""} bg-hmmi-primary-900 `}
-								style={{
-									border: "2px solid",
-									//borderColor: isTour ? "red" : "transparent",
-									borderRadius: 4,
-									overflow: "hidden",
-								}}
-							>
-								{children}
+							<div>
+								<div
+									key={event.index}
+									onClick={() => {
+										if (event.type === "HOLIDAY") {
+											setOpenHoliday({ isOpen: true, event: event });
+										}
+									}}
+									className={`${event.index === 0 ? "mt-6" : ""} bg-hmmi-primary-900 `}
+									style={{
+										border: "1px solid",
+										//borderColor: isTour ? "red" : "transparent",
+										borderRadius: 4,
+										overflow: "hidden",
+									}}
+								>
+									{children}
+								</div>
 							</div>
 						);
 					},
 				}}
 				className="mb-6"
 			/>
+			{openHoliday.isOpen && (
+				<DialogDetailHoliday
+					open={openHoliday.isOpen}
+					onClose={() => {
+						setOpenHoliday({ isOpen: false, event: {} });
+					}}
+					data={openHoliday.event}
+					refetch={refetch}
+				/>
+			)}
 		</Container>
 	);
 }
