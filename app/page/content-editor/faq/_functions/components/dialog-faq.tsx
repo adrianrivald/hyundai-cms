@@ -6,15 +6,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useForm } from "react-hook-form";
 import RHFTextField from "@/components/RHForm/RHFTextField";
-import {
-	usePostGlobalVariable,
-	usePutGlobalVariable,
-} from "@/api/global-variable";
-import type { GlobalVariableTypes } from "@/types/GlobalVariableTypes";
 import { enqueueSnackbar } from "notistack";
 import { useEffect } from "react";
-import { FAQSchema, type FaqType } from "../models/faq";
-import { usePostFaq, type FAQType, usePutFaq, useSaveFaq } from "@/api/faq";
+import { FAQSchema } from "../models/faq";
+import { type FAQType, useSaveFaq } from "@/api/faq";
 import RHFTextArea from "@/components/RHForm/RHFTextArea";
 import { Typography } from "@/components/typography";
 import { Icon } from "@iconify/react/dist/iconify.js";

@@ -7,13 +7,29 @@ import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { FormCalendarSchema } from "../models/calendar-schema";
+import {
+	usePostHoliday,
+	usePutHoliday,
+	type PublicHolidayType,
+	useSaveHoliday,
+	useGetHolidays,
+} from "@/api/public-holiday";
+import { enqueueSnackbar } from "notistack";
+import { eachDayOfInterval, format } from "date-fns";
 
 interface DialogPublicHolidayProps {
 	open: boolean;
 	onClose: () => void;
+	data?: PublicHolidayType;
+	refetch?: () => void;
 }
 
-const DialogPublicHoliday = ({ open, onClose }: DialogPublicHolidayProps) => {
+const DialogPublicHoliday = ({
+	open,
+	onClose,
+	data,
+	refetch,
+}: DialogPublicHolidayProps) => {
 	const methods = useForm({
 		defaultValues: {
 			id: "",
@@ -24,6 +40,42 @@ const DialogPublicHoliday = ({ open, onClose }: DialogPublicHolidayProps) => {
 		},
 		resolver: yupResolver(FormCalendarSchema),
 	});
+
+	const { mutate, isPending } = useSaveHoliday();
+
+	const onSubmit = () => {
+		const form = methods.watch();
+
+		const dateRange = eachDayOfInterval({
+			start: new Date(form.start_date),
+			end: new Date(form.end_date),
+		});
+
+		const dataForm: PublicHolidayType[] = dateRange.map((date) => ({
+			id: data?.id,
+			holiday_name: form.title,
+			start_date: format(date, "yyyy-MM-dd"),
+			description: form.description,
+		}));
+
+		mutate(dataForm, {
+			onSuccess: () => {
+				onClose();
+				refetch && refetch();
+				methods.clearErrors();
+				methods.reset();
+
+				enqueueSnackbar("Data telah ditambahkan", {
+					variant: "success",
+				});
+			},
+			onError: () => {
+				enqueueSnackbar("Error: Pembuatan holiday gagal", {
+					variant: "error",
+				});
+			},
+		});
+	};
 
 	return (
 		<DialogModal
@@ -92,11 +144,11 @@ const DialogPublicHoliday = ({ open, onClose }: DialogPublicHolidayProps) => {
 							<Grid item xs={12} className="flex justify-end">
 								<Button
 									variant={"hmmiOutline"}
-									//loading={pendingEdit || pendingPost}
+									loading={isPending}
 									onClick={() => {
 										methods.trigger().then((isValid) => {
 											if (isValid) {
-												//onSubmit();
+												onSubmit();
 											}
 										});
 									}}

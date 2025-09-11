@@ -178,6 +178,6 @@ export const SIDEBAR_MENU = () => {
 		// },
 	];
 
-	return data;
-	//return filterMenuByRole(data, role);
+	//return data;
+	return filterMenuByRole(data, role);
 };
