@@ -136,6 +136,13 @@ export function QuillEditor({
 
 				if (quill && range) {
 					quill.insertEmbed(range.index, "image", imageUrl);
+					const img = quill.root.querySelector(`img[src="${imageUrl}"]`);
+					if (img) {
+						img.setAttribute(
+							"style",
+							"width:100%;height:100%;object-fit:cover;"
+						);
+					}
 					//@ts-ignore
 					quill.setSelection(range.index + 1);
 				}

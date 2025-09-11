@@ -4,17 +4,15 @@ import {
 	dateFnsLocalizer,
 	type DayPropGetter,
 	type Event,
+	type ToolbarProps,
 } from "react-big-calendar";
-
 import id from "date-fns/locale/id";
-
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import {
 	format,
 	startOfWeek,
 	getDay,
 	addHours,
-	startOfHour,
 	parse,
 	startOfDay,
 	endOfDay,
@@ -22,9 +20,12 @@ import {
 import "./functions/components/Calendar.css";
 import Container from "@/components/container";
 import { CustomDateHeader } from "./functions/components/CustomDateHeader";
-import { CustomToolbar } from "./functions/components/CustomToolbar";
 import { CustomDateCellWrapper } from "./functions/components/CustomDateCellWrapper";
 import { useGetHolidays } from "@/api/public-holiday";
+import { cn } from "@/lib/utils";
+import DialogPublicHoliday from "./functions/components/dialog-public-holiday";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { Button } from "@/components/ui/button";
 
 const locales = {
 	id: id,
@@ -41,7 +42,7 @@ const localizer = dateFnsLocalizer({
 export default function CalendarPage() {
 	//Will remove TBD
 
-	const { data } = useGetHolidays("", false);
+	const { data, refetch } = useGetHolidays("", false);
 
 	const now = new Date(
 		"Wed Sep 15 2025 20:35:23 GMT+0700 (Western Indonesia Time)"
@@ -107,15 +108,95 @@ export default function CalendarPage() {
 				index: events.length + (index + 1),
 				description: item.description,
 			}));
-			setEvents([...events, ...holiday]);
+			let dataEvent = [...initialEvents, ...holiday];
+			setEvents(dataEvent);
 		}
 	}, [data?.data]);
+
+	const mergingEventDate = () => {
+		let holiday: typeof events = [];
+
+		const groupedByDate = events.reduce((acc, item) => {
+			const dateKey = startOfDay(new Date(item?.start || "")).toISOString();
+			// @ts-ignore
+			if (!acc[dateKey]) acc[dateKey] = [];
+			// @ts-ignore
+			acc[dateKey].push(item);
+			return acc;
+		}, {});
+
+		holiday = Object.values(groupedByDate).flatMap((group) =>
+			group.map((item: any, index: number) => ({
+				title: item.title,
+				start: item.start,
+				end: item.start,
+				type: item.type,
+				index,
+				description: item.description,
+			}))
+		);
+
+		return holiday;
+	};
+
+	const CustomToolbar = ({ date, onNavigate, label }: ToolbarProps) => {
+		const goToBack = () => onNavigate("PREV");
+		const goToNext = () => onNavigate("NEXT");
+		const [open, setOpen] = useState(false);
+
+		return (
+			<>
+				<div className="bg-white mb-7 p-3 flex flex-row justify-between items-center">
+					<div className="flex flex-row gap-3 items-center">
+						<div
+							onClick={goToBack}
+							className="cursor-pointer h-[36px] w-[36px] bg-gray-200 rounded-[18px] flex items-center justify-center"
+						>
+							<Icon icon="formkit:left" width="16" height="16" />
+						</div>
+
+						<span className="rbc-toolbar-label font-bold">
+							{/* use label if available (localized), otherwise format the date */}
+							{label ?? format(date, "MMMM yyyy")}
+						</span>
+
+						<div
+							onClick={goToNext}
+							className="cursor-pointer h-[36px] w-[36px] bg-gray-200 rounded-[18px] flex items-center justify-center"
+						>
+							<Icon icon="formkit:right" width="16" height="16" />
+						</div>
+					</div>
+
+					<Button
+						variant={"hmmiOutline"}
+						className="text-sm"
+						onClick={() => {
+							setOpen(true);
+						}}
+					>
+						Set Hari Libur
+					</Button>
+				</div>
+				<DialogPublicHoliday
+					onClose={() => setOpen(false)}
+					open={open}
+					refetch={() => {
+						setEvents([]);
+						setTimeout(() => {
+							refetch();
+						}, 500);
+					}}
+				/>
+			</>
+		);
+	};
 
 	return (
 		<Container>
 			<Calendar
 				localizer={localizer}
-				events={events}
+				events={mergingEventDate()}
 				startAccessor="start"
 				endAccessor="end"
 				defaultView="month"
@@ -130,9 +211,14 @@ export default function CalendarPage() {
 					header: CustomDateHeader,
 					toolbar: CustomToolbar,
 					dateCellWrapper: CustomDateCellWrapper(currentDate, data?.data || []),
-					event: ({ event }: { event: Event }) => (
+					event: ({ event }: { event: any }) => (
 						<div className="text-[11px] text-white flex flex-row gap-1 items-center">
-							<div className="h-[9px] w-[9px] bg-green-600 rounded-lg" />
+							<div
+								className={cn(
+									`min-h-[9px] min-w-[9px]  rounded-lg`,
+									event.type === "HOLIDAY" ? "bg-red-600" : "bg-green-600"
+								)}
+							/>
 							{format(event.start || new Date(), "HH:mm")} {event.title}
 						</div>
 					),
