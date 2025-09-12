@@ -27,6 +27,7 @@ import DialogPublicHoliday from "./functions/components/dialog-public-holiday";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Button } from "@/components/ui/button";
 import DialogDetailHoliday from "./functions/components/dialog-detail-holiday";
+import DialogAddVip from "./functions/components/dialog-add-vip";
 
 const locales = {
 	id: id,
@@ -148,6 +149,7 @@ export default function CalendarPage() {
 		const goToBack = () => onNavigate("PREV");
 		const goToNext = () => onNavigate("NEXT");
 		const [open, setOpen] = useState(false);
+		const [openVip, setOpenVip] = useState(false);
 
 		return (
 			<>
@@ -172,15 +174,26 @@ export default function CalendarPage() {
 						</div>
 					</div>
 
-					<Button
-						variant={"hmmiOutline"}
-						className="text-sm"
-						onClick={() => {
-							setOpen(true);
-						}}
-					>
-						Set Hari Libur
-					</Button>
+					<div className="flex flex-row gap-2">
+						<Button
+							variant={"hmmiOutline"}
+							className="text-sm"
+							onClick={() => {
+								setOpen(true);
+							}}
+						>
+							Set Hari Libur
+						</Button>
+						<Button
+							variant={"hmmiPrimary"}
+							className="text-sm"
+							onClick={() => {
+								setOpenVip(true);
+							}}
+						>
+							Tambahkan VIP
+						</Button>
+					</div>
 				</div>
 				<DialogPublicHoliday
 					onClose={() => setOpen(false)}
@@ -192,6 +205,7 @@ export default function CalendarPage() {
 						}, 500);
 					}}
 				/>
+				<DialogAddVip onClose={() => setOpenVip(false)} open={openVip} />
 			</>
 		);
 	};

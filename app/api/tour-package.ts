@@ -16,6 +16,7 @@ export type TourPackageType = {
 	image_path: string;
 	minimum_participant: number;
 	maximum_participant: number;
+	tour_packages_type: string;
 	factories: {
 		id: number;
 		name: string;
@@ -34,6 +35,7 @@ export type TourPackageType = {
 export type TourPackagePostType = {
 	id?: string;
 	name: string;
+	tour_packages_type: string;
 	description: string;
 	image_path?: string;
 	minimum_participant: number;
