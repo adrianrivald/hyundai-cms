@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator for Visitor Data</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(to bottom, #153263, #00102B);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+        .qr-section {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+        .qr-code {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .visitor-info {
+            flex: 1;
+        }
+        .info-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        .label {
+            font-weight: bold;
+            color: #ccc;
+            font-size: 14px;
+        }
+        .value {
+            color: white;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        .json-data {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #00ff00;
+            white-space: pre-wrap;
+            border: 1px solid #333;
+        }
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .instructions h3 {
+            color: #ffd700;
+            margin-top: 0;
+        }
+        .instructions ol {
+            color: #ccc;
+            line-height: 1.6;
+        }
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .test-btn {
+            background: #1E3A5F;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .test-btn:hover {
+            background: #2a4a6f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Generator for Visitor Data</h1>
+        
+        <div class="qr-section">
+            <div class="qr-code">
+                <canvas id="qrcode"></canvas>
+                <p style="color: #333; margin-top: 10px; font-size: 12px;">
+                    Scan this QR code with the app
+                </p>
+            </div>
+            
+            <div class="visitor-info">
+                <h3>Visitor Information</h3>
+                <div class="info-item">
+                    <div class="label">Nama</div>
+                    <div class="value" id="visitor-name">Andreas Kholilbi</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">No. HP</div>
+                    <div class="value" id="visitor-phone">081321245212</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">Jenis Kelamin</div>
+                    <div class="value" id="visitor-gender">Laki - laki</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">Email</div>
+                    <div class="value" id="visitor-email">anas@gmail.com</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">Nama Instansi</div>
+                    <div class="value" id="visitor-institution">SMK Adijaya Ciputat</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="json-data" id="json-data"></div>
+
+        <div class="instructions">
+            <h3>How to Use:</h3>
+            <ol>
+                <li>This QR code contains visitor data in JSON format</li>
+                <li>Scan the QR code with your mobile app's scanner</li>
+                <li>The app will automatically parse the JSON and display the visitor details</li>
+                <li>You can modify the visitor information below and regenerate the QR code</li>
+            </ol>
+        </div>
+
+        <div class="test-buttons">
+            <button class="test-btn" onclick="generateVisitor1()">Generate Visitor 1</button>
+            <button class="test-btn" onclick="generateVisitor2()">Generate Visitor 2</button>
+            <button class="test-btn" onclick="generateVisitor3()">Generate Visitor 3</button>
+        </div>
+    </div>
+
+    <script>
+        // Default visitor data
+        let currentVisitor = {
+            name: "Andreas Kholilbi",
+            phone: "081321245212",
+            gender: "Laki - laki",
+            email: "anas@gmail.com",
+            institution: "SMK Adijaya Ciputat"
+        };
+
+        // Sample visitors for testing
+        const visitors = [
+            {
+                name: "Andreas Kholilbi",
+                phone: "081321245212",
+                gender: "Laki - laki",
+                email: "anas@gmail.com",
+                institution: "SMK Adijaya Ciputat"
+            },
+            {
+                name: "Maria Culhane",
+                phone: "+4448546368358",
+                gender: "Perempuan",
+                email: "maria.culhane@email.com",
+                institution: "Universitas Indonesia"
+            },
+            {
+                name: "John Doe",
+                phone: "+2837720608484",
+                gender: "Laki - laki",
+                email: "john.doe@company.com",
+                institution: "PT. Teknologi Maju"
+            }
+        ];
+
+        function generateQRCode(visitorData) {
+            const jsonString = JSON.stringify(visitorData, null, 2);
+            
+            // Update the display
+            document.getElementById('visitor-name').textContent = visitorData.name;
+            document.getElementById('visitor-phone').textContent = visitorData.phone;
+            document.getElementById('visitor-gender').textContent = visitorData.gender;
+            document.getElementById('visitor-email').textContent = visitorData.email;
+            document.getElementById('visitor-institution').textContent = visitorData.institution;
+            document.getElementById('json-data').textContent = jsonString;
+
+            // Generate QR code
+            const canvas = document.getElementById('qrcode');
+            QRCode.toCanvas(canvas, jsonString, {
+                width: 200,
+                margin: 2,
+                color: {
+                    dark: '#000000',
+                    light: '#FFFFFF'
+                }
+            }, function (error) {
+                if (error) console.error(error);
+                console.log('QR Code generated successfully!');
+            });
+        }
+
+        function generateVisitor1() {
+            currentVisitor = visitors[0];
+            generateQRCode(currentVisitor);
+        }
+
+        function generateVisitor2() {
+            currentVisitor = visitors[1];
+            generateQRCode(currentVisitor);
+        }
+
+        function generateVisitor3() {
+            currentVisitor = visitors[2];
+            generateQRCode(currentVisitor);
+        }
+
+        // Generate initial QR code
+        generateQRCode(currentVisitor);
+    </script>
+</body>
+</html>
