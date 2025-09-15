@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
+import type { ClassValue } from "clsx";
 import type { JSXElementConstructor, ReactElement, ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
 
@@ -25,6 +26,7 @@ interface IProps {
 	direction?: "row" | "column";
 	className?: string;
 	containerRadioProps?: string;
+	itemRadioProps?: ClassValue;
 	onChange?: (value: string) => void;
 }
 
@@ -41,6 +43,7 @@ export default function RHFRadioGroup({
 	className,
 	containerRadioProps,
 	onChange,
+	itemRadioProps,
 }: IProps) {
 	const {
 		control,
@@ -79,7 +82,13 @@ export default function RHFRadioGroup({
 									: option;
 
 								return (
-									<div key={value} className="flex items-center space-x-3">
+									<div
+										key={value}
+										className={cn(
+											"flex items-center space-x-3",
+											itemRadioProps
+										)}
+									>
 										<RadioGroupItem
 											value={value}
 											id={`${name}-${index}`}

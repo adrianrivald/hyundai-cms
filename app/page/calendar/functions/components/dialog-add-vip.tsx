@@ -1,9 +1,14 @@
 import DialogModal from "@/components/custom/dialog/dialog-modal";
-import { Grid } from "@/components/grid";
+import { StepNavigation } from "@/components/custom/tabs-navigation/tabs-navigation";
+
 import { Typography } from "@/components/typography";
-import { cn } from "@/lib/utils";
+
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useForm } from "react-hook-form";
+import { FormRegisterTourSchema } from "../models/register-tour";
+import FormProvider from "@/components/RHForm/FormProvider";
+import BasicInformation from "./course-tour/basic-information";
 
 interface DialogAddVipProps {
 	open: boolean;
@@ -13,11 +18,21 @@ interface DialogAddVipProps {
 }
 
 const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
+	const steps = [
+		{ key: "info_dasar", label: "Isi Informasi Dasar" },
+		{ key: "info_anggota", label: "Isi Daftar Anggota Group" },
+		{ key: "done", label: "Selesai" },
+	];
+
 	const methods = useForm({
 		defaultValues: {
 			step: "info_dasar",
+			info_group: { email: "" },
 		},
+		mode: "onChange",
+		resolver: yupResolver(FormRegisterTourSchema),
 	});
+
 	return (
 		<DialogModal
 			open={true}
@@ -33,79 +48,23 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 			contentProps="w-[95%] max-h-[90%]"
 			content={
 				<div className="">
-					<Grid container className="mb-5">
-						<Grid
-							item
-							xs={4}
-							onClick={() => {
-								methods.setValue("step", "info_dasar");
-							}}
-							className={cn(
-								"py-4 px-5 cursor-pointer flex flex-row items-center gap-3",
-								methods.watch("step") === "info_dasar"
-									? "bg-[#A8C5F7]"
-									: "bg-[#153263]"
+					<StepNavigation
+						steps={steps}
+						value={methods.watch("step")}
+						onChange={(key) => {
+							methods.setValue("step", key);
+						}}
+						activeColor="#153263"
+						inactiveColor="#A8C5F7"
+					/>
+					<div className="max-h-[550px] overflow-y-scroll pr-2">
+						<FormProvider methods={methods}>
+							{methods.watch("step") === "info_dasar" && (
+								// @ts-ignore
+								<BasicInformation methods={methods} />
 							)}
-						>
-							<Icon
-								icon="fluent:checkmark-circle-24-filled"
-								height={24}
-								width={24}
-								color={
-									methods.watch("step") !== "info_dasar" ? "white" : "#153263"
-								}
-							/>
-							<Typography className={cn("text-white")}>
-								Isi Informasi Dasar
-							</Typography>
-						</Grid>
-						<Grid
-							item
-							xs={4}
-							onClick={() => {
-								methods.setValue("step", "info_anggota");
-							}}
-							className={cn(
-								"py-4 px-5 cursor-pointer flex flex-row items-center gap-3",
-								methods.watch("step") === "info_anggota"
-									? "bg-[#A8C5F7]"
-									: "bg-[#153263]"
-							)}
-						>
-							<Icon
-								icon="fluent:checkmark-circle-24-filled"
-								height={24}
-								width={24}
-								color={
-									methods.watch("step") !== "info_anggota" ? "white" : "#153263"
-								}
-							/>
-							<Typography className={cn("text-white")}>
-								Isi Daftar Anggota Group
-							</Typography>
-						</Grid>
-						<Grid
-							item
-							xs={4}
-							onClick={() => {
-								methods.setValue("step", "done");
-							}}
-							className={cn(
-								"py-4 px-5 cursor-pointer flex flex-row items-center gap-3",
-								methods.watch("step") === "done"
-									? "bg-[#A8C5F7]"
-									: "bg-[#153263]"
-							)}
-						>
-							<Icon
-								icon="fluent:checkmark-circle-24-filled"
-								height={24}
-								width={24}
-								color={methods.watch("step") !== "done" ? "white" : "#153263"}
-							/>
-							<Typography className={cn("text-white")}>Selesai</Typography>
-						</Grid>
-					</Grid>
+						</FormProvider>
+					</div>
 				</div>
 			}
 		/>

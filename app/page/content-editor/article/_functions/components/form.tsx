@@ -198,6 +198,7 @@ const Form = () => {
 					blurb: methods.watch("content") || "",
 					image_path: methods.watch("image"),
 				}}
+				isPreview
 			/>
 		</div>
 	);
