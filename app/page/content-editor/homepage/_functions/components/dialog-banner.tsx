@@ -43,8 +43,8 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 		const form = methods.watch();
 		const dataForm: BannerType = {
 			id: data?.id,
-			name: form.title,
-			description: form.description,
+			name: form.title || "",
+			description: form.description || "",
 			image_path: form.image,
 			link_url: form.link || "",
 			is_active: false,
@@ -122,7 +122,6 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 									label="Judul Banner"
 									placeholder="Masukan judul banner"
 									autoFocus={false}
-									required
 								/>
 							</Grid>
 							<Grid item xs={12}>
@@ -155,7 +154,6 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 									label="Link URL"
 									placeholder="Masukan link url"
 									autoFocus={false}
-									required
 								/>
 							</Grid>
 							<Grid item xs={12} className="flex justify-end">

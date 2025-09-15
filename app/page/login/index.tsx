@@ -20,6 +20,7 @@ const LoginPage = () => {
 	const isMobile = useIsMobile();
 	const navigate = useNavigate();
 	const [loginError, setLoginError] = useState("");
+	const [showPassword, setShowPassword] = useState(false);
 	const methods = useForm({
 		defaultValues: {
 			email: "",
@@ -69,6 +70,10 @@ const LoginPage = () => {
 		);
 	};
 
+	const togglePasswordVisibility = () => {
+		setShowPassword((prev) => !prev);
+	};
+
 	return (
 		<Container className="py-0 my-0">
 			<Grid container>
@@ -107,7 +112,7 @@ const LoginPage = () => {
 										name="password"
 										label="Password"
 										placeholder="Masukan Kata Sandi"
-										type="password"
+										type={showPassword ? "text" : "password"}
 										startIcon={
 											<Icon
 												icon="solar:lock-linear"
@@ -115,6 +120,22 @@ const LoginPage = () => {
 												height="20"
 												color="#153263"
 											/>
+										}
+										endIcon={
+											<div
+												onClick={togglePasswordVisibility}
+												className="mr-3 cursor-pointer"
+											>
+												{showPassword ? (
+													<Icon icon="solar:eye-bold" width="20" height="20" />
+												) : (
+													<Icon
+														icon="solar:eye-closed-bold"
+														width="20"
+														height="20"
+													/>
+												)}
+											</div>
 										}
 									/>
 									<Typography className="text-red-500 text-center">

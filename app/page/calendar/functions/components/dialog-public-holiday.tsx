@@ -7,21 +7,17 @@ import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { FormCalendarSchema } from "../models/calendar-schema";
-import {
-	usePostHoliday,
-	usePutHoliday,
-	type PublicHolidayType,
-	useSaveHoliday,
-	useGetHolidays,
-} from "@/api/public-holiday";
+import { type PublicHolidayType, useSaveHoliday } from "@/api/public-holiday";
 import { enqueueSnackbar } from "notistack";
 import { eachDayOfInterval, format } from "date-fns";
+import { useEffect } from "react";
 
 interface DialogPublicHolidayProps {
 	open: boolean;
 	onClose: () => void;
-	data?: PublicHolidayType;
+	data?: any;
 	refetch?: () => void;
+	isEdit?: boolean;
 }
 
 const DialogPublicHoliday = ({
@@ -29,6 +25,7 @@ const DialogPublicHoliday = ({
 	onClose,
 	data,
 	refetch,
+	isEdit,
 }: DialogPublicHolidayProps) => {
 	const methods = useForm({
 		defaultValues: {
@@ -48,7 +45,7 @@ const DialogPublicHoliday = ({
 
 		const dateRange = eachDayOfInterval({
 			start: new Date(form.start_date),
-			end: new Date(form.end_date),
+			end: isEdit ? new Date(form.start_date) : new Date(form?.end_date || ""),
 		});
 
 		const dataForm: PublicHolidayType[] = dateRange.map((date) => ({
@@ -65,7 +62,7 @@ const DialogPublicHoliday = ({
 				methods.clearErrors();
 				methods.reset();
 
-				enqueueSnackbar("Data telah ditambahkan", {
+				enqueueSnackbar(`Data telah ${isEdit ? "diubah" : "ditambahkan"}`, {
 					variant: "success",
 				});
 			},
@@ -76,6 +73,18 @@ const DialogPublicHoliday = ({
 			},
 		});
 	};
+
+	useEffect(() => {
+		if (data && open) {
+			methods.reset({
+				id: String(data?.id || ""),
+				description: data?.description,
+				title: data?.title,
+				start_date: data?.start,
+				end_date: data?.start,
+			});
+		}
+	}, [data, open]);
 
 	return (
 		<DialogModal
@@ -91,38 +100,63 @@ const DialogPublicHoliday = ({
 				<div className="">
 					<FormProvider methods={methods}>
 						<Grid container className="mt-5" spacing={4}>
-							<Grid item xs={6}>
-								<RHFDatePicker
-									name="start_date"
-									label="Tanggal dimulai"
-									required
-									placeholder="Pilih Tanggal Mulai"
-									format="dd/MM/yyyy"
-									onChange={(date) => {
-										if (date) {
-											methods.setValue("start_date", date.toISOString());
-											methods.clearErrors("start_date");
-										}
-									}}
-									//minDate={new Date()}
-								/>
-							</Grid>
-							<Grid item xs={6}>
-								<RHFDatePicker
-									name="end_date"
-									label="Tanggal berakhir"
-									required
-									placeholder="Pilih Tanggal Akhir"
-									format="dd/MM/yyyy"
-									onChange={(date) => {
-										if (date) {
-											methods.setValue("end_date", date.toISOString());
-											methods.clearErrors("end_date");
-										}
-									}}
-									//minDate={new Date()}
-								/>
-							</Grid>
+							{!isEdit && (
+								<>
+									<Grid item xs={6}>
+										<RHFDatePicker
+											name="start_date"
+											label="Tanggal dimulai"
+											required
+											placeholder="Pilih Tanggal Mulai"
+											format="dd/MM/yyyy"
+											onChange={(date) => {
+												if (date) {
+													methods.setValue("start_date", date.toISOString());
+													methods.clearErrors("start_date");
+													methods.setValue("end_date", "");
+												}
+											}}
+											//minDate={new Date()}
+										/>
+									</Grid>
+									<Grid item xs={6}>
+										<RHFDatePicker
+											name="end_date"
+											label="Tanggal berakhir"
+											required
+											placeholder="Pilih Tanggal Akhir"
+											format="dd/MM/yyyy"
+											onChange={(date) => {
+												if (date) {
+													methods.setValue("end_date", date.toISOString());
+													methods.clearErrors("end_date");
+												}
+											}}
+											minDate={new Date(methods.watch("start_date"))}
+										/>
+									</Grid>
+								</>
+							)}
+
+							{isEdit && (
+								<Grid item xs={12}>
+									<RHFDatePicker
+										name="start_date"
+										label="Tanggal"
+										required
+										placeholder="Pilih Tanggal"
+										format="dd/MM/yyyy"
+										onChange={(date) => {
+											if (date) {
+												methods.setValue("start_date", date.toISOString());
+												methods.clearErrors("start_date");
+											}
+										}}
+										//minDate={new Date()}
+									/>
+								</Grid>
+							)}
+
 							<Grid item xs={6}>
 								<RHFTextField
 									name="title"
@@ -153,8 +187,7 @@ const DialogPublicHoliday = ({
 										});
 									}}
 								>
-									{/* {data?.id ? "Ubah" : "Tambahkan"} */}
-									Set hari libur
+									{data?.id ? "Ubah hari libur" : "Set hari libur"}
 								</Button>
 							</Grid>
 						</Grid>

@@ -37,11 +37,12 @@ const DialogContact = ({
 			contact: [
 				{ id: "", phone: "", email: "" },
 				{ id: "", phone: "", email: "" },
+				{ id: "", phone: "", email: "" },
 			],
 		},
 		shouldFocusError: false,
 		mode: "onChange",
-		resolver: yupResolver(ContactSchema),
+		//resolver: yupResolver(ContactSchema),
 	});
 
 	const { mutate: mutatePost, isPending: pendingPost } =
@@ -113,52 +114,74 @@ const DialogContact = ({
 			headerTitle={
 				isEditMode ? "Lihat Kontak" : data?.id ? "Ubah Kontak" : "Tambah Kontak"
 			}
-			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
+			contentProps="w-[780px] max-h-[800px] overflow-y-scroll"
 			content={
 				<div className="">
 					<FormProvider methods={methods}>
 						<Grid container spacing={4}>
-							<Grid item xs={6}>
+							<Grid item xs={4}>
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.0.phone"
 									label="Nomor Telpon 1"
 									placeholder="Masukan Nomor Telfon"
 									autoFocus={false}
-									required={!isEditMode}
+									//required={!isEditMode}
 									type="number"
 								/>
 							</Grid>
-							<Grid item xs={6}>
+							<Grid item xs={4}>
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.1.phone"
 									label="Nomor Telpon 2"
 									placeholder="Masukan Nomor Telfon"
 									autoFocus={false}
-									required={!isEditMode}
+									//required={!isEditMode}
 									type="number"
 								/>
 							</Grid>
-							<Grid item xs={6}>
+							<Grid item xs={4}>
+								<RHFTextField
+									disabled={isEditMode}
+									name="contact.2.phone"
+									label="Nomor Telpon 3"
+									placeholder="Masukan Nomor Telfon"
+									autoFocus={false}
+									//required={!isEditMode}
+									type="number"
+								/>
+							</Grid>
+							<Grid item xs={4}>
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.0.email"
 									label="Alamat Email 1"
 									placeholder="Masukan Alamat Email"
 									autoFocus={false}
-									required={!isEditMode}
+									//required={!isEditMode}
 									type="email"
 								/>
 							</Grid>
-							<Grid item xs={6}>
+							<Grid item xs={4}>
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.1.email"
 									label="Alamat Email 2"
 									placeholder="Masukan Alamat Email"
 									autoFocus={false}
-									required={!isEditMode}
+									//required={!isEditMode}
+									type="email"
+								/>
+							</Grid>
+							<Grid item xs={4}>
+								<RHFTextField
+									disabled={isEditMode}
+									name="contact.2.email"
+									label="Alamat Email 3"
+									placeholder="Masukan Alamat Email"
+									autoFocus={false}
+									//required={!isEditMode}
 									type="email"
 								/>
 							</Grid>

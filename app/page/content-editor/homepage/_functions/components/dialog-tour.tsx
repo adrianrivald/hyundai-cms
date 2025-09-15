@@ -20,6 +20,7 @@ import {
 } from "@/api/tour-package";
 import { enqueueSnackbar } from "notistack";
 import { useEffect } from "react";
+import RHFSelect from "@/components/RHForm/RHFSelect";
 
 interface DialogTourProps {
 	open: boolean;
@@ -34,6 +35,7 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 			id: "",
 			//image: "",
 			name: "",
+			type: "",
 			description: "",
 			factory_id: [] as number[],
 			route_id: [] as { factory_id: number; id: number }[],
@@ -73,6 +75,7 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 			name: form.name,
 			description: form.description,
 			image_path: form.image,
+			tour_packages_type: form.type,
 			minimum_participant: form.min_occupy,
 			maximum_participant: form.max_occupy,
 			factories: (form.route_id || []).map((r) => Number(r.factory_id)),
@@ -99,8 +102,10 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 					refetch && refetch();
 					enqueueSnackbar("Data telah ditambahkan", { variant: "success" });
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Pembuatan tour gagal", { variant: "error" });
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
+						variant: "error",
+					});
 				},
 			});
 		}
@@ -120,6 +125,7 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 					factory_id: item.factory_id,
 				})),
 				description: data?.description,
+				type: data?.tour_packages_type,
 			});
 		}
 	}, [open]);
@@ -139,6 +145,20 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 						<Grid container spacing={4}>
 							<Grid item xs={12}>
 								<RHFUploadFile name="image" slug="factory" required />
+							</Grid>
+							<Grid item xs={12}>
+								<RHFSelect
+									name="type"
+									label="Tipe Sosial Media"
+									options={[
+										{ id: "general-course", name: "General Course Tour" },
+										{ id: "student-course", name: "Student Course Tour" },
+									]}
+									placeholder="Pilih tipe sosial media"
+									getOptionLabel={(user) => user.name}
+									getOptionValue={(user) => String(user.id)}
+									required
+								/>
 							</Grid>
 							<Grid item xs={12}>
 								<RHFTextField

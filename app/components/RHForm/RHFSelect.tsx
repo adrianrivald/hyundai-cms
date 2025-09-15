@@ -74,7 +74,7 @@ export default function RHFSelect<T>({
 							>
 								<SelectTrigger
 									className={cn(
-										"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-10 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none text-sm",
+										" file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-10 w-full min-w-0 border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none text-sm",
 										"border-ring ring-hmmi-primary-900 ring-[1.5px]",
 										"data-[placeholder]:bg-hmmi-grey-100 data-[placeholder]:border-ring data-[placeholder]:ring-hmmi-grey-200 data-[placeholder]:ring-[1.5px]",
 										"focus:bg-white focus:shadow-gray-500 focus:shadow-lg focus-visible:border-ring focus-visible:ring-hmmi-primary-900 focus-visible:ring-[1.5px]",
@@ -108,7 +108,7 @@ export default function RHFSelect<T>({
 										field.onChange("");
 										onChange?.("");
 									}}
-									className="cursor-pointer absolute right-8 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-gray-100"
+									className="cursor-pointer absolute right-8 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100"
 								>
 									<X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
 								</button>
