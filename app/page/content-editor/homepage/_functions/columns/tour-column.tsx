@@ -95,8 +95,7 @@ export const dataTourColumn: ColumnDef<TourPackageType>[] = [
 		meta: {
 			cellProps: {
 				style: {
-					minWidth: 90,
-					maxWidth: 90,
+					minWidth: 500,
 				},
 			},
 		},
@@ -134,7 +133,7 @@ export const dataTourColumn: ColumnDef<TourPackageType>[] = [
 		header: ({ table }) => {
 			const [open, setOpen] = useState(false);
 			return (
-				<div>
+				<div className="mr-5">
 					<Button
 						onClick={() => setOpen(true)}
 						className="bg-amber-500 hover:bg-amber-600 my-2"
@@ -154,8 +153,8 @@ export const dataTourColumn: ColumnDef<TourPackageType>[] = [
 		meta: {
 			headerCellProps: {
 				style: {
-					minWidth: 130,
-					maxWidth: 135,
+					minWidth: 160,
+					maxWidth: 160,
 				},
 			},
 		},

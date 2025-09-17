@@ -35,7 +35,7 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 
 	return (
 		<DialogModal
-			open={true}
+			open={open}
 			onOpenChange={() => {
 				onClose();
 			}}

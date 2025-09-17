@@ -149,12 +149,13 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 							<Grid item xs={12}>
 								<RHFSelect
 									name="type"
-									label="Tipe Sosial Media"
+									label="Tipe Tour"
 									options={[
+										{ id: "vip-course", name: "VIP Course Tour" },
 										{ id: "general-course", name: "General Course Tour" },
 										{ id: "student-course", name: "Student Course Tour" },
 									]}
-									placeholder="Pilih tipe sosial media"
+									placeholder="Pilih tipe tour"
 									getOptionLabel={(user) => user.name}
 									getOptionValue={(user) => String(user.id)}
 									required
