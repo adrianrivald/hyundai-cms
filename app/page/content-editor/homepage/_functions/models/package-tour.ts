@@ -4,6 +4,7 @@ export const TourSchema = yup.object({
 	id: yup.string().optional().nullable(),
 	image: yup.string().required("Gambar harus diisi"),
 	name: yup.string().required("Nama harus diisi"),
+	type: yup.string().required("Tipe tour harus diisi"),
 	description: yup.string().required("Deskripsi harus diisi"),
 	factory_id: yup
 		.array()

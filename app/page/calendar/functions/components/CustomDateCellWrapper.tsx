@@ -1,8 +1,5 @@
-import type { PublicHolidayType } from "@/api/public-holiday";
-import { type Event } from "react-big-calendar";
-
 export const CustomDateCellWrapper =
-	(currentMonth: Date, holiday: PublicHolidayType[]) =>
+	(currentMonth: Date, holiday: any) =>
 	({ value, children }: { value: Date; children: React.ReactNode }) => {
 		const isSameDate = (a: Date, b: Date) => {
 			return (
@@ -16,8 +13,9 @@ export const CustomDateCellWrapper =
 		const isOutsideMonth = value.getMonth() !== currentMonth.getMonth();
 
 		const isCustomWeekend = holiday
-			.map((item) => new Date(item.start_date))
-			.some((d) => isSameDate(d, value));
+			.filter((item: any) => item.type === "HOLIDAY")
+			.map((item: any) => new Date(item.start))
+			.some((d: any) => isSameDate(d, value));
 
 		const isSpecialDay = isWeekend || isCustomWeekend;
 

@@ -93,7 +93,9 @@ const DialogModal = ({
 	const alignText = `text-${textAlign}`;
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			{showCloseButton && <DialogClose onClick={onOpenChange} />}
+			{showCloseButton && (
+				<DialogClose className="hidden" onClick={onOpenChange} />
+			)}
 			<DialogOverlay />
 
 			<DialogContent

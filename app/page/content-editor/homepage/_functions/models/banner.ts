@@ -11,8 +11,8 @@ export type BannerType = {
 };
 
 export const BannerSchema = yup.object({
-	title: yup.string().required("Nama banner harus di isi"),
-	description: yup.string().required("Deskripsi banner harus di isi"),
+	title: yup.string().optional().nullable(),
+	description: yup.string().optional().nullable(),
 	image: yup.string().required("Image banner harus di isi"),
 	date: yup.string().required("Tanggal terbit harus di isi"),
 	link: yup

@@ -21,6 +21,7 @@ import {
 	useSaveFactoryRoutes,
 } from "@/api/factory-route";
 import DialogDelete from "@/components/custom/dialog/dialog-delete";
+import { StepNavigation } from "@/components/custom/tabs-navigation/tabs-navigation";
 
 interface DialogFactoryProps {
 	open: boolean;
@@ -37,6 +38,10 @@ const DialogFactory = ({
 	refetch,
 	isDisabled = false,
 }: DialogFactoryProps) => {
+	const steps = [
+		{ key: "reg_factory", label: "Detail Pabrik" },
+		{ key: "reg_route", label: "Buat Rute" },
+	];
 	const [deleteRoute, setDeleteRoute] = useState({ isOpen: false, id: "" });
 	const methods = useForm({
 		defaultValues: {
@@ -61,7 +66,7 @@ const DialogFactory = ({
 	});
 
 	const { data: dataRoute } = useGetFactoryRoutes(data?.id || "", {
-		enabled: !!data?.id,
+		enabled: !!data?.id && open,
 		queryKey: ["factory-route-get-all", data?.id],
 	});
 	const { mutate: mutatePost, isPending: pendingPost } = usePostFactory();
@@ -120,7 +125,8 @@ const DialogFactory = ({
 			form?.route?.map((item) => ({
 				...item,
 				factory_id: methods.watch("id"),
-				name: methods.watch("factory_name"),
+				name: item.route_name,
+				description: item.description,
 				image_path: item.image,
 			})) || [];
 
@@ -196,9 +202,7 @@ const DialogFactory = ({
 		<DialogModal
 			open={open}
 			onOpenChange={() => {
-				onClose();
-				methods.clearErrors();
-				methods.reset();
+				resetField();
 			}}
 			headerTitle={
 				isDisabled
@@ -211,59 +215,21 @@ const DialogFactory = ({
 			content={
 				<div className="">
 					<FormProvider methods={methods}>
-						<Grid container className="mb-5">
-							<Grid
-								item
-								xs={6}
-								onClick={() => {
-									methods.setValue("step", "reg_factory");
-								}}
-								className={cn(
-									"py-4 px-5 cursor-pointer flex flex-row items-center gap-3",
-									methods.watch("step") === "reg_factory"
-										? "bg-[#A8C5F7]"
-										: "bg-[#153263]"
-								)}
-							>
-								<Icon
-									icon="fluent:checkmark-circle-24-filled"
-									height={24}
-									width={24}
-									color={
-										methods.watch("step") !== "reg_factory"
-											? "white"
-											: "#153263"
+						<StepNavigation
+							steps={steps}
+							value={methods.watch("step") || ""}
+							onChange={(key) => {
+								if (key === "reg_route") {
+									if (data?.id || methods.watch("id")) {
+										methods.setValue("step", key);
 									}
-								/>
-								<Typography className={cn("text-white")}>
-									Detail Pabrik
-								</Typography>
-							</Grid>
-							<Grid
-								item
-								xs={6}
-								onClick={() => {
-									(data?.id || methods.watch("id")) &&
-										methods.setValue("step", "reg_route");
-								}}
-								className={cn(
-									"py-4 px-5 cursor-pointer flex flex-row items-center gap-3",
-									methods.watch("step") === "reg_route"
-										? "bg-[#A8C5F7]"
-										: "bg-[#153263]"
-								)}
-							>
-								<Icon
-									icon="fluent:checkmark-circle-24-filled"
-									height={24}
-									width={24}
-									color={
-										methods.watch("step") !== "reg_route" ? "white" : "#153263"
-									}
-								/>
-								<Typography className={cn("text-white")}>Buat Rute</Typography>
-							</Grid>
-						</Grid>
+								} else {
+									methods.setValue("step", key);
+								}
+							}}
+							activeColor="#153263"
+							inactiveColor="#A8C5F7"
+						/>
 
 						{methods.watch("step") === "reg_factory" && (
 							<Grid container spacing={4}>
