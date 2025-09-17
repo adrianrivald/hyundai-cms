@@ -156,7 +156,7 @@ const Form = () => {
 								label="Judul"
 								placeholder="Masukan judul artikel"
 								required
-								maxLength={80}
+								maxLength={200}
 							/>
 						</Grid>
 						<Grid item xs={12} md={6}>
