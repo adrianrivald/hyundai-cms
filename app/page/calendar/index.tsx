@@ -16,18 +16,22 @@ import {
 	parse,
 	startOfDay,
 	endOfDay,
+	isValid,
+	set,
+	isSameDay,
 } from "date-fns";
 import "./functions/components/Calendar.css";
 import Container from "@/components/container";
 import { CustomDateHeader } from "./functions/components/CustomDateHeader";
 import { CustomDateCellWrapper } from "./functions/components/CustomDateCellWrapper";
-import { useGetHolidays } from "@/api/public-holiday";
-import { cn } from "@/lib/utils";
+
 import DialogPublicHoliday from "./functions/components/dialog-public-holiday";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Button } from "@/components/ui/button";
 import DialogDetailHoliday from "./functions/components/dialog-detail-holiday";
 import DialogAddVip from "./functions/components/dialog-add-vip";
+import { useGetCalendars } from "@/api/batch";
+import { Typography } from "@/components/typography";
 
 const locales = {
 	id: id,
@@ -41,48 +45,36 @@ const localizer = dateFnsLocalizer({
 	locales,
 });
 
+type CalendarEvent = {
+	title: string;
+	start: Date;
+	end: Date;
+	type: string;
+	index: number;
+	description?: string;
+	id: number | string;
+};
+
 export default function CalendarPage() {
 	//Will remove TBD
 	const [openHoliday, setOpenHoliday] = useState({ isOpen: false, event: {} });
-	const { data, refetch } = useGetHolidays("", false);
 
-	const now = new Date(
-		"Wed Sep 15 2025 20:35:23 GMT+0700 (Western Indonesia Time)"
-	);
-	const initialEvents = [
-		{
-			title: "General Course",
-			start: now,
-			end: addHours(now, 1),
-			type: "TOUR",
-			index: 0,
-			description: "",
-			id: "",
-		},
-		{
-			title: "Student Course",
-			start: addHours(now, 2),
-			end: addHours(now, 3),
-			type: "TOUR",
-			index: 1,
-			description: "",
-			id: "",
-		},
-	];
-	const [events, setEvents] = useState<Event[]>(initialEvents);
+	const [events, setEvents] = useState<Event[]>([]);
+
 	const [currentDate, setCurrentDate] = useState(new Date());
-	const isSameDate = (a: Date, b: Date) =>
-		a.getFullYear() === b.getFullYear() &&
-		a.getMonth() === b.getMonth() &&
-		a.getDate() === b.getDate();
-	// TBD
+	const { data, refetch } = useGetCalendars(
+		isValid(currentDate)
+			? format(currentDate, "yyyy-MM")
+			: format(new Date(), "yyyy-MM")
+	);
 
 	const highlightWeekendAndCustomDays: DayPropGetter = (date) => {
 		const isWeekend = date.getDay() === 0 || date.getDay() === 6;
 
-		const isCustomHoliday = data?.data
-			.map((item) => new Date(item.start_date))
-			.some((d) => isSameDate(d, date));
+		const isCustomHoliday = data?.data?.some(
+			(item: any) =>
+				item?.events?.length > 0 && isSameDay(new Date(item.date), date)
+		);
 
 		if (isWeekend || isCustomHoliday) {
 			return {
@@ -103,47 +95,81 @@ export default function CalendarPage() {
 	};
 
 	useEffect(() => {
-		if (data?.data) {
-			let holiday = data?.data?.map((item, index) => ({
-				title: item.holiday_name,
-				start: startOfDay(new Date(item.start_date)),
-				end: endOfDay(new Date(item.start_date)),
-				type: "HOLIDAY",
-				index: events.length + (index + 1),
-				description: item.description,
-				id: item.id,
-			}));
-			let dataEvent = [...initialEvents, ...holiday];
-			setEvents(dataEvent);
-		}
+		if (!data?.data) return;
+
+		let allEvents: CalendarEvent[] = [];
+
+		data.data.forEach((dayItem: any) => {
+			let dailyEvents: CalendarEvent[] = [];
+
+			if (dayItem.events?.length > 0) {
+				dailyEvents.push(
+					...dayItem.events.map((h: any, idx: number) => ({
+						title: h.holiday_name,
+						start: startOfDay(new Date(h.start_date)),
+						end: endOfDay(new Date(h.end_date ?? h.start_date)),
+						type: "HOLIDAY",
+						index: idx, // reset per day
+						description: h.description,
+						id: h.id,
+					}))
+				);
+			}
+
+			// --- SLOTS / TOURS ---
+			if (dayItem.slot?.length > 0) {
+				dailyEvents.push(
+					...dayItem.slot
+						.filter((s: any) => s.tour)
+						.map((s: any, idx: number) => {
+							let baseDate = new Date(dayItem.date);
+
+							let start: Date;
+							let end: Date;
+
+							if (
+								s.time_range &&
+								s.time_range.includes("-") &&
+								s.time_range !== "-"
+							) {
+								// valid range like "08:00 - 09:00"
+								let [startStr, endStr] = s.time_range.split(" - ");
+
+								start = set(baseDate, {
+									hours: parseInt(startStr.split(":")[0], 10),
+									minutes: parseInt(startStr.split(":")[1], 10),
+								});
+
+								end = set(baseDate, {
+									hours: parseInt(endStr.split(":")[0], 10),
+									minutes: parseInt(endStr.split(":")[1], 10),
+								});
+							} else {
+								// fallback if time_range is "-"
+								start = startOfDay(baseDate);
+								end = endOfDay(baseDate);
+							}
+
+							return {
+								title: s?.tour?.tour_package?.name || "General Course Tour",
+								start,
+								end,
+								type:
+									s.tour.tour_package?.tour_packages_type?.toUpperCase() ??
+									"GENERAL-COURSE",
+								index: idx,
+								description: s.tour.purpose_of_visit,
+								id: s.tour.id,
+							} as CalendarEvent;
+						})
+				);
+			}
+
+			allEvents.push(...dailyEvents);
+		});
+
+		setEvents([...allEvents]);
 	}, [data?.data]);
-
-	const mergingEventDate = () => {
-		let holiday: typeof events = [];
-
-		const groupedByDate = events.reduce((acc, item) => {
-			const dateKey = startOfDay(new Date(item?.start || "")).toISOString();
-			// @ts-ignore
-			if (!acc[dateKey]) acc[dateKey] = [];
-			// @ts-ignore
-			acc[dateKey].push(item);
-			return acc;
-		}, {});
-
-		holiday = Object.values(groupedByDate).flatMap((group) =>
-			group.map((item: any, index: number) => ({
-				title: item.title,
-				start: item.start,
-				end: item.start,
-				type: item.type,
-				index,
-				description: item.description,
-				id: item.id,
-			}))
-		);
-
-		return holiday;
-	};
 
 	const CustomToolbar = ({ date, onNavigate, label }: ToolbarProps) => {
 		const goToBack = () => onNavigate("PREV");
@@ -214,7 +240,7 @@ export default function CalendarPage() {
 		<Container>
 			<Calendar
 				localizer={localizer}
-				events={mergingEventDate()}
+				events={events}
 				startAccessor="start"
 				endAccessor="end"
 				defaultView="month"
@@ -228,17 +254,16 @@ export default function CalendarPage() {
 				components={{
 					header: CustomDateHeader,
 					toolbar: CustomToolbar,
-					dateCellWrapper: CustomDateCellWrapper(currentDate, data?.data || []),
+					dateCellWrapper: CustomDateCellWrapper(currentDate, events),
 					event: ({ event }: { event: any }) => {
+						console.log("dataa", event);
 						return (
-							<div className="text-[11px] cursor-pointer text-white flex flex-row gap-1 items-center">
-								<div
-									className={cn(
-										`min-h-[9px] min-w-[9px]  rounded-lg`,
-										event.type === "HOLIDAY" ? "bg-red-600" : "bg-green-600"
-									)}
-								/>
-								{format(event.start || new Date(), "HH:mm")} {event.title}
+							<div
+								className={`text-[11px] cursor-pointer ${event.type === "HOLIDAY" ? "text-hmmi-red-500" : "text-white"}  flex flex-row gap-1 items-center`}
+							>
+								{event.type !== "HOLIDAY" &&
+									format(event.start || new Date(), "HH:mm")}{" "}
+								<Typography className="font-bold">{event.title}</Typography>
 							</div>
 						);
 					},
@@ -255,10 +280,8 @@ export default function CalendarPage() {
 											setOpenHoliday({ isOpen: true, event: event });
 										}
 									}}
-									className={`${event.index === 0 ? "mt-6" : ""} bg-hmmi-primary-900 `}
+									className={`${event.index === 0 ? "mt-6" : ""} ${event.type === "HOLIDAY" ? "bg-white" : event.type === "GENERAL-COURSE" ? "bg-[#0A5CE6]" : event.type === "STUDENT-COURSE" ? "bg-[#00AE0F]" : "bg-[#FFCF31]"} `}
 									style={{
-										border: "1px solid",
-										//borderColor: isTour ? "red" : "transparent",
 										borderRadius: 4,
 										overflow: "hidden",
 									}}

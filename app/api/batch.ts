@@ -15,6 +15,25 @@ export type BatchTypes = {
 	batch_timerange: string;
 };
 
+export type PublicCalendarTypes = {
+	date: string;
+	day: string;
+	events: { id: number; holiday_name: string; description: string }[];
+	slot: {
+		batch_time: string;
+		tour: {
+			id: number;
+			tour_package_id: number;
+			tour_package: {
+				id: number;
+				tour_packages_type: string;
+				name: string;
+				description: "";
+			};
+		};
+	}[];
+};
+
 export async function postBatch(
 	data: string[]
 ): Promise<AxiosResponse<BatchTypes[], AxiosError>> {
@@ -23,6 +42,15 @@ export async function postBatch(
 
 export async function getBatches(): Promise<{ data: { data: BatchTypes[] } }> {
 	const response = await apiConfig.get(`admin/slots`);
+	return response.data;
+}
+
+export async function getCalendar(
+	month_year: string
+): Promise<{ data: PublicCalendarTypes[] }> {
+	const response = await apiConfig.get(
+		`public/calendar-date-monthly?month=${month_year}`
+	);
 	return response.data;
 }
 
@@ -56,6 +84,23 @@ export const useGetBatches = (
 		queryKey: ["batches-get-all"],
 		queryFn: async () => {
 			const response = await getBatches();
+			return response;
+		},
+		placeholderData: (prev) => prev,
+		...options,
+	});
+};
+
+export const useGetCalendars = (
+	month_year: string,
+	options?: QueryObserverOptions<{ data: PublicCalendarTypes[] }>
+) => {
+	return useQuery<{
+		data: PublicCalendarTypes[];
+	}>({
+		queryKey: ["batches-get-all", month_year],
+		queryFn: async () => {
+			const response = await getCalendar(month_year);
 			return response;
 		},
 		placeholderData: (prev) => prev,
