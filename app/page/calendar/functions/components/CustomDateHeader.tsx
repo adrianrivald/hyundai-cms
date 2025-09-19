@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import id from "date-fns/locale/id";
+import enUS from "date-fns/locale/en-US";
 
 export const CustomDateHeader = ({ date }: { date: Date }) => {
 	const isSunday = date.getDay() === 0 || date.getDay() === 6;
@@ -8,7 +8,7 @@ export const CustomDateHeader = ({ date }: { date: Date }) => {
 		<div className="text-sm font-bold text-center py-2">
 			<span className={isSunday ? "text-red-500" : "text-black"}>
 				{/* @ts-ignore */}
-				{format(date, "eeee", { locale: id })}
+				{format(date, "eeee", { locale: enUS })}
 			</span>
 		</div>
 	);

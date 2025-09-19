@@ -6,13 +6,12 @@ import {
 	type Event,
 	type ToolbarProps,
 } from "react-big-calendar";
-import id from "date-fns/locale/id";
+import en from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import {
 	format,
 	startOfWeek,
 	getDay,
-	addHours,
 	parse,
 	startOfDay,
 	endOfDay,
@@ -34,7 +33,7 @@ import { useGetCalendars } from "@/api/batch";
 import { Typography } from "@/components/typography";
 
 const locales = {
-	id: id,
+	enUS: en,
 };
 
 const localizer = dateFnsLocalizer({
@@ -208,7 +207,7 @@ export default function CalendarPage() {
 								setOpen(true);
 							}}
 						>
-							Set Hari Libur
+							Set Day Off
 						</Button>
 						<Button
 							variant={"hmmiPrimary"}
@@ -217,7 +216,7 @@ export default function CalendarPage() {
 								setOpenVip(true);
 							}}
 						>
-							Tambahkan VIP
+							Add VIP
 						</Button>
 					</div>
 				</div>
