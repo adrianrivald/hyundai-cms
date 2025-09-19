@@ -88,7 +88,7 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 					onClose();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah diubah", { variant: "success" });
+					enqueueSnackbar("Data has been changed", { variant: "success" });
 				},
 				onError: () => {
 					enqueueSnackbar("Error: Ubah tour gagal", { variant: "error" });
@@ -100,7 +100,7 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 					onClose();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", { variant: "success" });
+					enqueueSnackbar("Data has been added", { variant: "success" });
 				},
 				onError: (err: any) => {
 					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {

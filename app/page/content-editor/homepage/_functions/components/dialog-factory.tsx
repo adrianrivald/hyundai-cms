@@ -89,7 +89,7 @@ const DialogFactory = ({
 					methods.clearErrors();
 					methods.setValue("step", "reg_route");
 					//refetch && refetch();
-					enqueueSnackbar("Data telah diubah", {
+					enqueueSnackbar("Data has been changed", {
 						variant: "success",
 					});
 				},
@@ -106,7 +106,7 @@ const DialogFactory = ({
 					methods.setValue("step", "reg_route");
 					methods.setValue("id", data?.data?.id);
 					//refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", {
+					enqueueSnackbar("Data has been added", {
 						variant: "success",
 					});
 				},

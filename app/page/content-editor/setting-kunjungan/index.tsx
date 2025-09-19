@@ -74,12 +74,12 @@ const SettingVisitPage = () => {
 
 		mutatePost(data, {
 			onSuccess: () => {
-				enqueueSnackbar("Data telah diubah", {
+				enqueueSnackbar("Data has been changed", {
 					variant: "success",
 				});
 			},
 			onError: () => {
-				enqueueSnackbar("Error: Ubah data gagal", {
+				enqueueSnackbar("Error: Failed to change data", {
 					variant: "error",
 				});
 			},

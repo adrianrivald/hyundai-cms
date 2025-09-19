@@ -75,7 +75,7 @@ const Form = () => {
 					onSuccess: () => {
 						methods.reset();
 						navigate("/content-editor/article");
-						enqueueSnackbar("Data telah diubah", { variant: "success" });
+						enqueueSnackbar("Data has been changed", { variant: "success" });
 					},
 					onError: () => {
 						enqueueSnackbar("Error: Ubah artikel gagal", { variant: "error" });
@@ -87,7 +87,7 @@ const Form = () => {
 				onSuccess: () => {
 					methods.reset();
 					navigate("/content-editor/article");
-					enqueueSnackbar("Data telah ditambahkan", { variant: "success" });
+					enqueueSnackbar("Data has been added", { variant: "success" });
 				},
 				onError: () => {
 					enqueueSnackbar("Error: Pembuatan artikel gagal", {

@@ -57,7 +57,7 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah diubah", {
+					enqueueSnackbar("Data has been changed", {
 						variant: "success",
 					});
 				},
@@ -74,7 +74,7 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", {
+					enqueueSnackbar("Data has been added", {
 						variant: "success",
 					});
 				},

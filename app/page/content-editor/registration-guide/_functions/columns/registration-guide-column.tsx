@@ -206,7 +206,7 @@ const ActionCell = ({
 				table.resetPageIndex();
 			},
 			onError: () => {
-				enqueueSnackbar("Error: Ubah data gagal", {
+				enqueueSnackbar("Error: Failed to change data", {
 					variant: "error",
 				});
 				setOpenDelete(false);
