@@ -57,12 +57,12 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah diubah", {
+					enqueueSnackbar("Data has been changed", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Ubah banner gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -74,12 +74,12 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", {
+					enqueueSnackbar("Data has been added", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Pembuatan banner gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -107,7 +107,7 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 				methods.clearErrors();
 				methods.reset();
 			}}
-			headerTitle={data?.id ? "Ubah Banner" : "Tambah Banner"}
+			headerTitle={data?.id ? "Edit Banner" : "Add Banner"}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
 				<div className="">
@@ -119,25 +119,25 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 							<Grid item xs={12}>
 								<RHFTextField
 									name="title"
-									label="Judul Banner"
-									placeholder="Masukan judul banner"
+									label="Title Banner"
+									placeholder="Input title banner"
 									autoFocus={false}
 								/>
 							</Grid>
 							<Grid item xs={12}>
 								<RHFTextArea
 									name="description"
-									label="Deskripsi"
-									placeholder="Masukan deskripsi"
+									label="Description"
+									placeholder="Input Description"
 									rows={5}
 								/>
 							</Grid>
 							<Grid item xs={7}>
 								<RHFDatePicker
 									name="date"
-									label="Tanggal Terbit"
+									label="Publish Date"
 									required
-									placeholder="Pilih Tanggal Terbit"
+									placeholder="Choose Date"
 									format="dd/MM/yyyy"
 									onChange={(date) => {
 										if (date) {
@@ -152,7 +152,7 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 								<RHFTextField
 									name="link"
 									label="Link URL"
-									placeholder="Masukan link url"
+									placeholder="Input link"
 									autoFocus={false}
 								/>
 							</Grid>
@@ -167,7 +167,7 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 										});
 									}}
 								>
-									{data?.id ? "Ubah" : "Tambahkan"}
+									{data?.id ? "Edit" : "Add"}
 								</Button>
 							</Grid>
 						</Grid>

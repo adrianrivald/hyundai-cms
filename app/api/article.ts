@@ -25,6 +25,7 @@ export type ArticleType = {
 
 export type PostArticleType = {
 	id?: number;
+	author_name: string;
 	name: string;
 	content: string;
 	image_path: string;

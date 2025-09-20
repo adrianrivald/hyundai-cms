@@ -59,12 +59,12 @@ const DialogYoutube = ({
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah diubah", {
+					enqueueSnackbar("Data has been changed", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Ubah data gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -76,12 +76,12 @@ const DialogYoutube = ({
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", {
+					enqueueSnackbar("Data has been added", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Pembuatan data gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -106,7 +106,7 @@ const DialogYoutube = ({
 				methods.clearErrors();
 				methods.reset();
 			}}
-			headerTitle={data?.id ? "Ubah Video YouTube" : "Tambah Video YouTube"}
+			headerTitle={data?.id ? "Change YouTube Video" : "Add YouTube Video"}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
 				<div className="">
@@ -115,8 +115,8 @@ const DialogYoutube = ({
 							<Grid item xs={12}>
 								<RHFTextField
 									name="title"
-									label="Judul"
-									placeholder="Masukan judul"
+									label="Title"
+									placeholder="Input Title"
 									autoFocus={false}
 									required
 								/>
@@ -125,7 +125,7 @@ const DialogYoutube = ({
 								<RHFTextField
 									name="link"
 									label="Link Video"
-									placeholder="Masukan link video"
+									placeholder="Input link video"
 									autoFocus={false}
 									required
 								/>
@@ -143,7 +143,7 @@ const DialogYoutube = ({
 												methods.setError("link", {
 													type: "manual",
 													message:
-														"Video tidak dapat diputar. Periksa link YouTube.",
+														"The video cannot be played. Check the YouTube link.",
 												});
 											}}
 										/>
@@ -161,7 +161,7 @@ const DialogYoutube = ({
 										});
 									}}
 								>
-									{data?.id ? "Ubah" : "Tambahkan"}
+									{data?.id ? "Edit" : "Add"}
 								</Button>
 							</Grid>
 						</Grid>

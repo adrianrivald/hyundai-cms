@@ -18,17 +18,17 @@ export const ContactSchema = yup.object({
 				id: yup.string().nullable().optional(),
 				phone: yup
 					.string()
-					.required("Nomor telepon harus di isi")
-					.max(13, "Nomor telpon tidak boleh lebih dari 13 karakter")
-					.min(11, "Nomor telpon tidak boleh kurang dari 11 karakter"),
+					.required("Phone Number is required")
+					.max(13, "Phone number must not be more than 13 characters")
+					.min(11, "Phone number must not be less than 11 characters"),
 				email: yup
 					.string()
-					.matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Email harus valid")
-					.required("Email harus di isi"),
+					.matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Email must be valid ")
+					.required("Email is required"),
 			})
 		)
-		.required("Kontak harus di isi")
-		.min(1, "Minimal satu kontak diperlukan"),
+		.required("Contact is required")
+		.min(1, "Minimum 1 contact must be filled"),
 
-	address: yup.string().required("Link harus di isi"),
+	address: yup.string().required("Address is required"),
 });

@@ -22,7 +22,7 @@ import DialogDetailContent from "@/components/custom/dialog/dialog-detail";
 export const dataLegalColumn: ColumnDef<LegalContentType>[] = [
 	{
 		accessorKey: "language",
-		header: "Bahasa",
+		header: "Language",
 		cell: ({ row }) => (
 			<CellText className="text-left">
 				{row?.original?.language === "en" ? "English" : "Indonesia" || "-"}
@@ -39,7 +39,7 @@ export const dataLegalColumn: ColumnDef<LegalContentType>[] = [
 	},
 	{
 		accessorKey: "title",
-		header: "Judul",
+		header: "Title",
 		cell: ({ row }) => (
 			<CellText className="text-left">{row?.original?.title || "-"}</CellText>
 		),
@@ -74,7 +74,7 @@ export const dataLegalColumn: ColumnDef<LegalContentType>[] = [
 
 	{
 		accessorKey: "completed",
-		header: "Aksi",
+		header: "Action",
 		cell: ({ row, table }) => <ActionCell table={table} row={row} />,
 		meta: {
 			cellProps: {
@@ -102,7 +102,7 @@ export const dataLegalColumn: ColumnDef<LegalContentType>[] = [
 						className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 					>
-						Tambah
+						Add
 					</Button>
 
 					<DialogLegal
@@ -124,7 +124,7 @@ export const dataLegalColumn: ColumnDef<LegalContentType>[] = [
 								setOpen(true);
 							}}
 						>
-							Lihat Detail
+							View Details
 						</Typography>
 					)}
 
@@ -201,14 +201,14 @@ const ActionCell = ({
 
 		mutateEdit(dataForm, {
 			onSuccess: () => {
-				enqueueSnackbar("Data telah dihapus", {
+				enqueueSnackbar("Data has been deleted", {
 					variant: "success",
 				});
 				setOpenDelete(false);
 				table.resetPageIndex();
 			},
-			onError: () => {
-				enqueueSnackbar("Error: Ubah data gagal", {
+			onError: (err: any) => {
+				enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 					variant: "error",
 				});
 				setOpenDelete(false);

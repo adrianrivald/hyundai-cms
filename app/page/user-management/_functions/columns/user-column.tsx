@@ -74,7 +74,7 @@ export const dataUserManagementColumn: ColumnDef<UserType>[] = [
 	},
 	{
 		accessorKey: "completed",
-		header: "Aksi",
+		header: "Action",
 		cell: ({ row, table }) => <ActionCell row={row} table={table} />,
 		meta: {
 			cellProps: {
@@ -98,7 +98,7 @@ export const dataUserManagementColumn: ColumnDef<UserType>[] = [
 						className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 					>
-						Tambah
+						Add
 					</Button>
 					<DialogUser
 						open={open}
@@ -139,13 +139,13 @@ const ActionCell = ({
 			{
 				onSuccess: () => {
 					setOpenDelete(false);
-					enqueueSnackbar("Data telah dihapus", {
+					enqueueSnackbar("Data has been deleted", {
 						variant: "success",
 					});
 					table.resetPageIndex();
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Hapus data gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},

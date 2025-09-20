@@ -62,12 +62,12 @@ const DialogPublicHoliday = ({
 				methods.clearErrors();
 				methods.reset();
 
-				enqueueSnackbar(`Data telah ${isEdit ? "diubah" : "ditambahkan"}`, {
+				enqueueSnackbar(`Data has been  ${isEdit ? "changed" : "added"}`, {
 					variant: "success",
 				});
 			},
 			onError: () => {
-				enqueueSnackbar("Error: Pembuatan holiday gagal", {
+				enqueueSnackbar("Error: Failed to create data", {
 					variant: "error",
 				});
 			},
@@ -105,9 +105,9 @@ const DialogPublicHoliday = ({
 									<Grid item xs={6}>
 										<RHFDatePicker
 											name="start_date"
-											label="Tanggal dimulai"
+											label="Start Date"
 											required
-											placeholder="Pilih Tanggal Mulai"
+											placeholder="Choose start date"
 											format="dd/MM/yyyy"
 											onChange={(date) => {
 												if (date) {
@@ -122,9 +122,9 @@ const DialogPublicHoliday = ({
 									<Grid item xs={6}>
 										<RHFDatePicker
 											name="end_date"
-											label="Tanggal berakhir"
+											label="End Date"
 											required
-											placeholder="Pilih Tanggal Akhir"
+											placeholder="Choose end date"
 											format="dd/MM/yyyy"
 											onChange={(date) => {
 												if (date) {
@@ -160,8 +160,8 @@ const DialogPublicHoliday = ({
 							<Grid item xs={6}>
 								<RHFTextField
 									name="title"
-									label="Judul"
-									placeholder="Masukan judul"
+									label="Title"
+									placeholder="Input title"
 									autoFocus={false}
 									required
 								/>
@@ -169,8 +169,8 @@ const DialogPublicHoliday = ({
 							<Grid item xs={6}>
 								<RHFTextField
 									name="description"
-									label="Deskripsi"
-									placeholder="Masukan deskripsi"
+									label="Description"
+									placeholder="Input description"
 									autoFocus={false}
 									required
 								/>
@@ -187,7 +187,7 @@ const DialogPublicHoliday = ({
 										});
 									}}
 								>
-									{data?.id ? "Ubah hari libur" : "Set hari libur"}
+									{data?.id ? "Change day off" : "Save day off"}
 								</Button>
 							</Grid>
 						</Grid>
