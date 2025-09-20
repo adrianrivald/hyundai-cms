@@ -16,12 +16,12 @@ const SettingVisitPage = () => {
 	const schema = yup.object({
 		batches: yup.array().of(
 			yup.object({
-				batch_identifier: yup.string().required("Batch harus diisi"),
+				batch_identifier: yup.string().required("Batch is required"),
 				batch_name: yup.string().nullable(),
 				batch_time: yup.string().nullable(),
 				batch_timerange: yup.string().nullable(),
-				start_time: yup.string().required("Start time harus diisi"),
-				end_time: yup.string().required("End time harus diisi"),
+				start_time: yup.string().required("Start time is required"),
+				end_time: yup.string().required("End time is required"),
 			})
 		),
 	});
@@ -78,8 +78,8 @@ const SettingVisitPage = () => {
 					variant: "success",
 				});
 			},
-			onError: () => {
-				enqueueSnackbar("Error: Failed to change data", {
+			onError: (err: any) => {
+				enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 					variant: "error",
 				});
 			},
@@ -88,10 +88,10 @@ const SettingVisitPage = () => {
 
 	return (
 		<Container className="bg-white px-5 py-5">
-			<Typography className="font-bold">Setting Kunjungan</Typography>
+			<Typography className="font-bold">Visit Setting</Typography>
 			<div className="mt-3 flex flex-row gap-3 mb-3">
 				<Typography className="text-sm mt-3">
-					Set batas slot kunjungan per hari
+					Set daily visit slot limit
 				</Typography>
 			</div>
 			<FormProvider methods={methods}>
@@ -166,7 +166,7 @@ const SettingVisitPage = () => {
 							]);
 						}}
 					>
-						Tambah Batch
+						Add Batch
 					</Button>
 				</div>
 			</FormProvider>
@@ -182,7 +182,7 @@ const SettingVisitPage = () => {
 					className="mt-3"
 					disabled={pendingPost}
 				>
-					Simpan Perubahan
+					Save Changes
 				</Button>
 			</div>
 		</Container>

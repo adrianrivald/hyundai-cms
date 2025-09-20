@@ -11,9 +11,9 @@ export const AboutContentSchema = yup.object({
 		.array()
 		.of(
 			yup.object({
-				title: yup.string().required("Title harus di isi"),
-				language: yup.string().required("Language harus di isi"),
-				content: yup.string().required("Content harus di isi"),
+				title: yup.string().required("Title is required"),
+				language: yup.string().required("Language is required"),
+				content: yup.string().required("Content is required"),
 			})
 		)
 		.optional()

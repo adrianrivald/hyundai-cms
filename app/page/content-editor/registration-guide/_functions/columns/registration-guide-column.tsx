@@ -20,7 +20,7 @@ import DialogAboutUs from "../components/dialog-registration-guide";
 export const dataAboutUsColumn: ColumnDef<LegalContentType>[] = [
 	{
 		accessorKey: "language",
-		header: "Bahasa",
+		header: "Language",
 		cell: ({ row }) => (
 			<CellText className="text-left">
 				{row?.original?.language === "en" ? "English" : "Indonesia" || "-"}
@@ -37,7 +37,7 @@ export const dataAboutUsColumn: ColumnDef<LegalContentType>[] = [
 	},
 	{
 		accessorKey: "title",
-		header: "Judul",
+		header: "Title",
 		cell: ({ row }) => (
 			<CellText className="text-left">{row?.original?.title || "-"}</CellText>
 		),
@@ -72,7 +72,7 @@ export const dataAboutUsColumn: ColumnDef<LegalContentType>[] = [
 
 	{
 		accessorKey: "completed",
-		header: "Aksi",
+		header: "Action",
 		cell: ({ row, table }) => <ActionCell table={table} row={row} />,
 		meta: {
 			cellProps: {
@@ -100,7 +100,7 @@ export const dataAboutUsColumn: ColumnDef<LegalContentType>[] = [
 						className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 					>
-						Tambah
+						Add
 					</Button>
 
 					<DialogAboutUs
@@ -122,7 +122,7 @@ export const dataAboutUsColumn: ColumnDef<LegalContentType>[] = [
 								setOpen(true);
 							}}
 						>
-							Lihat Detail
+							View Details
 						</Typography>
 					)}
 
@@ -205,8 +205,8 @@ const ActionCell = ({
 				setOpenDelete(false);
 				table.resetPageIndex();
 			},
-			onError: () => {
-				enqueueSnackbar("Error: Failed to change data", {
+			onError: (err: any) => {
+				enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 					variant: "error",
 				});
 				setOpenDelete(false);
