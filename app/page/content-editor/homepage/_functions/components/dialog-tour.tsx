@@ -88,10 +88,12 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 					onClose();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah diubah", { variant: "success" });
+					enqueueSnackbar("Data has been changed", { variant: "success" });
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Ubah tour gagal", { variant: "error" });
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
+						variant: "error",
+					});
 				},
 			});
 		} else {
@@ -100,7 +102,7 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 					onClose();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", { variant: "success" });
+					enqueueSnackbar("Data has been added", { variant: "success" });
 				},
 				onError: (err: any) => {
 					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
@@ -137,7 +139,7 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 				onClose();
 				methods.reset();
 			}}
-			headerTitle={data?.id ? "Ubah Tour" : "Tambah Tour"}
+			headerTitle={data?.id ? "Edit Tour" : "Add Tour"}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
 				<div>
@@ -149,13 +151,13 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 							<Grid item xs={12}>
 								<RHFSelect
 									name="type"
-									label="Tipe Tour"
+									label="Tour Type"
 									options={[
-										{ id: "vip-course", name: "VIP Course Tour" },
+										{ id: "vip", name: "VIP Course Tour" },
 										{ id: "general-course", name: "General Course Tour" },
 										{ id: "student-course", name: "Student Course Tour" },
 									]}
-									placeholder="Pilih tipe tour"
+									placeholder="Choose tour type"
 									getOptionLabel={(user) => user.name}
 									getOptionValue={(user) => String(user.id)}
 									required
@@ -164,16 +166,16 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 							<Grid item xs={12}>
 								<RHFTextField
 									name="name"
-									label="Nama Tour"
-									placeholder="Masukan nama tour"
+									label="Tour Name"
+									placeholder="Input Tour Name"
 									required
 								/>
 							</Grid>
 							<Grid item xs={12}>
 								<RHFTextArea
 									name="description"
-									label="Deskripsi"
-									placeholder="Masukan deskripsi"
+									label="Description"
+									placeholder="Input description"
 									rows={5}
 								/>
 							</Grid>
@@ -183,7 +185,7 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 								<Grid container spacing={3}>
 									<Grid item xs={12}>
 										<Typography className="font-bold text-sm">
-											Pabrik
+											Factory
 										</Typography>
 									</Grid>
 									{dataTour?.map((item) => {
@@ -241,7 +243,7 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 									<Grid container spacing={3}>
 										<Grid item xs={12}>
 											<Typography className="font-bold text-sm">
-												Rute Pilihan
+												Preffered Route
 											</Typography>
 										</Grid>
 										{dataRoute
@@ -316,16 +318,16 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 								<RHFTextField
 									type="number"
 									name="min_occupy"
-									label="Masukan jumlah minimal peserta"
-									placeholder="Masukan jumlah minimal peserta"
+									label="Enter the minimum number of participants"
+									placeholder="Enter the minimum number of participants"
 								/>
 							</Grid>
 							<Grid item xs={6}>
 								<RHFTextField
 									type="number"
 									name="max_occupy"
-									label="Masukan jumlah maksimal peserta"
-									placeholder="Masukan jumlah maksimal peserta"
+									label="Enter the maximum number of participants"
+									placeholder="Enter the maximum number of participants"
 								/>
 							</Grid>
 
@@ -338,7 +340,7 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 										});
 									}}
 								>
-									{methods.watch("id") ? "Ubah" : "Tambahkan"}
+									{methods.watch("id") ? "Edit" : "Add"}
 								</Button>
 							</Grid>
 						</Grid>

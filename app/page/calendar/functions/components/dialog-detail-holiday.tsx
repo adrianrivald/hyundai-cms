@@ -31,14 +31,14 @@ const DialogDetailHoliday = ({
 			{
 				onSuccess: () => {
 					setOpenDelete(false);
-					enqueueSnackbar("Data telah dihapus", {
+					enqueueSnackbar("Data has been deleted", {
 						variant: "success",
 					});
 					onClose();
 					refetch && refetch();
 				},
 				onError: () => {
-					enqueueSnackbar("Error: Hapus banner gagal", {
+					enqueueSnackbar("Error: Failed to delete data", {
 						variant: "error",
 					});
 				},
@@ -70,7 +70,7 @@ const DialogDetailHoliday = ({
 								setOpenEdit(true);
 							}}
 						>
-							Ubah
+							Change
 						</Button>
 						<Button
 							onClick={() => {
@@ -79,7 +79,7 @@ const DialogDetailHoliday = ({
 							variant={"hmmiOutline"}
 							className="border-red-500 text-red-500"
 						>
-							Hapus
+							Delete
 						</Button>
 					</div>
 

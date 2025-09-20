@@ -17,19 +17,19 @@ export default function Homepage() {
 					<TabsTrigger value="banner">
 						<div className="flex flex-row items-center gap-1 self-center">
 							<Icon icon="mynaui:image" width="20" height="20" />
-							Daftar Banner
+							List Banner
 						</div>
 					</TabsTrigger>
 					<TabsTrigger value="tour">
 						<div className="flex flex-row items-center gap-1 self-center">
 							<Icon icon="hugeicons:mentor" width="20" height="20" />
-							Daftar Tour
+							List Tour
 						</div>
 					</TabsTrigger>
 					<TabsTrigger value="pabrik">
 						<div className="flex flex-row items-center gap-1 self-center">
 							<Icon icon="hugeicons:factory" width="20" height="20" />
-							Daftar Pabrik
+							List Factory
 						</div>
 					</TabsTrigger>
 				</TabsList>

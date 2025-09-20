@@ -10,8 +10,8 @@ export type ArticleContentType = {
 
 export const ArticleContentSchema = yup.object({
 	id: yup.string().nullable().optional(),
-	title: yup.string().required("Judul harus di isi"),
-	author: yup.string().required("Penulis harus di isi"),
-	image: yup.string().required("Gambar harus di isi"),
-	content: yup.string().required("Konten harus di isi"),
+	title: yup.string().required("Title is required"),
+	author: yup.string().required("Author is required"),
+	image: yup.string().required("Image is required"),
+	content: yup.string().required("Content is required"),
 });

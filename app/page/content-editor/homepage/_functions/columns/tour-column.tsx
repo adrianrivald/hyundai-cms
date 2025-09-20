@@ -13,7 +13,7 @@ import { enqueueSnackbar } from "notistack";
 export const dataTourColumn: ColumnDef<TourPackageType>[] = [
 	{
 		accessorKey: "title",
-		header: "Gambar",
+		header: "Image",
 		cell: ({ row }) => (
 			<CellText className="text-left">
 				{row.original?.image_path ? (
@@ -37,7 +37,7 @@ export const dataTourColumn: ColumnDef<TourPackageType>[] = [
 	},
 	{
 		accessorKey: "name",
-		header: "Nama Tour",
+		header: "Tour Name",
 		cell: ({ row }) => <CellText className="">{row.original?.name}</CellText>,
 		meta: {
 			cellProps: {
@@ -50,7 +50,7 @@ export const dataTourColumn: ColumnDef<TourPackageType>[] = [
 	},
 	{
 		accessorKey: "description",
-		header: "Deskripsi",
+		header: "Description",
 		cell: ({ row }) => (
 			<CellText className="text-left">
 				{row?.original?.description || "-"}
@@ -67,7 +67,7 @@ export const dataTourColumn: ColumnDef<TourPackageType>[] = [
 	},
 	{
 		accessorKey: "participant",
-		header: "Peserta",
+		header: "Participant",
 		cell: ({ row }) => (
 			<CellText className="text-left">
 				{row.original.minimum_participant} - {row.original.maximum_participant}
@@ -84,7 +84,7 @@ export const dataTourColumn: ColumnDef<TourPackageType>[] = [
 	},
 	{
 		accessorKey: "factories",
-		header: "Pabrik",
+		header: "Factories",
 		cell: ({ row }) => (
 			<CellText className="text-left line-clamp-none">
 				{row.original.factories.map((item, index) => {
@@ -102,7 +102,7 @@ export const dataTourColumn: ColumnDef<TourPackageType>[] = [
 	},
 	{
 		accessorKey: "routes",
-		header: "Jml Rute",
+		header: "Total Routes",
 		cell: ({ row }) => (
 			<CellText className="text-left">{row.original.routes.length}</CellText>
 		),
@@ -117,7 +117,7 @@ export const dataTourColumn: ColumnDef<TourPackageType>[] = [
 	},
 	{
 		accessorKey: "completed",
-		header: "Aksi",
+		header: "Action",
 		cell: ({ row, table }) => <ActionCell row={row} table={table} />,
 		meta: {
 			cellProps: {
@@ -139,7 +139,7 @@ export const dataTourColumn: ColumnDef<TourPackageType>[] = [
 						className="bg-amber-500 hover:bg-amber-600 my-2"
 						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 					>
-						Tambah
+						Add
 					</Button>
 					<DialogTour
 						open={open}
@@ -178,13 +178,13 @@ const ActionCell = ({
 			{
 				onSuccess: () => {
 					setOpenDelete(false);
-					enqueueSnackbar("Data telah dihapus", {
+					enqueueSnackbar("Data has been deleted", {
 						variant: "success",
 					});
 					table.resetPageIndex();
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Hapus banner gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 					table.resetPageIndex();

@@ -62,6 +62,7 @@ const Form = () => {
 	const onSubmit = (status: string) => {
 		const form = methods.watch();
 		const postArticle: PostArticleType = {
+			author_name: form.author,
 			name: form.title,
 			content: form.content,
 			image_path: form.image,
@@ -75,7 +76,7 @@ const Form = () => {
 					onSuccess: () => {
 						methods.reset();
 						navigate("/content-editor/article");
-						enqueueSnackbar("Data telah diubah", { variant: "success" });
+						enqueueSnackbar("Data has been changed", { variant: "success" });
 					},
 					onError: () => {
 						enqueueSnackbar("Error: Ubah artikel gagal", { variant: "error" });
@@ -87,10 +88,10 @@ const Form = () => {
 				onSuccess: () => {
 					methods.reset();
 					navigate("/content-editor/article");
-					enqueueSnackbar("Data telah ditambahkan", { variant: "success" });
+					enqueueSnackbar("Data has been added", { variant: "success" });
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Pembuatan artikel gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error: ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -105,7 +106,7 @@ const Form = () => {
 					items={[
 						{ label: "Home", href: "/" },
 						{ label: "Articles", href: "/content-editor/article" },
-						{ label: id ? "Edit Artikel" : "Tambah Artikel" },
+						{ label: id ? "Edit Article" : "Add Article" },
 					]}
 				/>
 				<div className="flex flex-row gap-2">
@@ -153,8 +154,8 @@ const Form = () => {
 						<Grid item xs={12} md={6}>
 							<RHFTextField
 								name="title"
-								label="Judul"
-								placeholder="Masukan judul artikel"
+								label="Title"
+								placeholder="Input title article"
 								required
 								maxLength={200}
 							/>
@@ -163,9 +164,8 @@ const Form = () => {
 							<RHFTextField
 								name="author"
 								label="Author"
-								placeholder="Masukan Author Artikel"
+								placeholder="Input author article"
 								required
-								disabled
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -179,7 +179,7 @@ const Form = () => {
 							<QuillEditor
 								name="content"
 								control={methods.control}
-								placeholder={"Masukan isi konten"}
+								placeholder={"Input content"}
 								maxWords={1000}
 							/>
 						</Grid>

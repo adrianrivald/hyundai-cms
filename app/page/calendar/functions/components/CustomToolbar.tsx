@@ -41,7 +41,7 @@ export const CustomToolbar = ({ date, onNavigate, label }: ToolbarProps) => {
 						setOpen(true);
 					}}
 				>
-					Set Hari Libur
+					Set day off
 				</Button>
 			</div>
 			<DialogPublicHoliday onClose={() => setOpen(false)} open={open} />

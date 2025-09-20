@@ -39,8 +39,8 @@ const DialogFactory = ({
 	isDisabled = false,
 }: DialogFactoryProps) => {
 	const steps = [
-		{ key: "reg_factory", label: "Detail Pabrik" },
-		{ key: "reg_route", label: "Buat Rute" },
+		{ key: "reg_factory", label: "Factory Detail" },
+		{ key: "reg_route", label: "Add Route" },
 	];
 	const [deleteRoute, setDeleteRoute] = useState({ isOpen: false, id: "" });
 	const methods = useForm({
@@ -89,12 +89,12 @@ const DialogFactory = ({
 					methods.clearErrors();
 					methods.setValue("step", "reg_route");
 					//refetch && refetch();
-					enqueueSnackbar("Data telah diubah", {
+					enqueueSnackbar("Data has been changed", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Ubah factory gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -106,12 +106,12 @@ const DialogFactory = ({
 					methods.setValue("step", "reg_route");
 					methods.setValue("id", data?.data?.id);
 					//refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", {
+					enqueueSnackbar("Data has been added", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Pembuatan factory gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -135,12 +135,12 @@ const DialogFactory = ({
 				resetField();
 				methods.setValue("step", "reg_route");
 				refetch && refetch();
-				enqueueSnackbar("Data telah di tambahkan", {
+				enqueueSnackbar("Data has been added", {
 					variant: "success",
 				});
 			},
-			onError: () => {
-				enqueueSnackbar("Error: Ubah factory gagal", {
+			onError: (err: any) => {
+				enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 					variant: "error",
 				});
 			},
@@ -206,10 +206,10 @@ const DialogFactory = ({
 			}}
 			headerTitle={
 				isDisabled
-					? "Detail Pabrik"
+					? "Factory Detail"
 					: data?.id
-						? "Ubah Pabrik"
-						: "Tambah Pabrik"
+						? "Edit Factory"
+						: "Add Factory"
 			}
 			contentProps="w-[700px] max-h-[750px]"
 			content={
@@ -244,8 +244,8 @@ const DialogFactory = ({
 								<Grid item xs={12}>
 									<RHFTextField
 										name="factory_name"
-										label="Nama Pabrik"
-										placeholder="Masukan nama pabrik"
+										label="Factory Name"
+										placeholder="Input factory name"
 										autoFocus={false}
 										required
 										disabled={isDisabled}
@@ -254,8 +254,8 @@ const DialogFactory = ({
 								<Grid item xs={12}>
 									<RHFTextArea
 										name="description"
-										label="Deskripsi"
-										placeholder="Masukan deskripsi"
+										label="Description"
+										placeholder="Input description"
 										rows={4}
 										disabled={isDisabled}
 									/>
@@ -274,7 +274,7 @@ const DialogFactory = ({
 											}}
 										>
 											{/* {data?.id ? "Ubah" : "Tambahkan"} */}
-											Selanjutnya
+											Next
 										</Button>
 									</Grid>
 								)}
@@ -292,7 +292,7 @@ const DialogFactory = ({
 												className="flex flex-row justify-between"
 											>
 												<Typography className="text-lg font-bold ">
-													Rute {index + 1}
+													Route {index + 1}
 												</Typography>
 												{item.id && (
 													<div
@@ -328,8 +328,8 @@ const DialogFactory = ({
 											<Grid item xs={12}>
 												<RHFTextField
 													name={`route.${index}.route_name`}
-													label="Nama Rute"
-													placeholder="Masukan nama rute"
+													label="Route Name"
+													placeholder="Input route name"
 													autoFocus={false}
 													required
 													disabled={isDisabled}
@@ -338,8 +338,8 @@ const DialogFactory = ({
 											<Grid item xs={12}>
 												<RHFTextArea
 													name={`route.${index}.description`}
-													label="Deskripsi"
-													placeholder="Masukan deskripsi"
+													label="Description"
+													placeholder="Input description"
 													rows={4}
 													disabled={isDisabled}
 												/>
@@ -360,7 +360,7 @@ const DialogFactory = ({
 										}}
 									>
 										<Icon icon="ic:outline-plus" width="24" height="24" />
-										<Typography className="font-bold">Tambah Rute</Typography>
+										<Typography className="font-bold">Add route</Typography>
 									</div>
 								)}
 
@@ -377,7 +377,7 @@ const DialogFactory = ({
 												});
 											}}
 										>
-											Simpan
+											Save
 										</Button>
 									</div>
 								)}

@@ -69,7 +69,7 @@ export default function RHFUploadFile({
 		} catch (err) {
 			setError(name, {
 				type: "manual",
-				message: "Gagal mengunggah gambar",
+				message: "Failed to change image",
 			});
 		} finally {
 			setLoading(false);
@@ -82,7 +82,7 @@ export default function RHFUploadFile({
 				if (file.size > 10 * 1024 * 1024) {
 					setError(name, {
 						type: "manual",
-						message: "Ukuran maksimal 10MB untuk gambar",
+						message: "Maximum size for image is 10MB",
 					});
 					return;
 				}
@@ -159,7 +159,7 @@ export default function RHFUploadFile({
 									htmlFor={name}
 									className="text-[12px] underline mt-2 text-center cursor-pointer"
 								>
-									{loading ? "Uploading..." : "Ganti Gambar"}
+									{loading ? "Uploading..." : "Change image"}
 								</label>
 							</div>
 						) : (
@@ -170,12 +170,12 @@ export default function RHFUploadFile({
 								<Icon icon="mynaui:image" height={28} width={28} />
 								<Typography className="text-sm font-medium text-[#383B46]">
 									{loading
-										? "Mengunggah gambar..."
-										: "Seret dan letakkan gambar, atau pilih dari file"}
+										? "Uploading image..."
+										: "Drag and drop an image, or select from file"}
 								</Typography>
 								<Typography className="px-[100px] md:px-[200px] text-center text-[10px] text-[#9A9A9A]">
-									Gunakan gambar dengan lebar minimal 1600px. Ukuran maksimal
-									10MB (20MB untuk video)
+									Use an image with a minimum width of 1600px. Maximum size is
+									10MB (20MB for videos).
 								</Typography>
 							</label>
 						)}

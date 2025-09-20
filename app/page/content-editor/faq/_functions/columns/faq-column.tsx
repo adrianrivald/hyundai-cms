@@ -78,7 +78,7 @@ export const dataContactColumn: ColumnDef<FAQType>[] = [
 
 	{
 		accessorKey: "completed",
-		header: "Aksi",
+		header: "Action",
 		cell: ({ row, table }) => <ActionCell table={table} row={row} />,
 		meta: {
 			cellProps: {
@@ -101,7 +101,7 @@ export const dataContactColumn: ColumnDef<FAQType>[] = [
 						className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 					>
-						Tambah
+						Add
 					</Button>
 					<DialogContact
 						open={open}
@@ -142,13 +142,13 @@ const ActionCell = ({
 			{
 				onSuccess: () => {
 					setOpenDelete(false);
-					enqueueSnackbar("Data telah dihapus", {
+					enqueueSnackbar("Data has been deleted", {
 						variant: "success",
 					});
 					table.resetPageIndex();
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Hapus data gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},

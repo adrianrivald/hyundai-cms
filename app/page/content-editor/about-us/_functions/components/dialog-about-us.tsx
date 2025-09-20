@@ -2,7 +2,6 @@ import FormProvider from "@/components/RHForm/FormProvider";
 import DialogModal from "@/components/custom/dialog/dialog-modal";
 import { Grid } from "@/components/grid";
 import { Button } from "@/components/ui/button";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useForm } from "react-hook-form";
 import RHFTextField from "@/components/RHForm/RHFTextField";
@@ -18,10 +17,7 @@ import { useEffect, useState } from "react";
 import { QuillEditor } from "@/components/RHForm/RHFQuillEditor";
 import { Typography } from "@/components/typography";
 import { cn } from "@/lib/utils";
-import {
-	type LegalContentType,
-	LegalContentSchema,
-} from "@/page/content-editor/legal/_functions/models/legal";
+import { type LegalContentType } from "@/page/content-editor/legal/_functions/models/legal";
 
 interface DialogSocialMediaProps {
 	open: boolean;
@@ -72,12 +68,12 @@ const DialogAboutUs = ({
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah diubah", {
+					enqueueSnackbar("Data has been changed", {
 						variant: "success",
 					});
 				},
 				onError: () => {
-					enqueueSnackbar("Error: Ubah data gagal", {
+					enqueueSnackbar("Error: Failed to change data", {
 						variant: "error",
 					});
 				},
@@ -89,12 +85,12 @@ const DialogAboutUs = ({
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", {
+					enqueueSnackbar("Data has been added", {
 						variant: "success",
 					});
 				},
 				onError: () => {
-					enqueueSnackbar("Error: Pembuatan data gagal", {
+					enqueueSnackbar("Error: Failed to create data", {
 						variant: "error",
 					});
 				},
@@ -121,10 +117,10 @@ const DialogAboutUs = ({
 			}}
 			headerTitle={
 				isEditMode
-					? "Lihat About Us"
+					? "View About Us"
 					: methods.watch("id")
-						? "Ubah About Us"
-						: "Tambah About Us"
+						? "Change About Us"
+						: "Add About Us"
 			}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
@@ -173,8 +169,8 @@ const DialogAboutUs = ({
 										<RHFTextField
 											disabled={isEditMode}
 											name="data.0.title"
-											label="Judul"
-											placeholder="Masukan Judul"
+											label="Title"
+											placeholder="Input title"
 											autoFocus={false}
 											required
 										/>
@@ -184,7 +180,7 @@ const DialogAboutUs = ({
 										<QuillEditor
 											name="data.0.content"
 											control={methods.control}
-											placeholder={"Masukan isi konten"}
+											placeholder={"Input content"}
 										/>
 									</Grid>
 								</>
@@ -196,8 +192,8 @@ const DialogAboutUs = ({
 										<RHFTextField
 											disabled={isEditMode}
 											name="data.1.title"
-											label="Judul"
-											placeholder="Masukan Judul"
+											label="Title"
+											placeholder="Input title"
 											autoFocus={false}
 											required
 										/>
@@ -207,7 +203,7 @@ const DialogAboutUs = ({
 										<QuillEditor
 											name="data.1.content"
 											control={methods.control}
-											placeholder={"Masukan isi konten"}
+											placeholder={"Input content"}
 										/>
 									</Grid>
 								</>
@@ -225,7 +221,7 @@ const DialogAboutUs = ({
 										});
 									}}
 								>
-									{methods.watch("id") ? "Ubah" : "Tambahkan"}
+									{methods.watch("id") ? "Edit" : "Save"}
 								</Button>
 							</Grid>
 						</Grid>

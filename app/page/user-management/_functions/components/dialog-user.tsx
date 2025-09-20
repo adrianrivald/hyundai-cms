@@ -68,7 +68,7 @@ const DialogUser = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah diubah", {
+					enqueueSnackbar("Data has been changed", {
 						variant: "success",
 					});
 				},
@@ -86,7 +86,7 @@ const DialogUser = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", {
+					enqueueSnackbar("Data has been added", {
 						variant: "success",
 					});
 				},
@@ -127,8 +127,8 @@ const DialogUser = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 							<Grid item xs={12}>
 								<RHFTextField
 									name="name"
-									label="Nama"
-									placeholder="Masukan Nama"
+									label="Name"
+									placeholder="Input name"
 									autoFocus={false}
 									required
 								/>
@@ -136,8 +136,8 @@ const DialogUser = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 							<Grid item xs={12}>
 								<RHFTextField
 									name="email"
-									label="Alamat Email"
-									placeholder="Masukan Alamat Email"
+									label="Email Address"
+									placeholder="Input email address"
 									autoFocus={false}
 									required
 									type="email"
@@ -147,8 +147,8 @@ const DialogUser = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 							<Grid item xs={12}>
 								<RHFTextField
 									name="password"
-									label="Kata Sandi"
-									placeholder="Masukan Kata Sandi"
+									label="Password"
+									placeholder="Input password"
 									autoFocus={false}
 									required
 									type="password"
@@ -165,7 +165,7 @@ const DialogUser = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 											name: item.name,
 										})) || []
 									}
-									placeholder="Pilih Role"
+									placeholder="Choose role"
 									getOptionLabel={(user) => user.name}
 									getOptionValue={(user) => String(user.id)}
 									required
@@ -183,7 +183,7 @@ const DialogUser = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 										});
 									}}
 								>
-									{data?.id ? "Ubah" : "Tambahkan"}
+									{data?.id ? "Edit" : "Add"}
 								</Button>
 							</Grid>
 						</Grid>

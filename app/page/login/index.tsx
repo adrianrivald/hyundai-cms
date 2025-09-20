@@ -32,12 +32,12 @@ const LoginPage = () => {
 			yup.object().shape({
 				email: yup
 					.string()
-					.required("Email harus di isi")
-					.matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Email harus valid"),
+					.required("Email is required")
+					.matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Email must be valid"),
 				password: yup
 					.string()
-					.min(4, "Password harus lebih dari 4 karakter")
-					.required("Password harus di isi"),
+					.min(4, "Password must be more than 4 characters")
+					.required("Password is required"),
 			})
 		),
 	});
@@ -64,7 +64,7 @@ const LoginPage = () => {
 					});
 				},
 				onError: (err) => {
-					setLoginError("Email atau password salah.");
+					setLoginError("Wrong email or password.");
 				},
 			}
 		);
@@ -81,11 +81,11 @@ const LoginPage = () => {
 					<div className="flex-1 flex flex-col items-center justify-center ">
 						<div className={cn(`${isMobile ? "w-[70%]" : "w-[55%]"}`)}>
 							<img src="/images/logo.webp" className="w-[134px] h-[18px]" />
-							<Typography className="text-4xl font-sans font-bold mt-4 text-hmmi-primary-500">
-								Silakan masuk ke akun Anda
+							<Typography className="text-4xl font-sans font-bold mt-4 ">
+								Sign in to your account
 							</Typography>
 							<Typography className="text-xs text-hmmi-grey-400">
-								Masukan alamat email dan password untuk masuk ke akun anda.
+								Please enter your email and password to sign in.
 							</Typography>
 							<FormProvider
 								methods={methods}
@@ -95,7 +95,7 @@ const LoginPage = () => {
 									<RHFTextField
 										name="email"
 										label="Email"
-										placeholder="Masukan alamat email"
+										placeholder="Input email address"
 										type="email"
 										autoFocus={false}
 										autoComplete={"email"}
@@ -111,7 +111,7 @@ const LoginPage = () => {
 									<RHFTextField
 										name="password"
 										label="Password"
-										placeholder="Masukan Kata Sandi"
+										placeholder="Input assword"
 										type={showPassword ? "text" : "password"}
 										startIcon={
 											<Icon

@@ -67,12 +67,12 @@ const DialogContact = ({
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah diubah", {
+					enqueueSnackbar("Data has been changed", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Ubah data gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -84,12 +84,12 @@ const DialogContact = ({
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", {
+					enqueueSnackbar("Data has been added", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Pembuatan data gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -112,7 +112,7 @@ const DialogContact = ({
 				methods.reset();
 			}}
 			headerTitle={
-				isEditMode ? "Lihat Kontak" : data?.id ? "Ubah Kontak" : "Tambah Kontak"
+				isEditMode ? "View Contacts" : data?.id ? "Edit Contact" : "Add Contact"
 			}
 			contentProps="w-[780px] max-h-[800px] overflow-y-scroll"
 			content={
@@ -123,8 +123,8 @@ const DialogContact = ({
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.0.phone"
-									label="Nomor Telpon 1"
-									placeholder="Masukan Nomor Telfon"
+									label="Phone Number 1"
+									placeholder="Input Phone Number"
 									autoFocus={false}
 									//required={!isEditMode}
 									type="number"
@@ -134,8 +134,8 @@ const DialogContact = ({
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.1.phone"
-									label="Nomor Telpon 2"
-									placeholder="Masukan Nomor Telfon"
+									label="Phone Number 2"
+									placeholder="Input Phone Number"
 									autoFocus={false}
 									//required={!isEditMode}
 									type="number"
@@ -145,8 +145,8 @@ const DialogContact = ({
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.2.phone"
-									label="Nomor Telpon 3"
-									placeholder="Masukan Nomor Telfon"
+									label="Phone Number 3"
+									placeholder="Input Phone Number"
 									autoFocus={false}
 									//required={!isEditMode}
 									type="number"
@@ -156,8 +156,8 @@ const DialogContact = ({
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.0.email"
-									label="Alamat Email 1"
-									placeholder="Masukan Alamat Email"
+									label="Email Address 1"
+									placeholder="Input Email Address"
 									autoFocus={false}
 									//required={!isEditMode}
 									type="email"
@@ -167,8 +167,8 @@ const DialogContact = ({
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.1.email"
-									label="Alamat Email 2"
-									placeholder="Masukan Alamat Email"
+									label="Email Address 2"
+									placeholder="Input Email Address"
 									autoFocus={false}
 									//required={!isEditMode}
 									type="email"
@@ -178,8 +178,8 @@ const DialogContact = ({
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.2.email"
-									label="Alamat Email 3"
-									placeholder="Masukan Alamat Email"
+									label="Email Address 3"
+									placeholder="Input Email Address"
 									autoFocus={false}
 									//required={!isEditMode}
 									type="email"
@@ -190,8 +190,8 @@ const DialogContact = ({
 								<RHFTextField
 									disabled={isEditMode}
 									name="address"
-									label="Alamat"
-									placeholder="Masukan alamat"
+									label="Address"
+									placeholder="Input Address"
 									autoFocus={false}
 									required={!isEditMode}
 								/>
@@ -209,7 +209,7 @@ const DialogContact = ({
 										});
 									}}
 								>
-									{data?.id ? "Ubah" : "Tambahkan"}
+									{data?.id ? "Edit" : "Save"}
 								</Button>
 							</Grid>
 						</Grid>

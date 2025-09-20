@@ -90,6 +90,12 @@
         "file": "./routes/guard-route/content-editor/article/update.$id.tsx",
         "path": "content-editor/article/update/:id"
       },
+      "routes/guard-route/content-editor/setting-visit": {
+        "id": "routes/guard-route/content-editor/setting-visit",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/setting-visit.tsx",
+        "path": "content-editor/setting-visit"
+      },
       "routes/guard-route/content-editor/contact": {
         "id": "routes/guard-route/content-editor/contact",
         "parentId": "routes/__layout/__auth.layout",
@@ -119,12 +125,6 @@
         "parentId": "routes/__layout/__auth.layout",
         "file": "./routes/guard-route/content-editor/registration-guide.tsx",
         "path": "content-editor/registration-guide"
-      },
-      "routes/guard-route/post/post-detail": {
-        "id": "routes/guard-route/post/post-detail",
-        "parentId": "routes/__layout/__auth.layout",
-        "file": "./routes/guard-route/post/post-detail.tsx",
-        "path": "post/detail/:id"
       },
       "routes/guard-route/whistleblower/index": {
         "id": "routes/guard-route/whistleblower/index",
@@ -254,6 +254,12 @@
         "file": "./routes/guard-route/content-editor/article/update.$id.tsx",
         "path": "content-editor/article/update/:id"
       },
+      "routes/guard-route/content-editor/setting-visit": {
+        "id": "routes/guard-route/content-editor/setting-visit",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/setting-visit.tsx",
+        "path": "content-editor/setting-visit"
+      },
       "routes/guard-route/content-editor/contact": {
         "id": "routes/guard-route/content-editor/contact",
         "parentId": "routes/__layout/__auth.layout",
@@ -283,12 +289,6 @@
         "parentId": "routes/__layout/__auth.layout",
         "file": "./routes/guard-route/content-editor/registration-guide.tsx",
         "path": "content-editor/registration-guide"
-      },
-      "routes/guard-route/post/post-detail": {
-        "id": "routes/guard-route/post/post-detail",
-        "parentId": "routes/__layout/__auth.layout",
-        "file": "./routes/guard-route/post/post-detail.tsx",
-        "path": "post/detail/:id"
       },
       "routes/guard-route/whistleblower/index": {
         "id": "routes/guard-route/whistleblower/index",

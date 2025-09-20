@@ -7,11 +7,11 @@ export type YoutubeType = {
 };
 
 export const YoutubeSchema = yup.object({
-	title: yup.string().required("Judul video harus di isi"),
+	title: yup.string().required("Video title is required"),
 	link: yup
 		.string()
-		.required("Link video harus di isi")
-		.test("is-youtube", "Link harus berupa URL YouTube yang valid", (value) => {
+		.required("Video link is required")
+		.test("is-youtube", "Link must be a valid YouTube URL", (value) => {
 			if (!value) return false;
 			try {
 				const url = new URL(value);
