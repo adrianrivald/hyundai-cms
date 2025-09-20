@@ -61,8 +61,8 @@ const DialogFaq = ({
 					variant: "success",
 				});
 			},
-			onError: () => {
-				enqueueSnackbar("Error: Failed to change data", {
+			onError: (err: any) => {
+				enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 					variant: "error",
 				});
 			},
@@ -95,10 +95,10 @@ const DialogFaq = ({
 			}}
 			headerTitle={
 				isEditMode
-					? "Lihat Pertanyaan"
+					? "View Question"
 					: data?.id
-						? "Ubah Pertanyaan"
-						: "Tambah Pertanyaan"
+						? "Edit Question"
+						: "Add Question"
 			}
 			contentProps="w-[850px] max-h-[750px] overflow-y-scroll"
 			content={
@@ -114,7 +114,7 @@ const DialogFaq = ({
 											className="flex flex-row justify-between items-center"
 										>
 											<Typography className="font-medium">
-												Pertanyaan {index + 1}
+												Question {index + 1}
 											</Typography>
 
 											{(methods?.watch("faq") || [])?.length > 1 && (
@@ -139,8 +139,8 @@ const DialogFaq = ({
 											<RHFTextField
 												disabled={isEditMode}
 												name={`faq.${index}.question_id`}
-												label="Pertanyaan"
-												placeholder="Masukan Pertanyaan"
+												label="Question (ID)"
+												placeholder="Input Question"
 												autoFocus={false}
 												required
 											/>
@@ -149,7 +149,7 @@ const DialogFaq = ({
 											<RHFTextField
 												disabled={isEditMode}
 												name={`faq.${index}.question_en`}
-												label="Question"
+												label="Question (EN)"
 												placeholder="Input Question"
 												autoFocus={false}
 												required
@@ -159,8 +159,8 @@ const DialogFaq = ({
 											<RHFTextArea
 												disabled={isEditMode}
 												name={`faq.${index}.answer_id`}
-												label="Jawaban"
-												placeholder="Masukan Jawaban"
+												label="Answer (ID)"
+												placeholder="Input Answer"
 												required
 												rows={5}
 											/>
@@ -169,7 +169,7 @@ const DialogFaq = ({
 											<RHFTextArea
 												disabled={isEditMode}
 												name={`faq.${index}.answer_en`}
-												label="Answer"
+												label="Answer (EN)"
 												placeholder="Input Answer"
 												required
 												rows={5}
@@ -197,9 +197,7 @@ const DialogFaq = ({
 										}}
 									>
 										<Icon icon="ic:outline-plus" width="24" height="24" />
-										<Typography className="font-bold">
-											Tambah Pertanyaan
-										</Typography>
+										<Typography className="font-bold">Add Question</Typography>
 									</div>
 								</Grid>
 							)}
@@ -216,7 +214,7 @@ const DialogFaq = ({
 										});
 									}}
 								>
-									{data?.id ? "Ubah" : "Tambahkan"}
+									{data?.id ? "Edit" : "Add"}
 								</Button>
 							</Grid>
 						</Grid>

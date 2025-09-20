@@ -201,7 +201,7 @@ const ActionCell = ({
 
 		mutateEdit(dataForm, {
 			onSuccess: () => {
-				enqueueSnackbar("Data telah dihapus", {
+				enqueueSnackbar("Data has been deleted", {
 					variant: "success",
 				});
 				setOpenDelete(false);

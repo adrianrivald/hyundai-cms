@@ -14,8 +14,8 @@ import { enqueueSnackbar } from "notistack";
 
 export const dataBannerColumn: ColumnDef<BannerType>[] = [
 	{
-		accessorKey: "title",
-		header: "Gambar",
+		accessorKey: "image_path",
+		header: "Image",
 		cell: ({ row }) => (
 			<CellText className="text-left">
 				<img
@@ -34,8 +34,8 @@ export const dataBannerColumn: ColumnDef<BannerType>[] = [
 		},
 	},
 	{
-		accessorKey: "completed",
-		header: "Judul",
+		accessorKey: "name",
+		header: "Title",
 		cell: ({ row }) => <CellText className="">{row.original?.name}</CellText>,
 		meta: {
 			cellProps: {
@@ -47,8 +47,8 @@ export const dataBannerColumn: ColumnDef<BannerType>[] = [
 		},
 	},
 	{
-		accessorKey: "title",
-		header: "Deskripsi",
+		accessorKey: "description",
+		header: "Description",
 		cell: ({ row }) => (
 			<CellText className="text-left">
 				{row?.original?.description || "-"}
@@ -64,8 +64,8 @@ export const dataBannerColumn: ColumnDef<BannerType>[] = [
 		},
 	},
 	{
-		accessorKey: "title",
-		header: "Tanggal Terbit",
+		accessorKey: "published_at",
+		header: "Publish Date",
 		cell: ({ row }) => (
 			<CellText className="text-left">
 				{format(row.original?.published_at, "dd/MM/yyyy")}
@@ -82,7 +82,7 @@ export const dataBannerColumn: ColumnDef<BannerType>[] = [
 	},
 	{
 		accessorKey: "completed",
-		header: "Aksi",
+		header: "Action",
 		cell: ({ row, table }) => <ActionCell row={row} table={table} />,
 		meta: {
 			cellProps: {
@@ -105,7 +105,7 @@ export const dataBannerColumn: ColumnDef<BannerType>[] = [
 						className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 					>
-						Tambah
+						Add
 					</Button>
 
 					<DialogBanner
@@ -147,13 +147,13 @@ const ActionCell = ({
 			{
 				onSuccess: () => {
 					setOpenDelete(false);
-					enqueueSnackbar("Data telah dihapus", {
+					enqueueSnackbar("Data has been deleted", {
 						variant: "success",
 					});
 					table.resetPageIndex();
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Hapus banner gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 					table.resetPageIndex();

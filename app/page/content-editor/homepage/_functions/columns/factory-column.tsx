@@ -12,7 +12,7 @@ import { Typography } from "@/components/typography";
 export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 	{
 		accessorKey: "image_path",
-		header: "Gambar",
+		header: "Title",
 		cell: ({ row }) => (
 			<CellText className="text-left">
 				<img
@@ -32,7 +32,7 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 	},
 	{
 		accessorKey: "name",
-		header: "Nama Pabrik",
+		header: "Factory name",
 		cell: ({ row }) => <CellText className="">{row.original?.name}</CellText>,
 		meta: {
 			cellProps: {
@@ -45,7 +45,7 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 	},
 	{
 		accessorKey: "description",
-		header: "Deskripsi",
+		header: "Description",
 		cell: ({ row }) => (
 			<CellText className="text-left">
 				{row?.original?.description || "-"}
@@ -62,7 +62,7 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 	},
 	{
 		accessorKey: "completed",
-		header: "Aksi",
+		header: "Action",
 		cell: ({ row, table }) => <ActionCell row={row} table={table} />,
 		meta: {
 			cellProps: {
@@ -86,7 +86,7 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 						className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 					>
-						Tambah
+						Add
 					</Button>
 					<DialogFactory
 						open={open}
@@ -108,7 +108,7 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 							setOpen(true);
 						}}
 					>
-						Lihat Detail
+						View Details
 					</Typography>
 					<DialogFactory
 						open={open}
@@ -148,13 +148,13 @@ const ActionCell = ({
 			{
 				onSuccess: () => {
 					setOpenDelete(false);
-					enqueueSnackbar("Data telah dihapus", {
+					enqueueSnackbar("Data has been deleted", {
 						variant: "success",
 					});
 					table.resetPageIndex();
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Hapus banner gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 					table.resetPageIndex();
