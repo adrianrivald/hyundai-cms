@@ -16,6 +16,13 @@ import { queryClient } from "./lib/queryClient";
 import { NotistackProvider } from "./components/notistack-provider";
 import { LoadingIndicator } from "./components/loading-indicator";
 import NotFound from "./components/not-found";
+import Cookies from "js-cookie";
+import { Typography } from "./components/typography";
+import { useForm } from "react-hook-form";
+import FormProvider from "./components/RHForm/FormProvider";
+import RHFTextField from "./components/RHForm/RHFTextField";
+import { Button } from "./components/ui/button";
+import AuthenticationPage from "./components/authentication";
 
 export const links: Route.LinksFunction = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -39,6 +46,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Meta />
 				<Links />
 			</head>
+
 			<body>
 				<NotistackProvider>
 					<QueryClientProvider client={queryClient}>
@@ -57,6 +65,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
 	const navigation = useNavigation();
 	const isNavigating = Boolean(navigation.location);
+	const isAnyCookies = Cookies.get("hmmi_cookies");
+
+	if (!isAnyCookies) {
+		return <AuthenticationPage />;
+	}
+
 	return (
 		<>
 			{isNavigating && <LoadingIndicator />}
