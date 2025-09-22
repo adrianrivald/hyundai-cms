@@ -49,15 +49,29 @@ const DialogContact = ({
 		usePostGlobalVariable();
 	const { mutate: mutateEdit, isPending: pendingEdit } = usePutGlobalVariable();
 
+	const formatPhone = (value: string) => {
+		if (!value) return "";
+		const cleaned = value.replace(/\D/g, ""); // keep only digits
+		return cleaned.replace(/(\d{3})(?=\d)/g, "$1 ");
+	};
+
 	const onSubmit = () => {
 		const form = methods.watch();
+
+		const formattedContacts = form.contact.map((c: any) => ({
+			...c,
+			phone: formatPhone(c.phone),
+		}));
 
 		const dataForm: GlobalVariableTypes = {
 			id: data?.id || "",
 			name: "contact",
 			description: "The contact on microsite",
 			is_active: true,
-			var_value: JSON.stringify(form),
+			var_value: JSON.stringify({
+				...form,
+				contact: formattedContacts,
+			}),
 		};
 
 		if (data?.id) {
@@ -99,9 +113,17 @@ const DialogContact = ({
 
 	useEffect(() => {
 		if (open && data) {
-			methods.reset(data);
+			methods.reset({
+				id: data.id || "",
+				address: data.address || "",
+				contact: (data.contact || []).map((c: any) => ({
+					id: c.id || "",
+					phone: (c.phone || "").replace(/\s/g, ""), // remove spaces
+					email: c.email || "",
+				})),
+			});
 		}
-	}, [open, data]);
+	}, [open, data, methods]);
 
 	return (
 		<DialogModal

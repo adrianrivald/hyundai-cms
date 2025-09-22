@@ -19,14 +19,26 @@ export function useListContact() {
 				.filter((item) => item.var_value !== "" && item.var_value !== null)
 				.map((item) => {
 					const parsed = JSON.parse(item.var_value) as ContactType;
+
+					const phones = parsed.contact
+						.map((c) => c.phone?.trim())
+						.filter((p) => p); // remove empty
+
+					const emails = parsed.contact
+						.map((c) => c.email?.trim())
+						.filter((e) => e); // remove empty
+
+					const contactDisplay = parsed.contact
+						.filter((c) => c.phone || c.email) // only show if at least one exists
+						.map((c) => `${c.phone}${c.email ? ` (${c.email})` : ""}`)
+						.join(", ");
+
 					return {
 						...parsed,
 						id: item.id,
-						phone: parsed.contact.map((c) => c.phone).join(", "),
-						email: parsed.contact.map((c) => c.email).join(", "),
-						contactDisplay: parsed.contact
-							.map((c) => `${c.phone} (${c.email})`)
-							.join(", "),
+						phone: phones.join(", "),
+						email: emails.join(", "),
+						contactDisplay,
 					};
 				}) ?? [],
 		columns: dataContactColumn,
