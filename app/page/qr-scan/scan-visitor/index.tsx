@@ -5,6 +5,8 @@ import StickyFooter from "@/components/layout/sticky-footer";
 import StickyHeader from "@/components/layout/sticky-header";
 import { useState } from "react";
 import { Scanner } from "@yudiel/react-qr-scanner";
+import { attendQr } from "@/api/qr-scan";
+import { toast } from "sonner";
 
 export default function ScanVisitor() {
   const [isScanned, setIsScanned] = useState(false);
@@ -18,21 +20,25 @@ export default function ScanVisitor() {
     { icon: "mingcute:settings-2-line", label: "Settings" },
   ];
 
-  const handleScan = (detectedCodes: any[]) => {
+  const handleScan = async (detectedCodes: any[]) => {
     if (detectedCodes && detectedCodes.length > 0) {
       const result = detectedCodes[0].rawValue;
-      setScannedData(result);
 
       // Try to parse JSON data from QR code
       try {
-        const visitorData = JSON.parse(result);
-        console.log("Parsed visitor data:", visitorData);
+        const res = await attendQr({
+          code: result,
+        });
+        setScannedData(result);
+        setIsScanned(true);
+
+        // TODO: Set data after scanning
+
         // You can use this data to populate the visitor details
       } catch (error) {
-        console.log("QR code data is not JSON format:", result);
+        console.error("Error when scanning", error);
+        // toast.error(error?.response?.data?.message);
       }
-
-      setIsScanned(true);
     }
   };
 
