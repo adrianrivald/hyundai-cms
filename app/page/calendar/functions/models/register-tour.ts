@@ -18,6 +18,8 @@ export const FormRegisterTourSchema = yup.object({
 	}),
 
 	tour_type: yup.string().nullable().optional(),
+	min_participant: yup.string().nullable().optional(),
+	max_participant: yup.string().nullable().optional(),
 
 	batch: yup.string().when("step", {
 		is: "info_dasar",
@@ -28,13 +30,11 @@ export const FormRegisterTourSchema = yup.object({
 	info_group: yup.object({
 		group_name: yup.string().when("..step", {
 			is: "info_dasar",
-			then: (schema) => schema.optional().nullable(),
-			otherwise: (schema) => schema.required("Group name is required"),
+			otherwise: (schema) => schema.optional().nullable(),
+			then: (schema) => schema.required("Group name is required"),
 		}),
-		group_type: yup.string().when(["..type_tour", "..step"], {
-			is: (type_tour: string, step: string) =>
-				step === "info_dasar" &&
-				!(type_tour === "general-course" || type_tour === "vip"),
+		group_type: yup.string().when(["..step"], {
+			is: (step: string) => step === "info_dasar",
 			then: (schema) => schema.required("Group type is required"),
 			otherwise: (schema) => schema.optional().nullable(),
 		}),
@@ -69,26 +69,10 @@ export const FormRegisterTourSchema = yup.object({
 		age: yup.string().when("..step", {
 			is: "info_dasar",
 			then: (schema) => schema.optional().nullable(),
-			otherwise: (schema) =>
-				schema
-					.required("Age is required")
-					.test("max-age", "Age must be less than or equal to 70", (value) => {
-						if (!value) return false;
-						const num = Number(value);
-						return !isNaN(num) && num <= 70;
-					})
-					.test("min-age", "Age must be more than or equal to 10", (value) => {
-						if (!value) return false;
-						const num = Number(value);
-						return !isNaN(num) && num >= 10;
-					}),
+			otherwise: (schema) => schema.required("Dob is required"),
 		}),
 		isDifabel: yup.string().nullable().optional(),
-		purpose_letter: yup.string().when("..step", {
-			is: "info_dasar",
-			then: (schema) => schema.optional().nullable(),
-			otherwise: (schema) => schema.required("Purpose letter is required"),
-		}),
+		purpose_letter: yup.string().optional().nullable(),
 	}),
 
 	info_vehicle: yup.object({
@@ -104,29 +88,27 @@ export const FormRegisterTourSchema = yup.object({
 		}),
 	}),
 
-	group_member: yup
-		.array()
-		.of(
-			yup.object({
-				name: yup.string().required("Name is required"),
-				phone: yup.string().required("Phone is required"),
-				email: yup
-					.string()
-					.required("Email is required")
-					.matches(emailRegex, "Invalid email address"),
-				gender: yup.string().required("Gender is required"),
-				dob: yup.string().required("Date of birth is required"),
-				isDifable: yup.string().nullable().optional(),
-			})
-		)
-		.when("step", {
-			is: "info_dasar",
-			then: (schema) => schema.optional().nullable(),
-			otherwise: (schema) =>
-				schema
-					.required("Group members are required")
-					.min(1, "At least one member is required"),
-		}),
+	group_member: yup.array().when("step", {
+		is: "info_anggota",
+		then: (schema) =>
+			schema
+				.of(
+					yup.object({
+						name: yup.string().required("Name is required"),
+						phone: yup.string().required("Phone is required"),
+						email: yup
+							.string()
+							.required("Email is required")
+							.matches(emailRegex, "Invalid email address"),
+						gender: yup.string().required("Gender is required"),
+						dob: yup.string().required("Date of birth is required"),
+						isDifable: yup.string().nullable().optional(),
+					})
+				)
+				.required("Group members are required")
+				.min(1, "At least one member is required"),
+		otherwise: (schema) => schema.optional().nullable(),
+	}),
 });
 
 export type FormRegisterTour = {
@@ -135,10 +117,12 @@ export type FormRegisterTour = {
 	type: string;
 	tour_type: string;
 	batch: string;
+	min_participant: string;
+	max_participant: string;
 	info_group: {
 		group_name: string;
 		group_type?: string | null; // optional or nullable depending on type
-		group_lead: string;
+		group_leader: string;
 		purpose_visit: string;
 		city: string;
 		email: string;
@@ -146,6 +130,7 @@ export type FormRegisterTour = {
 		age: string;
 		isDifabel?: string | null;
 		purpose_letter: string;
+		phone_number: string;
 	};
 	info_vehicle: {
 		vehicle_type: string;

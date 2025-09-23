@@ -9,7 +9,7 @@ import RHFSelect from "@/components/RHForm/RHFSelect";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useGetTourPackages } from "@/api/tour-package";
-import { useGetBatches, useGetCalendars } from "@/api/batch";
+import { useGetCalendars } from "@/api/batch";
 import { format, isSameDay, isValid } from "date-fns";
 import { RHFFileUpload } from "@/components/RHForm/RHFUploadInput";
 
@@ -19,7 +19,7 @@ interface BasicInformationProps {
 
 const BasicInformation = ({ methods }: BasicInformationProps) => {
 	const { data: dataTourPackages } = useGetTourPackages("");
-	const { data: dataSlot } = useGetBatches();
+
 	const {
 		data: dataCalendar,
 		refetch,
@@ -29,6 +29,8 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 			? format(new Date(methods.watch("date")), "yyyy-MM")
 			: format(new Date(), "yyyy-MM")
 	);
+
+	console.log("dataa", methods.formState.errors);
 
 	return (
 		<div className="">
@@ -99,28 +101,39 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 					/>
 				</div>
 			</div>
-			<div className="mt-5">
-				<RHFRadioGroup
-					name="type"
-					options={dataTourPackages?.data?.map((item) => item.name) || []}
-					values={
-						dataTourPackages?.data?.map((item) => String(item.id || "")) || []
-					}
-					getOptionLabel={
-						dataTourPackages?.data?.map((item) => item.name) || []
-					}
-					direction="row"
-					size="sm"
-					itemRadioProps={"border-[1px] rounded-sm px-5 py-2"}
-					onChange={(tour) => {
-						let data = dataTourPackages?.data?.filter(
-							(item) => item.id === tour
-						)?.[0];
-						methods.setValue("type", tour);
-						methods.setValue("tour_type", data?.tour_packages_type || "");
-					}}
-				/>
-			</div>
+			{methods.watch("batch") && (
+				<div className="mt-5">
+					<RHFRadioGroup
+						name="type"
+						options={dataTourPackages?.data?.map((item) => item.name) || []}
+						values={
+							dataTourPackages?.data?.map((item) => String(item.id || "")) || []
+						}
+						getOptionLabel={
+							dataTourPackages?.data?.map((item) => item.name) || []
+						}
+						direction="row"
+						size="sm"
+						itemRadioProps={"border-[1px] rounded-sm px-5 py-2"}
+						onChange={(tour) => {
+							let data = dataTourPackages?.data?.filter(
+								(item) => item.id === tour
+							)?.[0];
+							methods.setValue("type", tour);
+							methods.setValue("tour_type", data?.tour_packages_type || "");
+							methods.setValue(
+								"min_participant",
+								String(data?.minimum_participant)
+							);
+							methods.setValue(
+								"max_participant",
+								String(data?.maximum_participant)
+							);
+						}}
+					/>
+				</div>
+			)}
+
 			{methods.watch("type") && (
 				<div className="mt-5 border-[1px] rounded-sm p-3">
 					<Typography className="text-md font-bold">
@@ -195,6 +208,18 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								placeholder="Input Email Address"
 								autoFocus={false}
 								required
+								className="space-y-0"
+							/>
+						</Grid>
+						<Grid item xs={6} md={3}>
+							<RHFTextField
+								name="info_group.phone_number"
+								label="Phone Number"
+								placeholder="Input Phone Number"
+								autoFocus={false}
+								required
+								type="number"
+								className="space-y-0"
 							/>
 						</Grid>
 						<Grid item xs={6} md={3}>
@@ -209,17 +234,22 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								getOptionLabel={(user) => user.name}
 								getOptionValue={(user) => String(user.id)}
 								required
+								className="space-y-0"
 							/>
 						</Grid>
 						<Grid item xs={6} md={3}>
-							<RHFTextField
-								name="info_group.age"
-								label="Age"
-								placeholder="Input Age"
-								autoFocus={false}
+							<RHFDatePicker
+								name={`info_group.age`}
+								label="Birth Date"
 								required
-								type="number"
-								maxLength={10}
+								placeholder="Select Birth Date"
+								format="dd/MM/yyyy"
+								onChange={(date) => {
+									if (date) {
+										methods.setValue(`info_group.age`, date.toISOString());
+									}
+								}}
+								maxDate={new Date()}
 							/>
 						</Grid>
 						<Grid item xs={6} md={3}>
@@ -233,14 +263,15 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								placeholder="Choose"
 								getOptionLabel={(user) => user.name}
 								getOptionValue={(user) => String(user.id)}
+								className="space-y-0"
 							/>
 						</Grid>
 						<Grid item xs={12} md={6}>
 							<RHFFileUpload
-								name="purpose_letter"
+								name="info_group.purpose_letter"
 								label="Surat berkunjung"
-								required
 								accept=".pdf,.word"
+								className="space-y-0"
 							/>
 						</Grid>
 					</Grid>

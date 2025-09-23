@@ -117,6 +117,34 @@ export async function deleteTourPackage(
 	return await apiConfig.delete(`admin/tour-packages/${id}`);
 }
 
+export const usePostRegisterTour = (
+	options?: MutationObserverOptions<
+		{ data: TourRegisterType; message: boolean },
+		Error,
+		TourRegisterType
+	>
+) => {
+	return useMutation<
+		{ data: TourRegisterType; message: boolean },
+		Error,
+		TourRegisterType
+	>({
+		mutationKey: ["package-register-post"],
+		mutationFn: async (data: TourRegisterType) => {
+			const response = await postRegisterTour(data);
+			queryClient.removeQueries({
+				predicate: (query) =>
+					typeof query.queryKey[0] === "string" &&
+					(query.queryKey[0].startsWith("holiday-") ||
+						query.queryKey[0].startsWith("batches-")),
+			});
+
+			return response.data;
+		},
+		...options,
+	});
+};
+
 export const usePostTourPackage = (
 	options?: MutationObserverOptions<TourPackageType, Error, TourPackagePostType>
 ) => {

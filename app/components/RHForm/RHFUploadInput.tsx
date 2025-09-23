@@ -92,7 +92,7 @@ export function RHFFileUpload({
 		<FormField
 			name={name}
 			control={control}
-			render={({ field: { onChange, value }, fieldState: { error } }) => (
+			render={({ field: { onChange }, fieldState: { error } }) => (
 				<FormItem className={cn("space-y-2", className)}>
 					{label && (
 						<FormLabel

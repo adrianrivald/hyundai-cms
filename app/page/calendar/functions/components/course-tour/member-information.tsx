@@ -7,12 +7,70 @@ import RHFSelect from "@/components/RHForm/RHFSelect";
 import RHFDatePicker from "@/components/RHForm/RHFDatePicker";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { usePostRegisterTour, type TourRegisterType } from "@/api/tour-package";
+import { format } from "date-fns";
+import { enqueueSnackbar } from "notistack";
 
 interface MemberInformationProps {
 	methods: UseFormReturn<FormRegisterTour>;
 }
 
 const MemberInformation = ({ methods }: MemberInformationProps) => {
+	const { mutate: mutatePost, isPending: pendingPost } = usePostRegisterTour();
+	const onSubmit = () => {
+		const form = methods.watch();
+		const data: TourRegisterType = {
+			tour_package_id: Number(form.type),
+			group_type: form.info_group.group_type || "",
+			tour_date: format(new Date(form.date), "yyyy-MM-dd"),
+			slot: form.batch,
+			name: form.info_group.group_name,
+			purpose_of_visit: form?.info_group.purpose_visit,
+			city: form.info_group.city,
+			vehicle_type: form.info_vehicle.vehicle_type,
+			vehicle_plate_number: form.info_vehicle.vehicle_plat,
+			attachments: form.info_group.purpose_letter
+				? [
+						{
+							original_filename: form.info_group.purpose_letter,
+							attachment_path:
+								form.info_group.purpose_letter.split("/").pop() || "",
+						},
+					]
+				: [],
+			leader: {
+				name: form.info_group.group_leader,
+				dob: form.info_group.age,
+				sex: form.info_group.gender,
+				email: form.info_group.email,
+				phone_number: form.info_group.phone_number,
+				is_special_need: Boolean(form.info_group.isDifabel),
+			},
+			participants: form.group_member.map((item) => ({
+				name: item.name,
+				dob: format(new Date(item.dob), "yyyy-MM-dd"),
+				sex: item.gender,
+				email: item.email,
+				phone_number: item.phone,
+				is_special_need: Boolean(item.isDifable),
+			})),
+		};
+
+		mutatePost(data, {
+			onSuccess: () => {
+				methods.setValue("step", "done");
+				enqueueSnackbar("Data has been added", {
+					variant: "success",
+				});
+			},
+			onError: (err: any) => {
+				enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
+					variant: "error",
+				});
+			},
+		});
+	};
+
 	return (
 		<div>
 			<div className="w-full border-[1px] rounded-sm">
@@ -99,7 +157,6 @@ const MemberInformation = ({ methods }: MemberInformationProps) => {
 										placeholder="Choose"
 										getOptionLabel={(user) => user.name}
 										getOptionValue={(user) => String(user.id)}
-										required
 									/>
 								</Grid>
 								{methods.watch("group_member").length > 1 && (
@@ -145,6 +202,9 @@ const MemberInformation = ({ methods }: MemberInformationProps) => {
 					</Button>
 				</div>
 			</div>
+			{/* <div>
+				<Typography>{}</Typography>
+			</div> */}
 
 			<div className="flex flex-row justify-between mt-10">
 				<Button
@@ -159,13 +219,19 @@ const MemberInformation = ({ methods }: MemberInformationProps) => {
 				>
 					Previously
 				</Button>
+
 				<Button
 					className=""
 					endIcon={
 						<Icon icon="mingcute:arrow-right-line" width="24" height="24" />
 					}
+					disabled={pendingPost}
 					onClick={() => {
-						methods.setValue("step", "done");
+						methods.trigger().then((isValid) => {
+							if (isValid) {
+								onSubmit();
+							}
+						});
 					}}
 				>
 					Add Schedule
