@@ -73,6 +73,36 @@ const MemberInformation = ({ methods }: MemberInformationProps) => {
 
 	return (
 		<div>
+			<div className="w-full border-[1px] rounded-sm mb-3 flex flex-col items-center">
+				<div className="w-[40%] mr-[100px]">
+					<Typography className="text-[18px] font-medium text-center mt-3">
+						Upload data secara masal sekaligus, Download format upload dibawah
+						ini
+					</Typography>
+					<div className="my-3 flex flex-row items-center gap-5 underline justify-center">
+						<Icon icon="vscode-icons:file-type-excel" width="46" height="46" />
+						<Typography>Download format upload masal</Typography>
+					</div>
+				</div>
+				<div className="border-[1px] border-dashed w-[97%] mb-5 items-center flex flex-col py-5 mt-3">
+					<Icon icon="icon-park-outline:upload-one" width="20" height="20" />
+					<Typography className="mt-2 text-sm font-bold">
+						Upload data
+					</Typography>
+					<Typography className="mt-1 text-sm">
+						(Data yang sudah terisi sesuai format)
+					</Typography>
+				</div>
+			</div>
+			<div className="flex items-center w-full my-4">
+				<div className="flex-grow border-t border-gray-300"></div>
+				<span className="px-3 text-[12px] text-gray-500 text-center">
+					Atau anda juga dapat memasukkan data secara manual
+					<br />
+					melalui formulir di bawah ini.
+				</span>
+				<div className="flex-grow border-t border-gray-300"></div>
+			</div>
 			<div className="w-full border-[1px] rounded-sm">
 				{methods.watch("group_member")?.map((_, index) => {
 					return (

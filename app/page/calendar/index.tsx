@@ -31,6 +31,7 @@ import DialogDetailHoliday from "./functions/components/dialog-detail-holiday";
 import DialogAddVip from "./functions/components/dialog-add-vip";
 import { useGetCalendars } from "@/api/batch";
 import { Typography } from "@/components/typography";
+import DialogDetailTour from "./functions/components/dialog-detail-tour";
 
 const locales = {
 	enUS: en,
@@ -57,7 +58,10 @@ type CalendarEvent = {
 export default function CalendarPage() {
 	//Will remove TBD
 	const [openHoliday, setOpenHoliday] = useState({ isOpen: false, event: {} });
-
+	const [openTourDetail, setOpenTourDetail] = useState({
+		isOpen: false,
+		event: {},
+	});
 	const [events, setEvents] = useState<Event[]>([]);
 
 	const [currentDate, setCurrentDate] = useState(new Date());
@@ -255,7 +259,6 @@ export default function CalendarPage() {
 					toolbar: CustomToolbar,
 					dateCellWrapper: CustomDateCellWrapper(currentDate, events),
 					event: ({ event }: { event: any }) => {
-						console.log("dataa", event);
 						return (
 							<div
 								className={`text-[11px] cursor-pointer ${event.type === "HOLIDAY" ? "text-hmmi-red-500" : "text-white"}  flex flex-row gap-1 items-center`}
@@ -277,6 +280,8 @@ export default function CalendarPage() {
 									onClick={() => {
 										if (event.type === "HOLIDAY") {
 											setOpenHoliday({ isOpen: true, event: event });
+										} else {
+											setOpenTourDetail({ isOpen: true, event: event });
 										}
 									}}
 									className={`${event.index === 0 ? "mt-6" : ""} ${event.type === "HOLIDAY" ? "bg-white" : event.type === "GENERAL-COURSE" ? "bg-[#0A5CE6]" : event.type === "STUDENT-COURSE" ? "bg-[#00AE0F]" : "bg-[#FFCF31]"} `}
@@ -301,6 +306,16 @@ export default function CalendarPage() {
 					}}
 					data={openHoliday.event}
 					refetch={refetch}
+				/>
+			)}
+
+			{openTourDetail.isOpen && (
+				<DialogDetailTour
+					open={openTourDetail.isOpen}
+					onClose={() => {
+						setOpenTourDetail({ isOpen: false, event: {} });
+					}}
+					data={openTourDetail.event}
 				/>
 			)}
 		</Container>
