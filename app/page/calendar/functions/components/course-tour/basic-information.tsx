@@ -8,18 +8,34 @@ import RHFTextField from "@/components/RHForm/RHFTextField";
 import RHFSelect from "@/components/RHForm/RHFSelect";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useGetTourPackages } from "@/api/tour-package";
+import { useGetBatches, useGetCalendars } from "@/api/batch";
+import { format, isSameDay, isValid } from "date-fns";
+import { RHFFileUpload } from "@/components/RHForm/RHFUploadInput";
 
 interface BasicInformationProps {
 	methods: UseFormReturn<FormRegisterTour>;
 }
 
 const BasicInformation = ({ methods }: BasicInformationProps) => {
+	const { data: dataTourPackages } = useGetTourPackages("");
+	const { data: dataSlot } = useGetBatches();
+	const {
+		data: dataCalendar,
+		refetch,
+		isLoading,
+	} = useGetCalendars(
+		isValid(new Date(methods.watch("date")))
+			? format(new Date(methods.watch("date")), "yyyy-MM")
+			: format(new Date(), "yyyy-MM")
+	);
+
 	return (
 		<div className="">
 			<div className="w-full border-[1px] rounded-sm p-5">
-				<div className="w-[70%]">
+				<div className="flex flex-row gap-3">
 					<RHFDatePicker
-						className="w-[50%]"
+						className="w-[200px]"
 						name="date"
 						label="Select Visit Date"
 						required
@@ -28,21 +44,81 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						onChange={(date) => {
 							if (date) {
 								methods.setValue("date", date.toISOString());
+								setTimeout(() => {
+									refetch();
+								}, 500);
 							}
 						}}
+
 						//minDate={new Date()}
+					/>
+
+					<RHFSelect
+						className="space-y-0 w-[200px]"
+						name="batch"
+						label="Batch"
+						disabled={
+							isLoading ||
+							(dataCalendar?.data || [])
+								?.filter((item) =>
+									isSameDay(item.date, methods.watch("date"))
+								)?.[0]
+								?.slot?.filter((item) => item.tour === null)
+								?.map((item) => ({
+									id: item.batch_time,
+									name: item.time_range,
+								})).length === 0
+						}
+						options={
+							(dataCalendar?.data || [])
+								?.filter((item) =>
+									isSameDay(item.date, methods.watch("date"))
+								)?.[0]
+								?.slot?.filter((item) => item.tour === null)
+								?.map((item) => ({
+									id: item.batch_time,
+									name: item.time_range,
+								})) || []
+						}
+						placeholder={
+							(dataCalendar?.data || [])
+								?.filter((item) =>
+									isSameDay(item.date, methods.watch("date"))
+								)?.[0]
+								?.slot?.filter((item) => item.tour === null)
+								?.map((item) => ({
+									id: item.batch_time,
+									name: item.time_range,
+								})).length === 0
+								? "No Batch"
+								: "Choose batch"
+						}
+						getOptionLabel={(user) => user.name}
+						getOptionValue={(user) => String(user.id)}
+						required
 					/>
 				</div>
 			</div>
 			<div className="mt-5">
 				<RHFRadioGroup
 					name="type"
-					options={["Tur VIP (Private)", "General Tour", "Student Tour"]}
-					values={["vip-course", "general-course", "student-course"]}
-					getOptionLabel={["Tur VIP (Private)", "General Tour", "Student Tour"]}
+					options={dataTourPackages?.data?.map((item) => item.name) || []}
+					values={
+						dataTourPackages?.data?.map((item) => String(item.id || "")) || []
+					}
+					getOptionLabel={
+						dataTourPackages?.data?.map((item) => item.name) || []
+					}
 					direction="row"
 					size="sm"
 					itemRadioProps={"border-[1px] rounded-sm px-5 py-2"}
+					onChange={(tour) => {
+						let data = dataTourPackages?.data?.filter(
+							(item) => item.id === tour
+						)?.[0];
+						methods.setValue("type", tour);
+						methods.setValue("tour_type", data?.tour_packages_type || "");
+					}}
 				/>
 			</div>
 			{methods.watch("type") && (
@@ -157,7 +233,14 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								placeholder="Choose"
 								getOptionLabel={(user) => user.name}
 								getOptionValue={(user) => String(user.id)}
+							/>
+						</Grid>
+						<Grid item xs={12} md={6}>
+							<RHFFileUpload
+								name="purpose_letter"
+								label="Surat berkunjung"
 								required
+								accept=".pdf,.word"
 							/>
 						</Grid>
 					</Grid>
@@ -199,7 +282,11 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 				<div className="mt-5 flex flex-row justify-end">
 					<Button
 						onClick={() => {
-							methods.setValue("step", "info_anggota");
+							methods.trigger().then((isValid) => {
+								if (isValid) {
+									methods.setValue("step", "info_anggota");
+								}
+							});
 						}}
 						endIcon={
 							<Icon icon="mingcute:arrow-right-line" width="24" height="24" />

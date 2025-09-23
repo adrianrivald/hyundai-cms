@@ -1,47 +1,107 @@
 import * as yup from "yup";
 
-const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const FormRegisterTourSchema = yup.object({
 	step: yup.string().required("Step is required"),
-	date: yup.string().required("Visit date is required"),
-	type: yup.string().required("Type tour is required"),
+
+	date: yup.string().when("step", {
+		is: "info_dasar",
+		then: (schema) => schema.required("Visit date is required"),
+		otherwise: (schema) => schema.required("Visit date is required"),
+	}),
+
+	type: yup.string().when("step", {
+		is: "info_dasar",
+		then: (schema) => schema.required("Type tour is required"),
+		otherwise: (schema) => schema.required("Type tour is required"),
+	}),
+
+	tour_type: yup.string().nullable().optional(),
+
+	batch: yup.string().when("step", {
+		is: "info_dasar",
+		then: (schema) => schema.required("Batch number is required"),
+		otherwise: (schema) => schema.required("Batch number is required"),
+	}),
 
 	info_group: yup.object({
-		group_name: yup.string().required("Group name is required"),
-		group_type: yup.string().when("..type", {
-			is: (type: string) => type === "general-course" || type === "vip-course",
+		group_name: yup.string().when("..step", {
+			is: "info_dasar",
 			then: (schema) => schema.optional().nullable(),
-			otherwise: (schema) => schema.required("Group type is required"),
+			otherwise: (schema) => schema.required("Group name is required"),
 		}),
-		group_lead: yup.string().required("Group leader is required"),
-		purpose_visit: yup.string().required("Purpose of visit is required"),
-		city: yup.string().required("City is required"),
-		email: yup
-			.string()
-			.required("Email is required")
-			.matches(emailRegex, "Invalid email address"),
-		gender: yup.string().required("Gender is required"),
-		age: yup
-			.string()
-			.required("Age is required")
-			.test("max-age", "Age must be less than or equal to 70", (value) => {
-				if (!value) return false;
-				const num = Number(value);
-				return !isNaN(num) && num <= 70;
-			})
-			.test("min-age", "Age must be more than or equal to 10", (value) => {
-				if (!value) return false;
-				const num = Number(value);
-				return !isNaN(num) && num >= 10;
-			}),
+		group_type: yup.string().when(["..type_tour", "..step"], {
+			is: (type_tour: string, step: string) =>
+				step === "info_dasar" &&
+				!(type_tour === "general-course" || type_tour === "vip"),
+			then: (schema) => schema.required("Group type is required"),
+			otherwise: (schema) => schema.optional().nullable(),
+		}),
+		group_leader: yup.string().when("..step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) => schema.required("Group leader is required"),
+		}),
+		purpose_visit: yup.string().when("..step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) => schema.required("Purpose of visit is required"),
+		}),
+		city: yup.string().when("..step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) => schema.required("City is required"),
+		}),
+		email: yup.string().when("..step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) =>
+				schema
+					.required("Email is required")
+					.matches(emailRegex, "Invalid email address"),
+		}),
+		gender: yup.string().when("..step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) => schema.required("Gender is required"),
+		}),
+		age: yup.string().when("..step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) =>
+				schema
+					.required("Age is required")
+					.test("max-age", "Age must be less than or equal to 70", (value) => {
+						if (!value) return false;
+						const num = Number(value);
+						return !isNaN(num) && num <= 70;
+					})
+					.test("min-age", "Age must be more than or equal to 10", (value) => {
+						if (!value) return false;
+						const num = Number(value);
+						return !isNaN(num) && num >= 10;
+					}),
+		}),
 		isDifabel: yup.string().nullable().optional(),
-		purpose_letter: yup.string().required("Purpose letter is required"),
+		purpose_letter: yup.string().when("..step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) => schema.required("Purpose letter is required"),
+		}),
 	}),
 
 	info_vehicle: yup.object({
-		vehicle_type: yup.string().required("Vehicle type is required"),
-		vehicle_plat: yup.string().required("Vehicle plate is required"),
+		vehicle_type: yup.string().when("..step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) => schema.required("Vehicle type is required"),
+		}),
+		vehicle_plat: yup.string().when("..step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) => schema.required("Vehicle plate is required"),
+		}),
 	}),
 
 	group_member: yup
@@ -59,14 +119,22 @@ export const FormRegisterTourSchema = yup.object({
 				isDifable: yup.string().nullable().optional(),
 			})
 		)
-		.required("Group members are required")
-		.min(1, "At least one member is required"),
+		.when("step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) =>
+				schema
+					.required("Group members are required")
+					.min(1, "At least one member is required"),
+		}),
 });
 
 export type FormRegisterTour = {
 	step: string;
 	date: string;
 	type: string;
+	tour_type: string;
+	batch: string;
 	info_group: {
 		group_name: string;
 		group_type?: string | null; // optional or nullable depending on type

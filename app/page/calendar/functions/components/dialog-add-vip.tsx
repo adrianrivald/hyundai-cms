@@ -31,8 +31,9 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 
 	const methods = useForm({
 		defaultValues: {
-			step: "done",
-			type: "vip",
+			step: "info_dasar",
+			type: "",
+			date: new Date().toString(),
 			info_group: { email: "" },
 			group_member: [{}],
 		},
@@ -42,7 +43,8 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 
 	return (
 		<DialogModal
-			open={open}
+			//open={open}
+			open
 			onOpenChange={() => {
 				setDialogConfirm(true);
 			}}

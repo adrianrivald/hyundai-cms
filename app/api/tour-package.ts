@@ -44,6 +44,46 @@ export type TourPackagePostType = {
 	routes: number[];
 };
 
+export type TourRegisterType = {
+	tour_package_id: number;
+	group_type: string;
+	tour_date: string;
+	slot: string;
+	name: string;
+	purpose_of_visit: string;
+	city: string;
+	vehicle_type: string;
+	vehicle_plate_number: string;
+	attachments: {
+		original_filename: string;
+		attachment_path: string;
+	}[];
+	leader: {
+		name: string;
+		dob: string;
+		sex: string;
+		email: string;
+		phone_number: string;
+		is_special_need: boolean;
+	};
+	participants: {
+		name: string;
+		dob: string;
+		sex: string;
+		email: string;
+		phone_number: string;
+		is_special_need: boolean;
+	}[];
+};
+
+export async function postRegisterTour(
+	data: TourRegisterType
+): Promise<
+	AxiosResponse<{ data: TourRegisterType; message: boolean }, AxiosError>
+> {
+	return await apiConfig.post("admin/tours/register", data);
+}
+
 export async function postTourPackage(
 	data: TourPackagePostType
 ): Promise<AxiosResponse<TourPackageType, AxiosError>> {

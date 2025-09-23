@@ -74,12 +74,13 @@ export default function RHFSelect<T>({
 							>
 								<SelectTrigger
 									className={cn(
-										" file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-12 w-full min-w-0 border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none text-sm",
+										"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 flex h-12 w-full min-w-0 border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none text-sm",
 										"border-ring ring-hmmi-primary-900 ring-[1.5px]",
 										"data-[placeholder]:bg-hmmi-grey-100 data-[placeholder]:border-ring data-[placeholder]:ring-hmmi-grey-200 data-[placeholder]:ring-[1.5px]",
 										"focus:bg-white focus:shadow-gray-500 focus:shadow-lg focus-visible:border-ring focus-visible:ring-hmmi-primary-900 focus-visible:ring-[1.5px]",
 										"aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-										error && "border-destructive focus:ring-destructive"
+										error &&
+											"border-destructive ring-destructive focus:ring-destructive "
 									)}
 								>
 									<SelectValue placeholder={placeholder} />
