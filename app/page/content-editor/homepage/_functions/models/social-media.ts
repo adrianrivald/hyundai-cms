@@ -9,8 +9,8 @@ export type SocialMediaType = {
 };
 
 export const SocialMediaSchema = yup.object({
-	title: yup.string().required("Judul harus di isi"),
-	type: yup.string().required("Tipe sosial media harus di isi"),
-	link: yup.string().url("Link harus valid").required("Link harus di isi"),
-	max_post: yup.string().required("Maksimum post harus di isi"),
+	title: yup.string().required("Title is required"),
+	type: yup.string().required("Social media type is required"),
+	link: yup.string().url("Link must be valid").required("Link is required"),
+	max_post: yup.string().required("Maximum post is required"),
 });

@@ -21,6 +21,7 @@ import {
 	useSaveFactoryRoutes,
 } from "@/api/factory-route";
 import DialogDelete from "@/components/custom/dialog/dialog-delete";
+import { StepNavigation } from "@/components/custom/tabs-navigation/tabs-navigation";
 
 interface DialogFactoryProps {
 	open: boolean;
@@ -37,6 +38,10 @@ const DialogFactory = ({
 	refetch,
 	isDisabled = false,
 }: DialogFactoryProps) => {
+	const steps = [
+		{ key: "reg_factory", label: "Factory Detail" },
+		{ key: "reg_route", label: "Add Route" },
+	];
 	const [deleteRoute, setDeleteRoute] = useState({ isOpen: false, id: "" });
 	const methods = useForm({
 		defaultValues: {
@@ -61,7 +66,7 @@ const DialogFactory = ({
 	});
 
 	const { data: dataRoute } = useGetFactoryRoutes(data?.id || "", {
-		enabled: !!data?.id,
+		enabled: !!data?.id && open,
 		queryKey: ["factory-route-get-all", data?.id],
 	});
 	const { mutate: mutatePost, isPending: pendingPost } = usePostFactory();
@@ -84,12 +89,12 @@ const DialogFactory = ({
 					methods.clearErrors();
 					methods.setValue("step", "reg_route");
 					//refetch && refetch();
-					enqueueSnackbar("Data telah diubah", {
+					enqueueSnackbar("Data has been changed", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Ubah factory gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -101,12 +106,12 @@ const DialogFactory = ({
 					methods.setValue("step", "reg_route");
 					methods.setValue("id", data?.data?.id);
 					//refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", {
+					enqueueSnackbar("Data has been added", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Pembuatan factory gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -120,7 +125,8 @@ const DialogFactory = ({
 			form?.route?.map((item) => ({
 				...item,
 				factory_id: methods.watch("id"),
-				name: methods.watch("factory_name"),
+				name: item.route_name,
+				description: item.description,
 				image_path: item.image,
 			})) || [];
 
@@ -129,12 +135,12 @@ const DialogFactory = ({
 				resetField();
 				methods.setValue("step", "reg_route");
 				refetch && refetch();
-				enqueueSnackbar("Data telah di tambahkan", {
+				enqueueSnackbar("Data has been added", {
 					variant: "success",
 				});
 			},
-			onError: () => {
-				enqueueSnackbar("Error: Ubah factory gagal", {
+			onError: (err: any) => {
+				enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 					variant: "error",
 				});
 			},
@@ -196,74 +202,34 @@ const DialogFactory = ({
 		<DialogModal
 			open={open}
 			onOpenChange={() => {
-				onClose();
-				methods.clearErrors();
-				methods.reset();
+				resetField();
 			}}
 			headerTitle={
 				isDisabled
-					? "Detail Pabrik"
+					? "Factory Detail"
 					: data?.id
-						? "Ubah Pabrik"
-						: "Tambah Pabrik"
+						? "Edit Factory"
+						: "Add Factory"
 			}
 			contentProps="w-[700px] max-h-[750px]"
 			content={
 				<div className="">
 					<FormProvider methods={methods}>
-						<Grid container className="mb-5">
-							<Grid
-								item
-								xs={6}
-								onClick={() => {
-									methods.setValue("step", "reg_factory");
-								}}
-								className={cn(
-									"py-4 px-5 cursor-pointer flex flex-row items-center gap-3",
-									methods.watch("step") === "reg_factory"
-										? "bg-[#A8C5F7]"
-										: "bg-[#153263]"
-								)}
-							>
-								<Icon
-									icon="fluent:checkmark-circle-24-filled"
-									height={24}
-									width={24}
-									color={
-										methods.watch("step") !== "reg_factory"
-											? "white"
-											: "#153263"
+						<StepNavigation
+							steps={steps}
+							value={methods.watch("step") || ""}
+							onChange={(key) => {
+								if (key === "reg_route") {
+									if (data?.id || methods.watch("id")) {
+										methods.setValue("step", key);
 									}
-								/>
-								<Typography className={cn("text-white")}>
-									Detail Pabrik
-								</Typography>
-							</Grid>
-							<Grid
-								item
-								xs={6}
-								onClick={() => {
-									(data?.id || methods.watch("id")) &&
-										methods.setValue("step", "reg_route");
-								}}
-								className={cn(
-									"py-4 px-5 cursor-pointer flex flex-row items-center gap-3",
-									methods.watch("step") === "reg_route"
-										? "bg-[#A8C5F7]"
-										: "bg-[#153263]"
-								)}
-							>
-								<Icon
-									icon="fluent:checkmark-circle-24-filled"
-									height={24}
-									width={24}
-									color={
-										methods.watch("step") !== "reg_route" ? "white" : "#153263"
-									}
-								/>
-								<Typography className={cn("text-white")}>Buat Rute</Typography>
-							</Grid>
-						</Grid>
+								} else {
+									methods.setValue("step", key);
+								}
+							}}
+							activeColor="#153263"
+							inactiveColor="#A8C5F7"
+						/>
 
 						{methods.watch("step") === "reg_factory" && (
 							<Grid container spacing={4}>
@@ -278,8 +244,8 @@ const DialogFactory = ({
 								<Grid item xs={12}>
 									<RHFTextField
 										name="factory_name"
-										label="Nama Pabrik"
-										placeholder="Masukan nama pabrik"
+										label="Factory Name"
+										placeholder="Input factory name"
 										autoFocus={false}
 										required
 										disabled={isDisabled}
@@ -288,8 +254,8 @@ const DialogFactory = ({
 								<Grid item xs={12}>
 									<RHFTextArea
 										name="description"
-										label="Deskripsi"
-										placeholder="Masukan deskripsi"
+										label="Description"
+										placeholder="Input description"
 										rows={4}
 										disabled={isDisabled}
 									/>
@@ -308,7 +274,7 @@ const DialogFactory = ({
 											}}
 										>
 											{/* {data?.id ? "Ubah" : "Tambahkan"} */}
-											Selanjutnya
+											Next
 										</Button>
 									</Grid>
 								)}
@@ -326,7 +292,7 @@ const DialogFactory = ({
 												className="flex flex-row justify-between"
 											>
 												<Typography className="text-lg font-bold ">
-													Rute {index + 1}
+													Route {index + 1}
 												</Typography>
 												{item.id && (
 													<div
@@ -362,8 +328,8 @@ const DialogFactory = ({
 											<Grid item xs={12}>
 												<RHFTextField
 													name={`route.${index}.route_name`}
-													label="Nama Rute"
-													placeholder="Masukan nama rute"
+													label="Route Name"
+													placeholder="Input route name"
 													autoFocus={false}
 													required
 													disabled={isDisabled}
@@ -372,8 +338,8 @@ const DialogFactory = ({
 											<Grid item xs={12}>
 												<RHFTextArea
 													name={`route.${index}.description`}
-													label="Deskripsi"
-													placeholder="Masukan deskripsi"
+													label="Description"
+													placeholder="Input description"
 													rows={4}
 													disabled={isDisabled}
 												/>
@@ -394,7 +360,7 @@ const DialogFactory = ({
 										}}
 									>
 										<Icon icon="ic:outline-plus" width="24" height="24" />
-										<Typography className="font-bold">Tambah Rute</Typography>
+										<Typography className="font-bold">Add route</Typography>
 									</div>
 								)}
 
@@ -411,7 +377,7 @@ const DialogFactory = ({
 												});
 											}}
 										>
-											Simpan
+											Save
 										</Button>
 									</div>
 								)}

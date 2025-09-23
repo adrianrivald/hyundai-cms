@@ -99,10 +99,10 @@ const DialogSocialMedia = ({
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah diubah", { variant: "success" });
+					enqueueSnackbar("Data has been changed", { variant: "success" });
 				},
 				onError: () => {
-					enqueueSnackbar("Error: Ubah data gagal", { variant: "error" });
+					enqueueSnackbar("Error: Failed to change data", { variant: "error" });
 				},
 			});
 		} else {
@@ -112,10 +112,10 @@ const DialogSocialMedia = ({
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", { variant: "success" });
+					enqueueSnackbar("Data has been added", { variant: "success" });
 				},
 				onError: () => {
-					enqueueSnackbar("Error: Pembuatan data gagal", { variant: "error" });
+					enqueueSnackbar("Error: Failed to create data", { variant: "error" });
 				},
 			});
 		}

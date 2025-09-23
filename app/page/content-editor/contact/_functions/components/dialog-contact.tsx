@@ -37,26 +37,41 @@ const DialogContact = ({
 			contact: [
 				{ id: "", phone: "", email: "" },
 				{ id: "", phone: "", email: "" },
+				{ id: "", phone: "", email: "" },
 			],
 		},
 		shouldFocusError: false,
 		mode: "onChange",
-		resolver: yupResolver(ContactSchema),
+		//resolver: yupResolver(ContactSchema),
 	});
 
 	const { mutate: mutatePost, isPending: pendingPost } =
 		usePostGlobalVariable();
 	const { mutate: mutateEdit, isPending: pendingEdit } = usePutGlobalVariable();
 
+	const formatPhone = (value: string) => {
+		if (!value) return "";
+		const cleaned = value.replace(/\D/g, ""); // keep only digits
+		return cleaned.replace(/(\d{3})(?=\d)/g, "$1 ");
+	};
+
 	const onSubmit = () => {
 		const form = methods.watch();
+
+		const formattedContacts = form.contact.map((c: any) => ({
+			...c,
+			phone: formatPhone(c.phone),
+		}));
 
 		const dataForm: GlobalVariableTypes = {
 			id: data?.id || "",
 			name: "contact",
 			description: "The contact on microsite",
 			is_active: true,
-			var_value: JSON.stringify(form),
+			var_value: JSON.stringify({
+				...form,
+				contact: formattedContacts,
+			}),
 		};
 
 		if (data?.id) {
@@ -66,12 +81,12 @@ const DialogContact = ({
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah diubah", {
+					enqueueSnackbar("Data has been changed", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Ubah data gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -83,12 +98,12 @@ const DialogContact = ({
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", {
+					enqueueSnackbar("Data has been added", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Pembuatan data gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -98,9 +113,17 @@ const DialogContact = ({
 
 	useEffect(() => {
 		if (open && data) {
-			methods.reset(data);
+			methods.reset({
+				id: data.id || "",
+				address: data.address || "",
+				contact: (data.contact || []).map((c: any) => ({
+					id: c.id || "",
+					phone: (c.phone || "").replace(/\s/g, ""), // remove spaces
+					email: c.email || "",
+				})),
+			});
 		}
-	}, [open, data]);
+	}, [open, data, methods]);
 
 	return (
 		<DialogModal
@@ -111,54 +134,76 @@ const DialogContact = ({
 				methods.reset();
 			}}
 			headerTitle={
-				isEditMode ? "Lihat Kontak" : data?.id ? "Ubah Kontak" : "Tambah Kontak"
+				isEditMode ? "View Contacts" : data?.id ? "Edit Contact" : "Add Contact"
 			}
-			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
+			contentProps="w-[780px] max-h-[800px] overflow-y-scroll"
 			content={
 				<div className="">
 					<FormProvider methods={methods}>
 						<Grid container spacing={4}>
-							<Grid item xs={6}>
+							<Grid item xs={4}>
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.0.phone"
-									label="Nomor Telpon 1"
-									placeholder="Masukan Nomor Telfon"
+									label="Phone Number 1"
+									placeholder="Input Phone Number"
 									autoFocus={false}
-									required={!isEditMode}
+									//required={!isEditMode}
 									type="number"
 								/>
 							</Grid>
-							<Grid item xs={6}>
+							<Grid item xs={4}>
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.1.phone"
-									label="Nomor Telpon 2"
-									placeholder="Masukan Nomor Telfon"
+									label="Phone Number 2"
+									placeholder="Input Phone Number"
 									autoFocus={false}
-									required={!isEditMode}
+									//required={!isEditMode}
 									type="number"
 								/>
 							</Grid>
-							<Grid item xs={6}>
+							<Grid item xs={4}>
+								<RHFTextField
+									disabled={isEditMode}
+									name="contact.2.phone"
+									label="Phone Number 3"
+									placeholder="Input Phone Number"
+									autoFocus={false}
+									//required={!isEditMode}
+									type="number"
+								/>
+							</Grid>
+							<Grid item xs={4}>
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.0.email"
-									label="Alamat Email 1"
-									placeholder="Masukan Alamat Email"
+									label="Email Address 1"
+									placeholder="Input Email Address"
 									autoFocus={false}
-									required={!isEditMode}
+									//required={!isEditMode}
 									type="email"
 								/>
 							</Grid>
-							<Grid item xs={6}>
+							<Grid item xs={4}>
 								<RHFTextField
 									disabled={isEditMode}
 									name="contact.1.email"
-									label="Alamat Email 2"
-									placeholder="Masukan Alamat Email"
+									label="Email Address 2"
+									placeholder="Input Email Address"
 									autoFocus={false}
-									required={!isEditMode}
+									//required={!isEditMode}
+									type="email"
+								/>
+							</Grid>
+							<Grid item xs={4}>
+								<RHFTextField
+									disabled={isEditMode}
+									name="contact.2.email"
+									label="Email Address 3"
+									placeholder="Input Email Address"
+									autoFocus={false}
+									//required={!isEditMode}
 									type="email"
 								/>
 							</Grid>
@@ -167,8 +212,8 @@ const DialogContact = ({
 								<RHFTextField
 									disabled={isEditMode}
 									name="address"
-									label="Alamat"
-									placeholder="Masukan alamat"
+									label="Address"
+									placeholder="Input Address"
 									autoFocus={false}
 									required={!isEditMode}
 								/>
@@ -186,7 +231,7 @@ const DialogContact = ({
 										});
 									}}
 								>
-									{data?.id ? "Ubah" : "Tambahkan"}
+									{data?.id ? "Edit" : "Save"}
 								</Button>
 							</Grid>
 						</Grid>

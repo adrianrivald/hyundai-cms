@@ -12,10 +12,10 @@ export const FAQSchema = yup.object({
 	faq: yup.array().of(
 		yup.object({
 			id: yup.string().nullable().optional(),
-			question_en: yup.string().required("Question EN harus di isi"),
-			question_id: yup.string().required("Question ID harus di isi"),
-			answer_id: yup.string().required("Answer ID harus di isi"),
-			answer_en: yup.string().required("Answer EN harus di isi"),
+			question_en: yup.string().required("Question EN is required"),
+			question_id: yup.string().required("Question ID is required"),
+			answer_id: yup.string().required("Answer ID is required"),
+			answer_en: yup.string().required("Answer EN is required"),
 		})
 	),
 });

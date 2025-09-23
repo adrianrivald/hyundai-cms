@@ -11,14 +11,10 @@ export type BannerType = {
 };
 
 export const BannerSchema = yup.object({
-	title: yup.string().required("Nama banner harus di isi"),
-	description: yup.string().required("Deskripsi banner harus di isi"),
-	image: yup.string().required("Image banner harus di isi"),
-	date: yup.string().required("Tanggal terbit harus di isi"),
-	link: yup
-		.string()
-		.url("Link harus berupa URL yang valid")
-		.optional()
-		.nullable(),
+	title: yup.string().optional().nullable(),
+	description: yup.string().optional().nullable(),
+	image: yup.string().required("Image banner is required"),
+	date: yup.string().required("Publish date is required"),
+	link: yup.string().url("Link must be valid url").optional().nullable(),
 	is_active: yup.string().optional().nullable(),
 });

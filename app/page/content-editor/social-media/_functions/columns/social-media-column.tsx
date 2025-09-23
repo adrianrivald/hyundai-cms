@@ -150,11 +150,13 @@ const ActionCell = ({
 		mutateEdit(dataForm, {
 			onSuccess: () => {
 				setOpenDelete(false);
-				enqueueSnackbar("Data telah dihapus", { variant: "success" });
+				enqueueSnackbar("Data has been deleted", { variant: "success" });
 				table.resetPageIndex();
 			},
-			onError: () => {
-				enqueueSnackbar("Error: Hapus data gagal", { variant: "error" });
+			onError: (err: any) => {
+				enqueueSnackbar(`Error: ${err.response?.data?.message}`, {
+					variant: "error",
+				});
 			},
 		});
 	};

@@ -72,12 +72,12 @@ const DialogAboutUs = ({
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah diubah", {
+					enqueueSnackbar("Data has been changed", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Ubah data gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -89,12 +89,12 @@ const DialogAboutUs = ({
 					methods.clearErrors();
 					methods.reset();
 					refetch && refetch();
-					enqueueSnackbar("Data telah ditambahkan", {
+					enqueueSnackbar("Data has been added", {
 						variant: "success",
 					});
 				},
-				onError: () => {
-					enqueueSnackbar("Error: Pembuatan data gagal", {
+				onError: (err: any) => {
+					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
 				},
@@ -121,10 +121,10 @@ const DialogAboutUs = ({
 			}}
 			headerTitle={
 				isEditMode
-					? "Lihat Registration Guide"
+					? "View Registration Guide"
 					: methods.watch("id")
-						? "Ubah Registration Guide"
-						: "Tambah Registration Guide"
+						? "Edit Registration Guide"
+						: "Add Registration Guide"
 			}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
@@ -174,7 +174,7 @@ const DialogAboutUs = ({
 											disabled={isEditMode}
 											name="data.0.title"
 											label="Judul"
-											placeholder="Masukan Judul"
+											placeholder="Input title"
 											autoFocus={false}
 											required
 										/>
@@ -184,7 +184,7 @@ const DialogAboutUs = ({
 										<QuillEditor
 											name="data.0.content"
 											control={methods.control}
-											placeholder={"Masukan isi konten"}
+											placeholder={"Input content"}
 										/>
 									</Grid>
 								</>
@@ -196,8 +196,8 @@ const DialogAboutUs = ({
 										<RHFTextField
 											disabled={isEditMode}
 											name="data.1.title"
-											label="Judul"
-											placeholder="Masukan Judul"
+											label="Title"
+											placeholder="Input title"
 											autoFocus={false}
 											required
 										/>
@@ -207,7 +207,7 @@ const DialogAboutUs = ({
 										<QuillEditor
 											name="data.1.content"
 											control={methods.control}
-											placeholder={"Masukan isi konten"}
+											placeholder={"Input content"}
 										/>
 									</Grid>
 								</>
@@ -225,7 +225,7 @@ const DialogAboutUs = ({
 										});
 									}}
 								>
-									{methods.watch("id") ? "Ubah" : "Tambahkan"}
+									{methods.watch("id") ? "Edit" : "Add"}
 								</Button>
 							</Grid>
 						</Grid>

@@ -6,7 +6,7 @@ export const UserSchema = yup.object({
 	name: yup.string().when("id", {
 		is: (val: unknown) => !!val, // if id exists
 		then: (schema) => schema.optional().nullable(),
-		otherwise: (schema) => schema.required("Nama harus di isi"),
+		otherwise: (schema) => schema.required("Name is required"),
 	}),
 
 	email: yup.string().when("id", {
@@ -15,22 +15,22 @@ export const UserSchema = yup.object({
 			schema
 				.optional()
 				.nullable()
-				.matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Email harus valid"),
+				.matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Email must be valid"),
 		otherwise: (schema) =>
 			schema
-				.required("Email harus di isi")
-				.matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Email harus valid"),
+				.required("Email is required")
+				.matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Email must be valid"),
 	}),
 
 	role: yup.string().when("id", {
 		is: (val: unknown) => !!val,
 		then: (schema) => schema.optional().nullable(),
-		otherwise: (schema) => schema.required("Role harus di isi"),
+		otherwise: (schema) => schema.required("Role is required"),
 	}),
 
 	password: yup.string().when("id", {
 		is: (val: unknown) => !!val,
 		then: (schema) => schema.optional().nullable(),
-		otherwise: (schema) => schema.required("Password harus di isi"),
+		otherwise: (schema) => schema.required("Password is required"),
 	}),
 });
