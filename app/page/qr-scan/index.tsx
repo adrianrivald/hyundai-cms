@@ -85,27 +85,24 @@ export default function QRScan() {
 
               {/* Total Tour Section */}
               <div className="mb-6">
-                <div className="bg-black rounded-t-lg px-4 py-3 mb-0">
+                <div className="bg-black px-4 py-3 mb-0">
                   <Typography className="text-sm font-medium">
                     Total tour
                   </Typography>
                 </div>
-                <div className="bg-black/20 rounded-b-lg p-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-[#00235E] rounded-lg p-4">
-                      <Typography className="text-xs text-white/80 mb-2">
-                        Jumlah Peserta Tour
-                      </Typography>
-                      <Typography className="text-2xl font-bold">38</Typography>
-                    </div>
-                    <div className="bg-[#00235E] rounded-lg p-4">
-                      <Typography className="text-xs text-white/80 mb-2">
-                        Presentage
-                      </Typography>
-                      <Typography className="text-2xl font-bold">
-                        87%
-                      </Typography>
-                    </div>
+
+                <div className="grid grid-cols-2 gap-4 mt-2">
+                  <div className="bg-[#00235E] rounded-lg p-4">
+                    <Typography className="text-xs text-white/80 mb-2">
+                      Jumlah Peserta Tour
+                    </Typography>
+                    <Typography className="text-2xl font-bold">38</Typography>
+                  </div>
+                  <div className="bg-[#00235E] rounded-lg p-4">
+                    <Typography className="text-xs text-white/80 mb-2">
+                      Presentage
+                    </Typography>
+                    <Typography className="text-2xl font-bold">87%</Typography>
                   </div>
                 </div>
               </div>
