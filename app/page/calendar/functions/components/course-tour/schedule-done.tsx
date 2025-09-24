@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 interface ScheduleDoneProps {
 	methods: UseFormReturn<FormRegisterTour>;
 	onClose: () => void;
+	refetch?: () => void;
 }
 
-const ScheduleDone = ({ methods, onClose }: ScheduleDoneProps) => {
+const ScheduleDone = ({ methods, onClose, refetch }: ScheduleDoneProps) => {
 	return (
 		<div className="w-full border-[1px] rounded-sm p-5">
 			<div className="px-20 flex flex-col">
@@ -35,6 +36,7 @@ const ScheduleDone = ({ methods, onClose }: ScheduleDoneProps) => {
 					onClick={() => {
 						methods.reset();
 						onClose();
+						refetch && refetch();
 					}}
 				>
 					Kembali ke menu utama
