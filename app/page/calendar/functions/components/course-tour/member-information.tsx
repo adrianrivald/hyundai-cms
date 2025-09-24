@@ -70,11 +70,11 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 				: [],
 			leader: {
 				name: form.info_group.group_leader,
-				dob: form.info_group.age,
+				dob: format(new Date(form.info_group.age), "yyyy-MM-dd"),
 				sex: form.info_group.gender,
 				email: form.info_group.email,
 				phone_number: form.info_group.phone_number,
-				is_special_need: Boolean(form.info_group.isDifabel),
+				is_special_need: form.info_group.isDifabel === "true",
 			},
 			participants: form.group_member.map((item) => ({
 				name: item.name,
@@ -82,17 +82,17 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 				sex: item.gender,
 				email: item.email,
 				phone_number: item.phone,
-				is_special_need: Boolean(item.isDifable),
+				is_special_need: item.isDifabel === "true",
 			})),
 		};
 
 		mutatePost(data, {
 			onSuccess: () => {
+				refetch && refetch();
 				methods.setValue("step", "done");
 				enqueueSnackbar("Data has been added", {
 					variant: "success",
 				});
-				refetch && refetch();
 			},
 			onError: (err: any) => {
 				enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
@@ -177,7 +177,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 						email: item.email,
 						gender: item.gender?.id || "",
 						dob: item.birthdate?.toString() || "",
-						isDifable: item.difabel,
+						isDifabel: item.difabel,
 					}))
 				);
 			}
@@ -313,7 +313,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 								<Grid item xs={6} md={3}>
 									<RHFSelect
 										className="space-y-0"
-										name={`group_member.${index}.isDifable`}
+										name={`group_member.${index}.isDifabel`}
 										label="Berkebutuhan Khusus ?"
 										options={difabelOptions}
 										placeholder="Choose"
@@ -352,7 +352,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 									name: "",
 									phone: "",
 									gender: "",
-									isDifable: "",
+									isDifabel: "",
 								},
 							]);
 						}}
