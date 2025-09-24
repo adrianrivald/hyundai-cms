@@ -12,7 +12,9 @@ export type TourDetailsType = {
 	reschedule_reason: string;
 	vehicle_type: string;
 	vehicle_plate_number: string;
-	participants_count: string;
+	participants_count: number;
+	participants_verified_count: number;
+	participants_attended_count: number;
 	tour_package: {
 		id: number;
 		tour_packages_type: string;
@@ -29,6 +31,20 @@ export type TourDetailsType = {
 		phone_number: string;
 		verified_at: null;
 	};
+	participants: ParticipantsType[];
+};
+
+export type ParticipantsType = {
+	id: number;
+	name: string;
+	sex: string;
+	dob: string;
+	email: string;
+	phone_number: string;
+	is_leader: boolean;
+	is_special_need: boolean;
+	verified_at: string;
+	attended_at: string;
 };
 
 export async function getTourDetails(id: string): Promise<TourDetailsType> {
