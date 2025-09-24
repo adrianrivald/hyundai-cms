@@ -14,6 +14,7 @@ import * as XLSX from "xlsx";
 
 interface MemberInformationProps {
 	methods: UseFormReturn<FormRegisterTour>;
+	refetch?: () => void;
 }
 
 const genderOptions = [
@@ -44,7 +45,7 @@ function excelSerialToDate(serial: number): Date {
 	return new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000);
 }
 
-const MemberInformation = ({ methods }: MemberInformationProps) => {
+const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 	const { mutate: mutatePost, isPending: pendingPost } = usePostRegisterTour();
 	const onSubmit = () => {
 		const form = methods.watch();
@@ -91,6 +92,7 @@ const MemberInformation = ({ methods }: MemberInformationProps) => {
 				enqueueSnackbar("Data has been added", {
 					variant: "success",
 				});
+				refetch && refetch();
 			},
 			onError: (err: any) => {
 				enqueueSnackbar(`Error : ${err.response?.data?.message}`, {

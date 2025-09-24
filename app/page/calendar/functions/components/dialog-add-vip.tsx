@@ -46,7 +46,9 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 			open={open}
 			// open
 			onOpenChange={() => {
-				setDialogConfirm(true);
+				if (methods.watch("step") !== "done") {
+					setDialogConfirm(true);
+				}
 			}}
 			headerTitle={
 				<div className="flex flex-row gap-2 items-center mt-[-5px]">
@@ -100,6 +102,7 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 						onSubmit={() => {
 							setDialogConfirm(false);
 							onClose();
+							refetch && refetch();
 							methods.reset();
 						}}
 					/>

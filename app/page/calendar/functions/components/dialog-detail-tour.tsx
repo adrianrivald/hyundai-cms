@@ -1,8 +1,10 @@
+import { useGetTourDetails } from "@/api/tour";
 import DialogModal from "@/components/custom/dialog/dialog-modal";
 import { Grid } from "@/components/grid";
 import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { format, isValid } from "date-fns";
 
 interface DialogDetailTourProps {
 	open: boolean;
@@ -13,15 +15,7 @@ interface DialogDetailTourProps {
 const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 	console.log("dataaa", data);
 
-	//   {
-	//     "title": "VIP Course Tour",
-	//     "start": "2025-09-23T02:00:00.000Z",
-	//     "end": "2025-09-23T03:00:00.000Z",
-	//     "type": "VIP",
-	//     "index": 0,
-	//     "description": "benchmarking",
-	//     "id": 28
-	// }
+	const { data: dataDetail } = useGetTourDetails(data?.id);
 
 	const TextFieldDisabled = ({
 		title,
@@ -33,15 +27,17 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 		return (
 			<>
 				<div className="mb-1 font-medium">{title}</div>
-				<div className="bg-[#F9F9F9] py-2 pl-3 rounded-sm">{value}</div>
+				<div className="bg-[#F9F9F9] py-2 pl-3 rounded-sm text-ellipsis overflow-hidden">
+					{value}
+				</div>
 			</>
 		);
 	};
 
 	return (
 		<DialogModal
-			open={open}
-			//open
+			//open={open}
+			open
 			onOpenChange={() => {
 				onClose();
 			}}
@@ -49,21 +45,82 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 				<div className="flex flex-row justify-between">
 					<div className="flex flex-row gap-2 items-center mt-[-5px]">
 						<Icon icon="fa7-solid:arrow-left" width="14" height="14" />
-						<Typography className="font-bold">Informasi Kunjungan</Typography>
+						<Typography className="font-bold">Visit Information</Typography>
 					</div>
 					<div className="flex flex-row gap-3 mr-5">
 						<Button variant={"hmmiOutline"}>Ubah Jadwal</Button>
-						<Button>Ganti VIP</Button>
+						{dataDetail?.tour_package?.tour_packages_type !== "vip" && (
+							<Button>Ganti VIP</Button>
+						)}
 					</div>
 				</div>
 			}
 			contentProps="w-[95%] max-h-[90%]"
 			content={
 				<div>
-					<Typography className="font-medium">SMK Adijaya Ciputat</Typography>
+					<Typography className="font-medium">{dataDetail?.name}</Typography>
 					<Grid container spacing={3} className="mt-5">
 						<Grid item xs={6} md={3}>
-							<TextFieldDisabled title="Jadwal Kunjungan" value="26/07/2024" />
+							<TextFieldDisabled
+								title="Visit Schedule"
+								value={
+									dataDetail?.tour_date &&
+									isValid(new Date(dataDetail?.tour_date))
+										? format(new Date(dataDetail?.tour_date), "dd/MM/yyyy")
+										: "-"
+								}
+							/>
+						</Grid>
+						<Grid item xs={6} md={3}>
+							<TextFieldDisabled
+								title="Tour Type"
+								value={
+									dataDetail?.tour_package?.tour_packages_type === "vip"
+										? "VIP"
+										: dataDetail?.tour_package?.tour_packages_type ===
+											  "general-course"
+											? "General Tour"
+											: "Student Tour"
+								}
+							/>
+						</Grid>
+						<Grid item xs={6} md={3}>
+							<TextFieldDisabled
+								title="Number of Participants"
+								value={dataDetail?.participants_count || "-"}
+							/>
+						</Grid>
+						<Grid item xs={6} md={3}>
+							<TextFieldDisabled title="City" value={dataDetail?.city || "-"} />
+						</Grid>
+						{dataDetail?.tour_package?.tour_packages_type ===
+							"student-course" && (
+							<Grid item xs={6} md={3}>
+								<TextFieldDisabled title="Group Type" value={"-"} />
+							</Grid>
+						)}
+
+						<Grid item xs={6} md={3}>
+							<TextFieldDisabled
+								title="Vehicle Type"
+								value={
+									(dataDetail?.vehicle_type === "tour-bus"
+										? "Tour Bus"
+										: "Personal Car") || "-"
+								}
+							/>
+						</Grid>
+						<Grid item xs={6} md={3}>
+							<TextFieldDisabled
+								title="Vehicle Plate"
+								value={dataDetail?.vehicle_plate_number || "-"}
+							/>
+						</Grid>
+						<Grid item xs={6} md={3}>
+							<TextFieldDisabled
+								title="Email Address"
+								value={dataDetail?.leader.email || "-"}
+							/>
 						</Grid>
 					</Grid>
 				</div>

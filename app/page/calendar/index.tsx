@@ -234,7 +234,11 @@ export default function CalendarPage() {
 						}, 500);
 					}}
 				/>
-				<DialogAddVip onClose={() => setOpenVip(false)} open={openVip} />
+				<DialogAddVip
+					onClose={() => setOpenVip(false)}
+					open={openVip}
+					refetch={refetch}
+				/>
 			</>
 		);
 	};
