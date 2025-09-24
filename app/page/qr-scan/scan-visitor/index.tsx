@@ -3,15 +3,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import StickyFooter from "@/components/layout/sticky-footer";
 import StickyHeader from "@/components/layout/sticky-header";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Scanner } from "@yudiel/react-qr-scanner";
-import { attendQr } from "@/api/qr-scan";
+import { attendQr, getParticipant } from "@/api/qr-scan";
 import { toast } from "sonner";
+import type { Participant } from "./_functions/models/scan-visitor";
+import { enqueueSnackbar } from "notistack";
 
 export default function ScanVisitor() {
   const [isScanned, setIsScanned] = useState(false);
   const [flashlightOn, setFlashlightOn] = useState(false);
-  const [scannedData, setScannedData] = useState<string>("");
+  const [scannedData, setScannedData] = useState<Participant["data"]>();
+  const [code, setCode] = useState<string>("");
 
   const footerItems = [
     { icon: "formkit:people", label: "Visitor List" },
@@ -23,21 +26,17 @@ export default function ScanVisitor() {
   const handleScan = async (detectedCodes: any[]) => {
     if (detectedCodes && detectedCodes.length > 0) {
       const result = detectedCodes[0].rawValue;
-
-      // Try to parse JSON data from QR code
       try {
-        const res = await attendQr({
-          code: result,
-        });
-        setScannedData(result);
+        const res = await getParticipant(result);
+        setScannedData(res?.data);
         setIsScanned(true);
-
-        // TODO: Set data after scanning
-
-        // You can use this data to populate the visitor details
-      } catch (error) {
-        console.error("Error when scanning", error);
-        // toast.error(error?.response?.data?.message);
+      } catch (error: any) {
+        enqueueSnackbar(
+          `Error: ${error?.response?.data?.message ?? "Failed to scan"}`,
+          {
+            variant: "error",
+          }
+        );
       }
     }
   };
@@ -46,23 +45,53 @@ export default function ScanVisitor() {
     console.error("QR Scanner error:", error);
   };
 
-  const handleManualScan = () => {
-    // Simulate manual code entry
-    setScannedData("manual-entry-123");
-    setIsScanned(true);
+  const handleChangeCode = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCode(e.target.value);
   };
 
-  const handleAddVisitor = () => {
+  const handleManualScan = async () => {
+    try {
+      const res = await getParticipant(code);
+      setScannedData(res.data);
+      setIsScanned(true);
+    } catch (error: any) {
+      enqueueSnackbar(
+        `Error: ${error?.response?.data?.message ?? "Failed to scan"}`,
+        {
+          variant: "error",
+        }
+      );
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleManualScan();
+    }
+  };
+
+  const handleAddVisitor = async () => {
     // Handle add visitor action
-    console.log("Add visitor clicked", scannedData);
-    // Reset scanner after adding visitor
-    setIsScanned(false);
-    setScannedData("");
+    try {
+      const res = await attendQr({ code });
+      setIsScanned(false);
+      setScannedData(undefined);
+      enqueueSnackbar(`Participant has been added`, {
+        variant: "success",
+      });
+    } catch (error: any) {
+      enqueueSnackbar(
+        `Error: ${error?.response?.data?.message ?? "Failed to add participant"}`,
+        {
+          variant: "error",
+        }
+      );
+    }
   };
 
   const handleResetScanner = () => {
     setIsScanned(false);
-    setScannedData("");
+    setScannedData(undefined);
   };
 
   return (
@@ -149,12 +178,13 @@ export default function ScanVisitor() {
                   </div>
 
                   {/* Insert Code Button */}
-                  <button
-                    onClick={handleManualScan}
-                    className="w-full bg-[#1E3A5F] text-white py-3 px-6 rounded-lg font-medium"
-                  >
-                    Insert Code
-                  </button>
+                  <input
+                    type="text"
+                    onChange={handleChangeCode}
+                    onKeyDown={handleKeyDown}
+                    className="focus:outline-none text-center w-full bg-[#1E3A5F] text-white py-3 px-6 rounded-lg font-medium"
+                    placeholder="Insert Code"
+                  />
                 </div>
               </>
             ) : (
@@ -204,17 +234,17 @@ export default function ScanVisitor() {
                     <div className="flex-1 h-px bg-white/20"></div>
                   </div>
 
-                  {/* Insert Code Button */}
-                  <button
-                    onClick={handleResetScanner}
-                    className="w-full bg-[#1E3A5F] text-white py-3 px-6 rounded-lg font-medium blur-sm"
-                  >
-                    Insert Code
-                  </button>
+                  <input
+                    type="text"
+                    onChange={handleChangeCode}
+                    onKeyDown={handleKeyDown}
+                    className="focus:outline-none text-center w-full bg-[#1E3A5F] text-white py-3 px-6 rounded-lg font-medium"
+                    placeholder="Insert Code"
+                  />
                 </div>
 
                 {/* Visitor Detail Card */}
-                <div className="absolute bottom-0 left-0 right-0 bg-[#1E3A5F] rounded-t-2xl p-6">
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-b from-[#002B74] to-[#00102B] rounded-t-2xl p-6">
                   <div className="flex justify-between items-center mb-3">
                     <Typography className="text-lg font-bold text-white">
                       Detail Visitor
@@ -232,48 +262,38 @@ export default function ScanVisitor() {
                   <div className="space-y-4">
                     <div className="flex justify-between">
                       <div>
-                        <Typography className="text-sm text-white/80">
-                          Nama
-                        </Typography>
                         <Typography className="text-sm font-medium text-white">
-                          Andreas Kholilbi
+                          {scannedData?.name}
                         </Typography>
                       </div>
                       <div>
-                        <Typography className="text-sm text-white/80">
-                          No. HP
-                        </Typography>
                         <Typography className="text-sm font-medium text-white">
-                          081321245212
+                          {scannedData?.phone_number}
                         </Typography>
                       </div>
                     </div>
 
                     <div className="flex justify-between">
                       <div>
-                        <Typography className="text-sm text-white/80">
-                          Jenis Kelamin
-                        </Typography>
                         <Typography className="text-sm font-medium text-white">
-                          Laki - laki
+                          {scannedData?.sex === "male"
+                            ? "Laki-laki"
+                            : "Perempuan"}
                         </Typography>
                       </div>
                       <div>
-                        <Typography className="text-sm text-white/80">
-                          Email
-                        </Typography>
                         <Typography className="text-sm font-medium text-white">
-                          anas@gmail.com
+                          {scannedData?.email}
                         </Typography>
                       </div>
                     </div>
 
-                    <div>
+                    <div className="flex justify-between items-center">
                       <Typography className="text-sm text-white/80">
-                        Nama Instansi
+                        Nama Intansi
                       </Typography>
                       <Typography className="text-sm font-medium text-white">
-                        SMK Adijaya Ciputat
+                        {scannedData?.tour?.name}
                       </Typography>
                     </div>
 
@@ -290,7 +310,7 @@ export default function ScanVisitor() {
 
                   <button
                     onClick={handleAddVisitor}
-                    className="w-full bg-[#0F1B2E] text-white py-3 px-6 rounded-lg font-medium mt-6"
+                    className="cursor-pointer w-full bg-[#1E3A5F] text-white py-4 px-6 font-medium mt-6"
                   >
                     Tambah Pengunjung
                   </button>
