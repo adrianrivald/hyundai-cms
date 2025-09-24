@@ -1,4 +1,4 @@
-import { useGetTourDetails } from "@/api/tour";
+import { useGetTourDetails, type TourDetailsType } from "@/api/tour";
 import DialogModal from "@/components/custom/dialog/dialog-modal";
 import { Grid } from "@/components/grid";
 import { Typography } from "@/components/typography";
@@ -7,7 +7,15 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { format, isValid } from "date-fns";
 import DialogRescheduleEmail from "./dialog-reschedule-email";
 import { useState } from "react";
-import DialogReschedule from "./dialog-reschedule";
+import { useTableConfig } from "@/hooks/use-table-config";
+import { useTableState } from "@/hooks/use-table-state";
+import { dataParticipantsColumn } from "../column/columns-detail-participants";
+import { DataTable } from "@/components/layout/table/data-table";
+import DialogDetailsVisitor from "./dialog-details-visitor";
+import { useForm } from "react-hook-form";
+import FormProvider from "@/components/RHForm/FormProvider";
+import RHFTextField from "@/components/RHForm/RHFTextField";
+import { SearchIcon } from "lucide-react";
 
 interface DialogDetailTourProps {
 	open: boolean;
@@ -17,11 +25,17 @@ interface DialogDetailTourProps {
 
 const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 	const { data: dataDetail } = useGetTourDetails(data?.id);
+	const tableState = useTableState({});
 	const [openEmail, setOpenEmail] = useState({ isOpen: false, email: "" });
-	const [openReschedule, setOpenReschedule] = useState({
-		isOpen: false,
-		code: "",
+	const methods = useForm({
+		defaultValues: {
+			search: "",
+		},
 	});
+	// const [openReschedule, setOpenReschedule] = useState({
+	// 	isOpen: false,
+	// 	code: "",
+	// });
 
 	const TextFieldDisabled = ({
 		title,
@@ -39,6 +53,18 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 			</>
 		);
 	};
+
+	const search = methods.watch("search")?.trim() || "";
+	const table = useTableConfig({
+		data:
+			dataDetail?.participants.filter((item) => {
+				if (!search) return true; // no search → include all
+				const regex = new RegExp(search, "i"); // "i" = case-insensitive
+				return regex.test(item.name);
+			}) || [],
+		columns: dataParticipantsColumn as any,
+		tableState,
+	});
 
 	return (
 		<DialogModal
@@ -101,7 +127,7 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 						<Grid item xs={6} md={3}>
 							<TextFieldDisabled
 								title="Number of Participants"
-								value={dataDetail?.participants_count || "-"}
+								value={String(dataDetail?.participants_count) || "-"}
 							/>
 						</Grid>
 						<Grid item xs={6} md={3}>
@@ -137,6 +163,26 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 							/>
 						</Grid>
 					</Grid>
+					<div>
+						<Typography className="font-bold my-5 text-[18px]">
+							Daftar Peserta
+						</Typography>
+						<div className="mt-3 mb-5 w-[300px]">
+							<FormProvider methods={methods}>
+								<RHFTextField
+									name="search"
+									label="Temukan Peserta"
+									placeholder="Cari nama peserta"
+									endIcon={<SearchIcon className="mr-2" />}
+								/>
+							</FormProvider>
+						</div>
+
+						<div className="max-h-[280px] overflow-y-scroll mb-10">
+							<DataTable table={table} showPagination={false} />
+						</div>
+					</div>
+
 					<DialogRescheduleEmail
 						open={openEmail.isOpen}
 						onClose={() => {
