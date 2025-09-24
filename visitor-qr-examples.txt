@@ -1,0 +1,63 @@
+QR Code Examples for Visitor Data
+=====================================
+
+Here are example JSON strings that you can use to generate QR codes for testing the visitor scanner:
+
+1. Andreas Kholilbi (Default visitor from the app):
+{
+  "name": "Andreas Kholilbi",
+  "phone": "081321245212",
+  "gender": "Laki - laki",
+  "email": "anas@gmail.com",
+  "institution": "SMK Adijaya Ciputat"
+}
+
+2. Maria Culhane:
+{
+  "name": "Maria Culhane",
+  "phone": "+4448546368358",
+  "gender": "Perempuan",
+  "email": "maria.culhane@email.com",
+  "institution": "Universitas Indonesia"
+}
+
+3. John Doe:
+{
+  "name": "John Doe",
+  "phone": "+2837720608484",
+  "gender": "Laki - laki",
+  "email": "john.doe@company.com",
+  "institution": "PT. Teknologi Maju"
+}
+
+4. Hanna Carder:
+{
+  "name": "Hanna Carder",
+  "phone": "+9791802725322",
+  "gender": "Perempuan",
+  "email": "hanna.carder@school.edu",
+  "institution": "SMA Negeri 1 Jakarta"
+}
+
+5. Corey Passaquindici Arcand:
+{
+  "name": "Corey Passaquindici Arcand",
+  "phone": "+6964558702330",
+  "gender": "Laki - laki",
+  "email": "corey.arcand@university.ac.id",
+  "institution": "Institut Teknologi Bandung"
+}
+
+How to Use:
+-----------
+1. Copy any of the JSON strings above
+2. Use any QR code generator (online or app) to create a QR code
+3. Scan the QR code with your mobile app
+4. The app should parse the JSON and display the visitor information
+
+Alternative QR Code Generators:
+- https://www.qr-code-generator.com/
+- https://qr-code-styling.com/
+- Any QR code generator app on your phone
+
+Note: Make sure to use the exact JSON format shown above for the scanner to work properly.
