@@ -23,22 +23,33 @@ export default function ScanVisitor() {
     { icon: "mingcute:settings-2-line", label: "Settings" },
   ];
 
+  let lastScanned = "";
+
   const handleScan = async (detectedCodes: any[]) => {
-    if (detectedCodes && detectedCodes.length > 0) {
-      const result = detectedCodes[0].rawValue;
-      try {
-        const res = await getParticipant(result);
-        setScannedData(res?.data);
-        setIsScanned(true);
-      } catch (error: any) {
-        enqueueSnackbar(
-          `Error: ${error?.response?.data?.message ?? "Failed to scan"}`,
-          {
-            variant: "error",
-          }
-        );
-      }
+    if (!detectedCodes || detectedCodes.length === 0) return;
+
+    const result = detectedCodes[0].rawValue;
+
+    // Prevent duplicate scans of the same QR
+    if (result === lastScanned) return;
+    lastScanned = result;
+
+    try {
+      const res = await getParticipant(result);
+      setScannedData(res?.data);
+      setIsScanned(true);
+    } catch (error: any) {
+      enqueueSnackbar(
+        `Error: ${error?.response?.data?.message ?? "Failed to scan"}`,
+        { variant: "error" }
+      );
     }
+
+    // Reset last scanned after 2 seconds so new scans are allowed
+    setTimeout(() => {
+      lastScanned = "";
+      setIsScanned(false);
+    }, 2000);
   };
 
   const handleError = (error: unknown) => {
@@ -149,6 +160,7 @@ export default function ScanVisitor() {
                           objectFit: "cover",
                         },
                       }}
+                      allowMultiple
                       constraints={{
                         facingMode: "environment", // Use back camera
                       }}
@@ -206,6 +218,7 @@ export default function ScanVisitor() {
                           objectFit: "cover",
                         },
                       }}
+                      allowMultiple
                       constraints={{
                         facingMode: "environment",
                       }}
@@ -290,7 +303,7 @@ export default function ScanVisitor() {
 
                     <div className="flex justify-between items-center">
                       <Typography className="text-sm text-white/80">
-                        Nama Intansi
+                        Nama Instansi
                       </Typography>
                       <Typography className="text-sm font-medium text-white">
                         {scannedData?.tour?.name}
