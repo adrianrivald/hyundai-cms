@@ -7,6 +7,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { format, isValid } from "date-fns";
 import DialogRescheduleEmail from "./dialog-reschedule-email";
 import { useState } from "react";
+import DialogReschedule from "./dialog-reschedule";
 
 interface DialogDetailTourProps {
 	open: boolean;
@@ -17,6 +18,10 @@ interface DialogDetailTourProps {
 const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 	const { data: dataDetail } = useGetTourDetails(data?.id);
 	const [openEmail, setOpenEmail] = useState({ isOpen: false, email: "" });
+	const [openReschedule, setOpenReschedule] = useState({
+		isOpen: false,
+		code: "",
+	});
 
 	const TextFieldDisabled = ({
 		title,
