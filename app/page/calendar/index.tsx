@@ -220,7 +220,7 @@ export default function CalendarPage() {
 								setOpenVip(true);
 							}}
 						>
-							Add VIP
+							Add Guest
 						</Button>
 					</div>
 				</div>
