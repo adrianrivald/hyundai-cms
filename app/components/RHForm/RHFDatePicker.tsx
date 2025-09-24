@@ -94,6 +94,7 @@ export default function RHFDatePicker({
 										onChange(date);
 									}
 								}}
+								captionLayout="dropdown"
 								//@ts-ignore
 								disabled={{ before: minDate, after: maxDate }}
 								className="w-full rounded-none"
