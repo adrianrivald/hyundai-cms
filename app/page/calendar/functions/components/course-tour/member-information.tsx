@@ -8,11 +8,40 @@ import RHFDatePicker from "@/components/RHForm/RHFDatePicker";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { usePostRegisterTour, type TourRegisterType } from "@/api/tour-package";
-import { format } from "date-fns";
+import { format, isValid, parse } from "date-fns";
 import { enqueueSnackbar } from "notistack";
+import * as XLSX from "xlsx";
 
 interface MemberInformationProps {
 	methods: UseFormReturn<FormRegisterTour>;
+}
+
+const genderOptions = [
+	{
+		id: "male",
+		name: "Male",
+	},
+	{
+		id: "female",
+		name: "Female",
+	},
+];
+
+const difabelOptions = [
+	{
+		id: "true",
+		name: "Yes",
+	},
+	{
+		id: "false",
+		name: "No",
+	},
+];
+
+function excelSerialToDate(serial: number): Date {
+	const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+	const days = Math.floor(serial);
+	return new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000);
 }
 
 const MemberInformation = ({ methods }: MemberInformationProps) => {
@@ -71,20 +100,110 @@ const MemberInformation = ({ methods }: MemberInformationProps) => {
 		});
 	};
 
+	const onDownload = async () => {
+		const response = await fetch("/template.xlsx");
+		const blob = await response.blob();
+
+		const url = window.URL.createObjectURL(blob);
+		const link = document.createElement("a");
+		link.href = url;
+		link.download = "template_peserta.xlsx";
+		document.body.appendChild(link);
+		link.click();
+		link.remove();
+		window.URL.revokeObjectURL(url);
+	};
+
+	const handleExcelUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (!file) return;
+
+		const reader = new FileReader();
+		reader.onload = (event) => {
+			const data = new Uint8Array(event.target?.result as ArrayBuffer);
+			const workbook = XLSX.read(data, { type: "array" });
+
+			const sheetName = workbook.SheetNames[0];
+			const worksheet = workbook.Sheets[sheetName];
+			const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+
+			const mappedParticipants = jsonData.map((row: any) => ({
+				full_name: row["Name"] || "",
+				email: row["Email"] || "",
+				phone_no: row["Phone Number"]?.toString() || "",
+				gender:
+					row["Gender"]?.toLowerCase() === "male"
+						? genderOptions?.find((g) => g.id === "male")
+						: genderOptions?.find((g) => g.id === "female"),
+
+				birthdate: row["Year of Birth (date/month/year)"]
+					? typeof row["Year of Birth (date/month/year)"] === "number"
+						? excelSerialToDate(row["Year of Birth (date/month/year)"])
+						: parse(
+								row["Year of Birth (date/month/year)"],
+								"dd/MM/yyyy",
+								new Date()
+							)
+					: null,
+				difabel:
+					row["Difabel"]?.toLowerCase() === "yes"
+						? String("true")
+						: String("false"),
+			}));
+
+			const nonEmptyParticipants = mappedParticipants.filter(
+				(p) => p.email !== ""
+			);
+
+			if (nonEmptyParticipants.length > 0) {
+				console.log(
+					"dataa",
+					nonEmptyParticipants.map((item) => ({
+						name: item.full_name,
+						phone: item.phone_no,
+						email: item.email,
+						gender: item.gender?.id || "",
+						dob: item.birthdate,
+						isDifable: item.difabel,
+					}))
+				);
+				methods.setValue(
+					"group_member",
+					nonEmptyParticipants.map((item) => ({
+						name: item.full_name,
+						phone: item.phone_no,
+						email: item.email,
+						gender: item.gender?.id || "",
+						dob: item.birthdate?.toString() || "",
+						isDifable: item.difabel,
+					}))
+				);
+			}
+		};
+
+		reader.readAsArrayBuffer(file);
+	};
+
 	return (
 		<div>
 			<div className="w-full border-[1px] rounded-sm mb-3 flex flex-col items-center">
-				<div className="w-[40%] mr-[100px]">
-					<Typography className="text-[18px] font-medium text-center mt-3">
+				<div className=" self-center-500 w-[460px]">
+					<Typography className="text-[18px] font-medium text-center my-3 ">
 						Upload data secara masal sekaligus, Download format upload dibawah
 						ini
 					</Typography>
-					<div className="my-3 flex flex-row items-center gap-5 underline justify-center">
-						<Icon icon="vscode-icons:file-type-excel" width="46" height="46" />
-						<Typography>Download format upload masal</Typography>
-					</div>
 				</div>
-				<div className="border-[1px] border-dashed w-[97%] mb-5 items-center flex flex-col py-5 mt-3">
+				<div
+					className="my-3 flex flex-row items-center gap-5 underline justify-center cursor-pointer"
+					onClick={() => onDownload()}
+				>
+					<Icon icon="vscode-icons:file-type-excel" width="46" height="46" />
+					<Typography>Download format upload masal</Typography>
+				</div>
+				<label
+					htmlFor="upload-file"
+					className="border-[1px] border-dashed w-[97%] mb-5 items-center flex flex-col py-5 mt-3 cursor-pointer"
+				>
 					<Icon icon="icon-park-outline:upload-one" width="20" height="20" />
 					<Typography className="mt-2 text-sm font-bold">
 						Upload data
@@ -92,7 +211,22 @@ const MemberInformation = ({ methods }: MemberInformationProps) => {
 					<Typography className="mt-1 text-sm">
 						(Data yang sudah terisi sesuai format)
 					</Typography>
-				</div>
+					<input
+						id="upload-file"
+						type="file"
+						accept=".xlsx,.xls,.csv"
+						className="hidden"
+						onClick={(e) => {
+							(e.target as HTMLInputElement).value = "";
+						}}
+						onChange={(e) => {
+							const file = e.target.files?.[0];
+							if (file) {
+								handleExcelUpload(e);
+							}
+						}}
+					/>
+				</label>
 			</div>
 			<div className="flex items-center w-full my-4">
 				<div className="flex-grow border-t border-gray-300"></div>
@@ -147,10 +281,7 @@ const MemberInformation = ({ methods }: MemberInformationProps) => {
 									<RHFSelect
 										name={`group_member.${index}.gender`}
 										label="Gender"
-										options={[
-											{ id: "male", name: "Male" },
-											{ id: "female", name: "Female" },
-										]}
+										options={genderOptions}
 										placeholder="Choose Gender"
 										getOptionLabel={(user) => user.name}
 										getOptionValue={(user) => String(user.id)}
@@ -180,10 +311,7 @@ const MemberInformation = ({ methods }: MemberInformationProps) => {
 										className="space-y-0"
 										name={`group_member.${index}.isDifabel`}
 										label="Berkebutuhan Khusus ?"
-										options={[
-											{ id: "true", name: "Yes" },
-											{ id: "false", name: "No" },
-										]}
+										options={difabelOptions}
 										placeholder="Choose"
 										getOptionLabel={(user) => user.name}
 										getOptionValue={(user) => String(user.id)}
