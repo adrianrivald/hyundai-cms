@@ -1,32 +1,328 @@
-import { usePostList } from "@/api/post";
+import FormProvider from "@/components/RHForm/FormProvider";
+import RHFDatePicker from "@/components/RHForm/RHFDatePicker";
 import Container from "@/components/container";
+import { Grid } from "@/components/grid";
+import { Typography } from "@/components/typography";
+import { Button } from "@/components/ui/button";
+import {
+	ChartContainer,
+	ChartTooltip,
+	ChartTooltipContent,
+	type ChartConfig,
+	ChartLegendContent,
+	ChartLegend,
+} from "@/components/ui/chart";
+import { cn } from "@/lib/utils";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
-import { useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import {
+	CartesianGrid,
+	XAxis,
+	Line,
+	LineChart,
+	Legend,
+	YAxis,
+	Cell,
+	Pie,
+	PieChart,
+	Tooltip,
+	Bar,
+	BarChart,
+	LabelList,
+} from "recharts";
+
+const chartConfig = {
+	tour: {
+		label: "Total Visitors",
+	},
+	student_tour: {
+		label: "Student Tour",
+		color: "#FFCA8B",
+	},
+	general_tour: {
+		label: "General Tour",
+		color: "#743F00",
+	},
+
+	total: {
+		label: "Total",
+	},
+	label: {
+		color: "var(--background)",
+	},
+} satisfies ChartConfig;
 
 export default function DashboardPage() {
-	const navigate = useNavigate();
-	const { data, isLoading, error } = usePostList({
-		queryKey: ["posts"],
+	const methods = useForm({
+		defaultValues: {
+			start_date: "",
+			end_date: "",
+		},
 	});
 
-	if (isLoading) return <p>Loading...</p>;
-	if (error) return <p>Error: {(error as Error).message}</p>;
+	const chartData = [
+		//{ date: "", student_tour: "", general_tour: "" },
+		{ date: "24 Sep 2024", student_tour: 186, general_tour: 184 },
+		{ date: "25 Sep 2024", student_tour: 305, general_tour: 150 },
+		{ date: "26 Sep 2024", student_tour: 237, general_tour: 120 },
+		{ date: "27 Sep 2024", student_tour: 73, general_tour: 110 },
+		{ date: "28 Sep 2024", student_tour: 209, general_tour: 194 },
+		{ date: "29 Sep 2024", student_tour: 214, general_tour: 104 },
+	];
+
+	const dataPie = [
+		{
+			name: "general_tour",
+			value: 75,
+			fill: "var(--color-general-tour)",
+		},
+		{
+			name: "student_tour",
+			value: 25,
+			fill: "var(--color-student-tour)",
+		},
+	];
+
+	const dataBar = [
+		{ city: "Bekasi", total: 186 },
+		{ city: "Tambun", total: 305 },
+		{ city: "Cibitung", total: 237 },
+		{ city: "Cikarang", total: 214 },
+	];
+
+	const baseHeight = 300; // for 4 items
+	const extraHeightPerBar = 50;
+	const chartHeight =
+		dataBar.length <= 4
+			? baseHeight
+			: baseHeight + (dataBar.length - 4) * extraHeightPerBar;
 
 	return (
 		<Container>
-			{data?.map((item, index) => {
-				return (
-					<div
-						key={index}
-						className="p-2 border-2 mb-2 rounded-md cursor-pointer"
-						onClick={() => {
-							navigate("/post/detail/" + item.id);
+			<FormProvider methods={methods}>
+				<div className="flex flex-row gap-5 bg-white p-5  items-end rounded-sm">
+					<RHFDatePicker
+						name="start_date"
+						label="Start Date"
+						required
+						placeholder="Choose start date"
+						format="dd/MM/yyyy"
+						onChange={(date) => {
+							if (date) {
+								methods.setValue("start_date", date.toISOString());
+								methods.clearErrors("start_date");
+								methods.setValue("end_date", "");
+							}
 						}}
+						className="w-full"
+						//minDate={new Date()}
+					/>
+					<RHFDatePicker
+						name="end_date"
+						label="End Date"
+						required
+						placeholder="Choose end date"
+						format="dd/MM/yyyy"
+						onChange={(date) => {
+							if (date) {
+								methods.setValue("end_date", date.toISOString());
+								methods.clearErrors("end_date");
+							}
+						}}
+						className="w-full"
+						minDate={new Date(methods.watch("start_date"))}
+					/>
+					<Button
+						className="bg-amber-500 hover:bg-amber-600 cursor-pointer"
+						endIcon={
+							<Icon icon="simple-line-icons:magnifier" width="16" height="16" />
+						}
 					>
-						{item?.title}
-					</div>
-				);
-			})}
+						Cari Data
+					</Button>
+				</div>
+				<Grid container>
+					<Grid item xs={12} className="bg-white mt-5 rounded-sm p-5">
+						<ChartContainer
+							config={chartConfig}
+							className="h-[350px] w-full mt-5"
+						>
+							<LineChart
+								accessibilityLayer
+								data={chartData}
+								margin={{
+									left: 10,
+									right: 55,
+								}}
+							>
+								<CartesianGrid vertical={false} />
+								<XAxis
+									dataKey="date"
+									interval={0}
+									tickLine={true}
+									axisLine={true}
+									tickMargin={8}
+									tickFormatter={(value) => value}
+								/>
+								<YAxis />
+								<ChartTooltip
+									cursor={false}
+									content={<ChartTooltipContent hideLabel />}
+								/>
+								<Line
+									dataKey="student_tour"
+									type="natural"
+									stroke="var(--color-student-tour)"
+									strokeWidth={2}
+									dot={true}
+									name={chartConfig.student_tour.label}
+								/>
+								<Line
+									dataKey="general_tour"
+									type="natural"
+									stroke="var(--color-general-tour)"
+									strokeWidth={2}
+									dot={true}
+									name={chartConfig.general_tour.label}
+								/>
+								<Legend
+									margin={{ top: 20 }}
+									wrapperStyle={{ marginTop: 20, paddingTop: 10 }}
+								/>
+							</LineChart>
+						</ChartContainer>
+					</Grid>
+				</Grid>
+
+				<Grid container spacing={3} className="mt-5 mb-10">
+					<Grid item xs={6} className="bg-white rounded-sm pt-5">
+						<Typography className="text-center font-bold">
+							Total Visitor
+						</Typography>
+						<ChartContainer
+							config={chartConfig}
+							className="mx-auto aspect-square max-h-[250px]"
+						>
+							<PieChart>
+								<ChartTooltip
+									cursor={false}
+									content={<ChartTooltipContent hideLabel />}
+								/>
+								<Pie
+									data={dataPie}
+									dataKey="value"
+									nameKey="name"
+									innerRadius={60}
+									label={({ payload, ...props }) => {
+										return (
+											<text
+												cx={props.cx}
+												cy={props.cy}
+												x={props.x}
+												y={props.y}
+												textAnchor={props.textAnchor}
+												dominantBaseline={props.dominantBaseline}
+												fill="hsla(var(--foreground))"
+											>
+												{payload.value} %
+											</text>
+										);
+									}}
+								/>
+								<ChartLegend
+									content={<ChartLegendContent nameKey="name" />}
+									className="-translate-y-2 flex-wrap gap-2 *:justify-center "
+								/>
+							</PieChart>
+						</ChartContainer>
+					</Grid>
+					<Grid item xs={6} className="">
+						<div className="relative bg-white rounded-sm py-5 px-5">
+							<Typography className="font-bold text-[18px]">
+								Jenis Gender Pengunjung
+							</Typography>
+							<div className="mt-5 flex flex-row">
+								<div className="flex-1">
+									<Typography className="text-[#8E8E93]">Laki Laki</Typography>
+									<Typography className="font-medium text-[18px]">
+										2,690
+									</Typography>
+								</div>
+								<div className="flex-1">
+									<Typography className="text-[#8E8E93]">Perempuan</Typography>
+									<Typography className="font-medium text-[18px]">
+										1,780
+									</Typography>
+								</div>
+							</div>
+						</div>
+					</Grid>
+					<Grid item xs={12} className="bg-white rounded-sm pt-5">
+						<Typography className="text-center mb-5 text-[18px] font-bold">
+							Kota Asal
+						</Typography>
+						<ChartContainer
+							config={chartConfig}
+							className="w-full"
+							style={{ height: `${chartHeight}px` }}
+						>
+							<BarChart
+								accessibilityLayer
+								data={dataBar}
+								layout="vertical"
+								barSize={50}
+								maxBarSize={50}
+								barGap={10}
+								barCategoryGap={0}
+								margin={{
+									left: 20,
+									right: 20,
+									bottom: 20,
+								}}
+							>
+								<CartesianGrid horizontal={false} />
+								<YAxis
+									dataKey="city"
+									type="category"
+									tickLine={false}
+									tickMargin={10}
+									axisLine={false}
+									tickFormatter={(value) => value.slice(0, 3)}
+									hide
+								/>
+								<XAxis
+									dataKey="total"
+									type="number"
+									tickLine={false}
+									axisLine={false}
+									tickMargin={10}
+									tickCount={5}
+								/>
+								<ChartTooltip
+									cursor={false}
+									content={<ChartTooltipContent indicator="line" />}
+								/>
+								<Bar
+									dataKey="total"
+									layout="vertical"
+									fill="var(--color-hmmi-bar-chart)"
+									radius={4}
+								>
+									<LabelList
+										dataKey="city"
+										position="insideLeft"
+										offset={8}
+										//className="fill-(--colo-chart-2)"
+										className="fill-[white]"
+										fontSize={12}
+									/>
+								</Bar>
+							</BarChart>
+						</ChartContainer>
+					</Grid>
+				</Grid>
+			</FormProvider>
 		</Container>
 	);
 }

@@ -20,6 +20,7 @@ export type PublicCalendarTypes = {
 	day: string;
 	events: { id: number; holiday_name: string; description: string }[];
 	slot: {
+		time_range: string;
 		batch_time: string;
 		tour: {
 			id: number;

@@ -52,7 +52,7 @@ export default function RHFTextField({
 			name={name}
 			control={control}
 			render={({ field, fieldState: { error } }) => (
-				<div className="space-y-2">
+				<div className={cn("space-y-2", className)}>
 					{label && (
 						<FormLabel
 							className={cn(
