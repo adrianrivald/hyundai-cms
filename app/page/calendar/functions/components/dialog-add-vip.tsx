@@ -79,7 +79,7 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 
 							{methods.watch("step") === "info_anggota" && (
 								// @ts-ignore
-								<MemberInformation methods={methods} />
+								<MemberInformation methods={methods} refetch={refetch} />
 							)}
 
 							{methods.watch("step") === "done" && (
