@@ -5,6 +5,8 @@ import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { format, isValid } from "date-fns";
+import DialogRescheduleEmail from "./dialog-reschedule-email";
+import { useState } from "react";
 
 interface DialogDetailTourProps {
 	open: boolean;
@@ -13,9 +15,8 @@ interface DialogDetailTourProps {
 }
 
 const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
-	console.log("dataaa", data);
-
 	const { data: dataDetail } = useGetTourDetails(data?.id);
+	const [openEmail, setOpenEmail] = useState({ isOpen: false, email: "" });
 
 	const TextFieldDisabled = ({
 		title,
@@ -36,8 +37,7 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 
 	return (
 		<DialogModal
-			//open={open}
-			open
+			open={open}
 			onOpenChange={() => {
 				onClose();
 			}}
@@ -50,7 +50,16 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 					<div className="flex flex-row gap-3 mr-5">
 						<Button variant={"hmmiOutline"}>Ubah Jadwal</Button>
 						{dataDetail?.tour_package?.tour_packages_type !== "vip" && (
-							<Button>Ganti VIP</Button>
+							<Button
+								onClick={() =>
+									setOpenEmail({
+										isOpen: true,
+										email: dataDetail?.leader?.email || "",
+									})
+								}
+							>
+								Ganti VIP
+							</Button>
 						)}
 					</div>
 				</div>
@@ -123,6 +132,13 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 							/>
 						</Grid>
 					</Grid>
+					<DialogRescheduleEmail
+						open={openEmail.isOpen}
+						onClose={() => {
+							setOpenEmail({ isOpen: false, email: "" });
+						}}
+						email={openEmail.email}
+					/>
 				</div>
 			}
 		/>
