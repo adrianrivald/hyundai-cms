@@ -62,8 +62,8 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 			attachments: form.info_group.purpose_letter
 				? [
 						{
-							original_filename: form.info_group.purpose_letter,
-							attachment_path:
+							attachment_path: form.info_group.purpose_letter,
+							original_filename:
 								form.info_group.purpose_letter.split("/").pop() || "",
 						},
 					]
@@ -185,6 +185,8 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 
 		reader.readAsArrayBuffer(file);
 	};
+
+	console.log("dataa www", methods.watch());
 
 	return (
 		<div>
@@ -311,7 +313,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 								<Grid item xs={6} md={3}>
 									<RHFSelect
 										className="space-y-0"
-										name={`group_member.${index}.isDifabel`}
+										name={`group_member.${index}.isDifable`}
 										label="Berkebutuhan Khusus ?"
 										options={difabelOptions}
 										placeholder="Choose"

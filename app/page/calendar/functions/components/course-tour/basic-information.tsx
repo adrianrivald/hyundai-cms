@@ -117,8 +117,9 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						itemRadioProps={"border-[1px] rounded-sm px-5 py-2"}
 						onChange={(tour) => {
 							let data = dataTourPackages?.data?.filter(
-								(item) => item.id === tour
+								(item) => String(item.id) === tour
 							)?.[0];
+							console.log("dataa tour", data, dataTourPackages);
 							methods.setValue("type", tour);
 							methods.setValue("tour_type", data?.tour_packages_type || "");
 							methods.setValue(
@@ -149,7 +150,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								required
 							/>
 						</Grid>
-						{methods.watch("type") === "student-course" && (
+						{methods.watch("tour_type") === "student-course" && (
 							<Grid item xs={6} md={3}>
 								<RHFSelect
 									name="info_group.group_type"
@@ -303,7 +304,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								placeholder="Input Plate Number"
 								autoFocus={false}
 								required
-								maxLength={7}
+								maxLength={9}
 							/>
 						</Grid>
 					</Grid>
