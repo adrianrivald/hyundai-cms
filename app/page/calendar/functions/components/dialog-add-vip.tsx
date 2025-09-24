@@ -9,6 +9,10 @@ import { useForm } from "react-hook-form";
 import { FormRegisterTourSchema } from "../models/register-tour";
 import FormProvider from "@/components/RHForm/FormProvider";
 import BasicInformation from "./course-tour/basic-information";
+import MemberInformation from "./course-tour/member-information";
+import DialogConfirm from "@/components/custom/dialog/dialog-confirm";
+import { useState } from "react";
+import ScheduleDone from "./course-tour/schedule-done";
 
 interface DialogAddVipProps {
 	open: boolean;
@@ -18,6 +22,7 @@ interface DialogAddVipProps {
 }
 
 const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
+	const [dialogConfirm, setDialogConfirm] = useState(false);
 	const steps = [
 		{ key: "info_dasar", label: "Isi Informasi Dasar" },
 		{ key: "info_anggota", label: "Isi Daftar Anggota Group" },
@@ -27,7 +32,10 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 	const methods = useForm({
 		defaultValues: {
 			step: "info_dasar",
+			type: "",
+			date: new Date().toString(),
 			info_group: { email: "" },
+			group_member: [{}],
 		},
 		mode: "onChange",
 		resolver: yupResolver(FormRegisterTourSchema),
@@ -36,8 +44,11 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 	return (
 		<DialogModal
 			open={open}
+			// open
 			onOpenChange={() => {
-				onClose();
+				if (methods.watch("step") !== "done") {
+					setDialogConfirm(true);
+				}
 			}}
 			headerTitle={
 				<div className="flex flex-row gap-2 items-center mt-[-5px]">
@@ -52,7 +63,9 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 						steps={steps}
 						value={methods.watch("step")}
 						onChange={(key) => {
-							methods.setValue("step", key);
+							if (methods.formState.isValid) {
+								methods.setValue("step", key);
+							}
 						}}
 						activeColor="#153263"
 						inactiveColor="#A8C5F7"
@@ -63,8 +76,36 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 								// @ts-ignore
 								<BasicInformation methods={methods} />
 							)}
+
+							{methods.watch("step") === "info_anggota" && (
+								// @ts-ignore
+								<MemberInformation methods={methods} />
+							)}
+
+							{methods.watch("step") === "done" && (
+								<ScheduleDone
+									// @ts-ignore
+									methods={methods}
+									onClose={() => {
+										onClose();
+									}}
+								/>
+							)}
 						</FormProvider>
 					</div>
+
+					<DialogConfirm
+						open={dialogConfirm}
+						onClose={() => {
+							setDialogConfirm(false);
+						}}
+						onSubmit={() => {
+							setDialogConfirm(false);
+							onClose();
+							refetch && refetch();
+							methods.reset();
+						}}
+					/>
 				</div>
 			}
 		/>

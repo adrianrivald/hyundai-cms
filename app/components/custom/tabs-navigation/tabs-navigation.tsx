@@ -10,8 +10,8 @@ type Step = {
 
 interface StepNavigationProps {
 	steps: Step[];
-	value: string; // current step
-	onChange: (key: string) => void; // triggered when user clicks
+	value: string;
+	onChange: (key: string) => void;
 	activeColor?: string;
 	inactiveColor?: string;
 }
@@ -35,9 +35,11 @@ export function StepNavigation({
 						xs={12 / steps.length}
 						onClick={() => onChange(step.key)}
 						className={cn(
-							"py-4 px-5 cursor-pointer flex flex-row items-center gap-3",
-							isActive ? `bg-[${activeColor}]` : `bg-[${inactiveColor}]`
+							"py-4 px-5 cursor-pointer flex flex-row items-center gap-3"
 						)}
+						style={{
+							backgroundColor: isActive ? activeColor : inactiveColor,
+						}}
 					>
 						<div className="min-[24px] max-[24px]">
 							<Icon
