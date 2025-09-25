@@ -158,17 +158,6 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 			);
 
 			if (nonEmptyParticipants.length > 0) {
-				console.log(
-					"dataa",
-					nonEmptyParticipants.map((item) => ({
-						name: item.full_name,
-						phone: item.phone_no,
-						email: item.email,
-						gender: item.gender?.id || "",
-						dob: item.birthdate,
-						isDifable: item.difabel,
-					}))
-				);
 				methods.setValue(
 					"group_member",
 					nonEmptyParticipants.map((item) => ({

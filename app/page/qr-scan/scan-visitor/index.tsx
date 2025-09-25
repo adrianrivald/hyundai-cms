@@ -23,16 +23,10 @@ export default function ScanVisitor() {
     { icon: "mingcute:settings-2-line", label: "Settings" },
   ];
 
-  let lastScanned = "";
-
   const handleScan = async (detectedCodes: any[]) => {
     if (!detectedCodes || detectedCodes.length === 0) return;
 
     const result = detectedCodes[0].rawValue;
-
-    // Prevent duplicate scans of the same QR
-    if (result === lastScanned) return;
-    lastScanned = result;
 
     try {
       const res = await getParticipant(result);
@@ -44,12 +38,6 @@ export default function ScanVisitor() {
         { variant: "error" }
       );
     }
-
-    // Reset last scanned after 2 seconds so new scans are allowed
-    setTimeout(() => {
-      lastScanned = "";
-      setIsScanned(false);
-    }, 2000);
   };
 
   const handleError = (error: unknown) => {
@@ -60,7 +48,9 @@ export default function ScanVisitor() {
     setCode(e.target.value);
   };
 
-  const handleManualScan = async () => {
+  const handleManualScan = async (e: any) => {
+    e.preventDefault();
+    console.log("manual scanned");
     try {
       const res = await getParticipant(code);
       setScannedData(res.data);
@@ -75,12 +65,6 @@ export default function ScanVisitor() {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleManualScan();
-    }
-  };
-
   const handleAddVisitor = async () => {
     // Handle add visitor action
     try {
@@ -90,6 +74,9 @@ export default function ScanVisitor() {
       enqueueSnackbar(`Participant has been added`, {
         variant: "success",
       });
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error: any) {
       enqueueSnackbar(
         `Error: ${error?.response?.data?.message ?? "Failed to add participant"}`,
@@ -160,7 +147,7 @@ export default function ScanVisitor() {
                           objectFit: "cover",
                         },
                       }}
-                      allowMultiple
+                      // allowMultiple
                       constraints={{
                         facingMode: "environment", // Use back camera
                       }}
@@ -190,13 +177,22 @@ export default function ScanVisitor() {
                   </div>
 
                   {/* Insert Code Button */}
-                  <input
-                    type="text"
-                    onChange={handleChangeCode}
-                    onKeyDown={handleKeyDown}
-                    className="focus:outline-none text-center w-full bg-[#1E3A5F] text-white py-3 px-6 rounded-lg font-medium"
-                    placeholder="Insert Code"
-                  />
+                  <form
+                    style={{
+                      width: "100%",
+                    }}
+                    onSubmit={handleManualScan}
+                  >
+                    {" "}
+                    <input
+                      type="text"
+                      onChange={handleChangeCode}
+                      // onKeyDown={handleKeyDown}
+                      className="focus:outline-none text-center w-full bg-[#1E3A5F] text-white py-3 px-6 rounded-lg font-medium"
+                      placeholder="Insert Code"
+                    />
+                    <input type="submit" hidden />
+                  </form>
                 </div>
               </>
             ) : (
@@ -218,7 +214,7 @@ export default function ScanVisitor() {
                           objectFit: "cover",
                         },
                       }}
-                      allowMultiple
+                      // allowMultiple
                       constraints={{
                         facingMode: "environment",
                       }}
@@ -247,13 +243,23 @@ export default function ScanVisitor() {
                     <div className="flex-1 h-px bg-white/20"></div>
                   </div>
 
-                  <input
-                    type="text"
-                    onChange={handleChangeCode}
-                    onKeyDown={handleKeyDown}
-                    className="focus:outline-none text-center w-full bg-[#1E3A5F] text-white py-3 px-6 rounded-lg font-medium"
-                    placeholder="Insert Code"
-                  />
+                  {/* <div className="w-full"> */}
+                  <form
+                    style={{
+                      width: "100%",
+                    }}
+                    onSubmit={handleManualScan}
+                  >
+                    <input
+                      type="text"
+                      onChange={handleChangeCode}
+                      // onKeyDown={handleKeyDown}
+                      className="focus:outline-none text-center w-full bg-[#1E3A5F] text-white py-3 px-6 rounded-lg font-medium"
+                      placeholder="Insert Code"
+                    />
+                    <input type="submit" hidden />
+                  </form>
+                  {/* </div> */}
                 </div>
 
                 {/* Visitor Detail Card */}
