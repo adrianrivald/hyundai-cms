@@ -48,7 +48,8 @@ export default function ScanVisitor() {
     setCode(e.target.value);
   };
 
-  const handleManualScan = async () => {
+  const handleManualScan = async (e: any) => {
+    e.preventDefault();
     try {
       const res = await getParticipant(code);
       setScannedData(res.data);
@@ -60,12 +61,6 @@ export default function ScanVisitor() {
           variant: "error",
         }
       );
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleManualScan();
     }
   };
 
@@ -181,13 +176,22 @@ export default function ScanVisitor() {
                   </div>
 
                   {/* Insert Code Button */}
-                  <input
-                    type="text"
-                    onChange={handleChangeCode}
-                    onKeyDown={handleKeyDown}
-                    className="focus:outline-none text-center w-full bg-[#1E3A5F] text-white py-3 px-6 rounded-lg font-medium"
-                    placeholder="Insert Code"
-                  />
+                  <form
+                    style={{
+                      width: "100%",
+                    }}
+                    onSubmit={handleManualScan}
+                  >
+                    {" "}
+                    <input
+                      type="text"
+                      onChange={handleChangeCode}
+                      // onKeyDown={handleKeyDown}
+                      className="focus:outline-none text-center w-full bg-[#1E3A5F] text-white py-3 px-6 rounded-lg font-medium"
+                      placeholder="Insert Code"
+                    />
+                    <input type="submit" hidden />
+                  </form>
                 </div>
               </>
             ) : (
@@ -238,13 +242,23 @@ export default function ScanVisitor() {
                     <div className="flex-1 h-px bg-white/20"></div>
                   </div>
 
-                  <input
-                    type="text"
-                    onChange={handleChangeCode}
-                    onKeyDown={handleKeyDown}
-                    className="focus:outline-none text-center w-full bg-[#1E3A5F] text-white py-3 px-6 rounded-lg font-medium"
-                    placeholder="Insert Code"
-                  />
+                  {/* <div className="w-full"> */}
+                  <form
+                    style={{
+                      width: "100%",
+                    }}
+                    onSubmit={handleManualScan}
+                  >
+                    <input
+                      type="text"
+                      onChange={handleChangeCode}
+                      // onKeyDown={handleKeyDown}
+                      className="focus:outline-none text-center w-full bg-[#1E3A5F] text-white py-3 px-6 rounded-lg font-medium"
+                      placeholder="Insert Code"
+                    />
+                    <input type="submit" hidden />
+                  </form>
+                  {/* </div> */}
                 </div>
 
                 {/* Visitor Detail Card */}
