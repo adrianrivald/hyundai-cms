@@ -30,6 +30,7 @@ export default function ScanVisitor() {
 
     try {
       const res = await getParticipant(result);
+      setCode(result);
       setScannedData(res?.data);
       setIsScanned(true);
     } catch (error: any) {
