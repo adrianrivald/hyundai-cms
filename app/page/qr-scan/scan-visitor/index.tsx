@@ -48,7 +48,7 @@ export default function ScanVisitor() {
     // Reset last scanned after 2 seconds so new scans are allowed
     setTimeout(() => {
       lastScanned = "";
-      setIsScanned(false);
+      // setIsScanned(false);
     }, 2000);
   };
 
