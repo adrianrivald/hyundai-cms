@@ -50,6 +50,7 @@ export default function ScanVisitor() {
 
   const handleManualScan = async (e: any) => {
     e.preventDefault();
+    console.log("manual scanned");
     try {
       const res = await getParticipant(code);
       setScannedData(res.data);
