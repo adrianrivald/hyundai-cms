@@ -17,7 +17,7 @@ const AuthenticationPage = () => {
 
 	const onSubmit = () => {
 		const form = methods.watch();
-		console.log("daataa", methods.watch());
+
 		if (form.username === "HMMI-Tester" && form.password === "Hyund@1FTP!!") {
 			Cookies.set("hmmi_cookies", form.username, {
 				sameSite: "strict",
