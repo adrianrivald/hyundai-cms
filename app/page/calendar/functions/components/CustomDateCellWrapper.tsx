@@ -14,8 +14,11 @@ export const CustomDateCellWrapper =
 
 		const isCustomWeekend = holiday
 			.filter((item: any) => item.type === "HOLIDAY")
-			.map((item: any) => new Date(item.start))
-			.some((d: any) => isSameDate(d, value));
+			.some((item: any) => {
+				const start = new Date(item.start);
+				const end = new Date(item.end); // already adjusted with addDays(1)
+				return value >= start && value < end; // inclusive of start, exclusive of end
+			});
 
 		const isSpecialDay = isWeekend || isCustomWeekend;
 
