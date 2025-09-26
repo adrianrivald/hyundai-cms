@@ -1,12 +1,13 @@
 import DialogModal from "@/components/custom/dialog/dialog-modal";
 import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 import DialogPublicHoliday from "./dialog-public-holiday";
 import { useState } from "react";
 import DialogDelete from "@/components/custom/dialog/dialog-delete";
 import { useDeleteHoliday } from "@/api/public-holiday";
 import { enqueueSnackbar } from "notistack";
+import { Grid } from "@/components/grid";
 
 interface DialogDetailHolidayProps {
 	open: boolean;
@@ -24,6 +25,7 @@ const DialogDetailHoliday = ({
 	const [openEdit, setOpenEdit] = useState(false);
 	const [openDelete, setOpenDelete] = useState(false);
 	const { mutate } = useDeleteHoliday();
+	console.log("dataa", data);
 
 	const onDelete = () => {
 		mutate(
@@ -55,10 +57,21 @@ const DialogDetailHoliday = ({
 			contentProps="w-[700px] max-h-[750px]"
 			content={
 				<div className="">
-					<div>
-						<Typography className="font-bold">Date : </Typography>
-						<Typography>{format(data?.start, "dd-MM-yyyy")}</Typography>
-					</div>
+					<Grid container spacing={2}>
+						<Grid item xs={6}>
+							<Typography className="font-bold">
+								{!isSameDay(data?.end, data?.start) ? "Date" : "Start Date"}
+							</Typography>
+							<Typography>{format(data?.start, "dd-MM-yyyy")}</Typography>
+						</Grid>
+						{!isSameDay(data?.end, data?.start) && (
+							<Grid item xs={6}>
+								<Typography className="font-bold">End Date : </Typography>
+								<Typography>{format(data?.end, "dd-MM-yyyy")}</Typography>
+							</Grid>
+						)}
+					</Grid>
+
 					<div className="mt-2">
 						<Typography className="font-bold">Description : </Typography>
 						<Typography>{data?.description}</Typography>
@@ -87,6 +100,7 @@ const DialogDetailHoliday = ({
 						open={openEdit}
 						onClose={() => {
 							setOpenEdit(false);
+							onClose();
 						}}
 						data={data}
 						refetch={refetch}

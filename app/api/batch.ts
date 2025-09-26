@@ -99,7 +99,7 @@ export const useGetCalendars = (
 	return useQuery<{
 		data: PublicCalendarTypes[];
 	}>({
-		queryKey: ["batches-get-all", month_year],
+		queryKey: ["calendar-get-all", month_year],
 		queryFn: async () => {
 			const response = await getCalendar(month_year);
 			return response;

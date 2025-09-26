@@ -45,15 +45,18 @@ const DialogPublicHoliday = ({
 
 		const dateRange = eachDayOfInterval({
 			start: new Date(form.start_date),
-			end: isEdit ? new Date(form.start_date) : new Date(form?.end_date || ""),
+			end: new Date(form?.end_date || ""),
 		});
 
-		const dataForm: PublicHolidayType[] = dateRange.map((date) => ({
+		// const dataForm: PublicHolidayType[] = dateRange.map((date) => ({
+		const dataForm = {
 			id: data?.id,
 			holiday_name: form.title,
-			start_date: format(date, "yyyy-MM-dd"),
+			start_date: format(form.start_date, "yyyy-MM-dd"),
+			end_date: format(form.end_date, "yyyy-MM-dd"),
 			description: form.description,
-		}));
+		};
+		// }));
 
 		mutate(dataForm, {
 			onSuccess: () => {
@@ -81,7 +84,7 @@ const DialogPublicHoliday = ({
 				description: data?.description,
 				title: data?.title,
 				start_date: data?.start,
-				end_date: data?.start,
+				end_date: data?.end,
 			});
 		}
 	}, [data, open]);
@@ -100,45 +103,45 @@ const DialogPublicHoliday = ({
 				<div className="">
 					<FormProvider methods={methods}>
 						<Grid container className="mt-5" spacing={4}>
-							{!isEdit && (
-								<>
-									<Grid item xs={6}>
-										<RHFDatePicker
-											name="start_date"
-											label="Start Date"
-											required
-											placeholder="Choose start date"
-											format="dd/MM/yyyy"
-											onChange={(date) => {
-												if (date) {
-													methods.setValue("start_date", date.toISOString());
-													methods.clearErrors("start_date");
-													methods.setValue("end_date", "");
-												}
-											}}
-											//minDate={new Date()}
-										/>
-									</Grid>
-									<Grid item xs={6}>
-										<RHFDatePicker
-											name="end_date"
-											label="End Date"
-											required
-											placeholder="Choose end date"
-											format="dd/MM/yyyy"
-											onChange={(date) => {
-												if (date) {
-													methods.setValue("end_date", date.toISOString());
-													methods.clearErrors("end_date");
-												}
-											}}
-											minDate={new Date(methods.watch("start_date"))}
-										/>
-									</Grid>
-								</>
-							)}
+							{/* {!isEdit && ( */}
+							<>
+								<Grid item xs={6}>
+									<RHFDatePicker
+										name="start_date"
+										label="Start Date"
+										required
+										placeholder="Choose start date"
+										format="dd/MM/yyyy"
+										onChange={(date) => {
+											if (date) {
+												methods.setValue("start_date", date.toISOString());
+												methods.clearErrors("start_date");
+												methods.setValue("end_date", "");
+											}
+										}}
+										//minDate={new Date()}
+									/>
+								</Grid>
+								<Grid item xs={6}>
+									<RHFDatePicker
+										name="end_date"
+										label="End Date"
+										required
+										placeholder="Choose end date"
+										format="dd/MM/yyyy"
+										onChange={(date) => {
+											if (date) {
+												methods.setValue("end_date", date.toISOString());
+												methods.clearErrors("end_date");
+											}
+										}}
+										minDate={new Date(methods.watch("start_date"))}
+									/>
+								</Grid>
+							</>
+							{/* )} */}
 
-							{isEdit && (
+							{/* {isEdit && (
 								<Grid item xs={12}>
 									<RHFDatePicker
 										name="start_date"
@@ -149,13 +152,14 @@ const DialogPublicHoliday = ({
 										onChange={(date) => {
 											if (date) {
 												methods.setValue("start_date", date.toISOString());
+												methods.setValue("end_date", date.toISOString());
 												methods.clearErrors("start_date");
 											}
 										}}
 										//minDate={new Date()}
 									/>
 								</Grid>
-							)}
+							)} */}
 
 							<Grid item xs={6}>
 								<RHFTextField
