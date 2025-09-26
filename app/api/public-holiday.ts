@@ -80,7 +80,8 @@ export const useDeleteHoliday = (
 			queryClient.removeQueries({
 				predicate: (query) =>
 					typeof query.queryKey[0] === "string" &&
-					query.queryKey[0].startsWith("holiday-"),
+					(query.queryKey[0].startsWith("holiday-") ||
+						query.queryKey[0].startsWith("calendar-")),
 			});
 
 			return response;
@@ -99,7 +100,8 @@ export const usePutHoliday = (
 			queryClient.removeQueries({
 				predicate: (query) =>
 					typeof query.queryKey[0] === "string" &&
-					query.queryKey[0].startsWith("holiday-"),
+					(query.queryKey[0].startsWith("holiday-") ||
+						query.queryKey[0].startsWith("calendar-")),
 			});
 
 			return response.data;
@@ -140,20 +142,18 @@ export const useGetHoliday = (
 };
 
 export const useSaveHoliday = (
-	options?: MutationObserverOptions<void, Error, PublicHolidayType[]>
+	options?: MutationObserverOptions<void, Error, PublicHolidayType>
 ) => {
 	const postMutation = usePostHoliday();
 	const putMutation = usePutHoliday();
 
-	return useMutation<void, Error, PublicHolidayType[]>({
+	return useMutation<void, Error, PublicHolidayType>({
 		mutationKey: ["holiday-post"],
-		mutationFn: async (routes: PublicHolidayType[]) => {
-			for (const route of routes) {
-				if (!route.id) {
-					await postMutation.mutateAsync(route);
-				} else {
-					await putMutation.mutateAsync(route);
-				}
+		mutationFn: async (routes: PublicHolidayType) => {
+			if (!routes.id) {
+				await postMutation.mutateAsync(routes);
+			} else {
+				await putMutation.mutateAsync(routes);
 			}
 		},
 		...options,

@@ -43,6 +43,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						required
 						placeholder="Select Visit Date"
 						format="dd/MM/yyyy"
+						minDate={new Date()}
 						onChange={(date) => {
 							if (date) {
 								methods.setValue("date", date.toISOString());
@@ -65,10 +66,11 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								?.filter((item) =>
 									isSameDay(item.date, methods.watch("date"))
 								)?.[0]
-								?.slot?.filter((item) => item.tour === null)
+								?.slot?.filter((item) => item.time_range !== "-")
 								?.map((item) => ({
 									id: item.batch_time,
 									name: item.time_range,
+									disabled: item.tour !== null,
 								})).length === 0
 						}
 						options={
@@ -76,10 +78,11 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								?.filter((item) =>
 									isSameDay(item.date, methods.watch("date"))
 								)?.[0]
-								?.slot?.filter((item) => item.tour === null)
+								?.slot?.filter((item) => item.time_range !== "-") //?.filter((item) => item.tour === null)
 								?.map((item) => ({
 									id: item.batch_time,
 									name: item.time_range,
+									disabled: item.tour !== null,
 								})) || []
 						}
 						placeholder={
@@ -87,7 +90,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								?.filter((item) =>
 									isSameDay(item.date, methods.watch("date"))
 								)?.[0]
-								?.slot?.filter((item) => item.tour === null)
+								?.slot //?.filter((item) => item.tour === null)
 								?.map((item) => ({
 									id: item.batch_time,
 									name: item.time_range,

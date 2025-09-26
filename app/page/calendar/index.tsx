@@ -18,6 +18,7 @@ import {
 	isValid,
 	set,
 	isSameDay,
+	addDays,
 } from "date-fns";
 import "./functions/components/Calendar.css";
 import Container from "@/components/container";
@@ -105,16 +106,24 @@ export default function CalendarPage() {
 		data.data.forEach((dayItem: any) => {
 			let dailyEvents: CalendarEvent[] = [];
 
+			// --- HOLIDAYS ---
 			if (dayItem.events?.length > 0) {
+				// dedupe inside each dayItem.events by id
+				const uniqueEvents = dayItem.events.filter(
+					(h: any, idx: number, self: any[]) =>
+						self.findIndex((x) => String(x.id) === String(h.id)) === idx
+				);
+
 				dailyEvents.push(
-					...dayItem.events.map((h: any, idx: number) => ({
+					...uniqueEvents.map((h: any, idx: number) => ({
 						title: h.holiday_name,
 						start: startOfDay(new Date(h.start_date)),
-						end: endOfDay(new Date(h.end_date ?? h.start_date)),
+						end: endOfDay(new Date(h.end_date)),
 						type: "HOLIDAY",
-						index: idx, // reset per day
+						index: idx,
 						description: h.description,
 						id: h.id,
+						allDay: true,
 					}))
 				);
 			}
@@ -171,7 +180,17 @@ export default function CalendarPage() {
 			allEvents.push(...dailyEvents);
 		});
 
-		setEvents([...allEvents]);
+		// --- FINAL DEDUPLICATION across allEvents ---
+		const uniqueAllEvents = allEvents.filter(
+			(ev, idx, self) =>
+				self.findIndex(
+					(x) => String(x.id) === String(ev.id) && x.type === ev.type
+				) === idx
+		);
+
+		console.log("dataa", uniqueAllEvents);
+
+		setEvents(uniqueAllEvents);
 	}, [data?.data]);
 
 	const CustomToolbar = ({ date, onNavigate, label }: ToolbarProps) => {
@@ -242,6 +261,8 @@ export default function CalendarPage() {
 			</>
 		);
 	};
+
+	console.log("dataa", events);
 
 	return (
 		<Container>
