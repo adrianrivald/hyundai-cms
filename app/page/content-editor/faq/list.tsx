@@ -12,7 +12,9 @@ const FAQListPage = () => {
 		<Container>
 			<Tabs defaultValue="contact">
 				<TabsList className="w-[calc(100%/3)]">
-					<TabsTrigger value="contact">FAQ</TabsTrigger>
+					<TabsTrigger value="contact" className="cursor-default">
+						FAQ
+					</TabsTrigger>
 				</TabsList>
 				<TabsContent value="contact">
 					<DataTable table={table} showPagination={false} />

@@ -129,53 +129,53 @@ export default function CalendarPage() {
 			}
 
 			// --- SLOTS / TOURS ---
-			// if (dayItem.slot?.length > 0) {
-			// 	dailyEvents.push(
-			// 		...dayItem.slot
-			// 			.filter((s: any) => s.tour)
-			// 			.map((s: any, idx: number) => {
-			// 				let baseDate = new Date(dayItem.date);
+			if (dayItem.slot?.length > 0) {
+				dailyEvents.push(
+					...dayItem.slot
+						.filter((s: any) => s.tour)
+						.map((s: any, idx: number) => {
+							let baseDate = new Date(dayItem.date);
 
-			// 				let start: Date;
-			// 				let end: Date;
+							let start: Date;
+							let end: Date;
 
-			// 				if (
-			// 					s.time_range &&
-			// 					s.time_range.includes("-") &&
-			// 					s.time_range !== "-"
-			// 				) {
-			// 					// valid range like "08:00 - 09:00"
-			// 					let [startStr, endStr] = s.time_range.split(" - ");
+							if (
+								s.time_range &&
+								s.time_range.includes("-") &&
+								s.time_range !== "-"
+							) {
+								// valid range like "08:00 - 09:00"
+								let [startStr, endStr] = s.time_range.split(" - ");
 
-			// 					start = set(baseDate, {
-			// 						hours: parseInt(startStr.split(":")[0], 10),
-			// 						minutes: parseInt(startStr.split(":")[1], 10),
-			// 					});
+								start = set(baseDate, {
+									hours: parseInt(startStr.split(":")[0], 10),
+									minutes: parseInt(startStr.split(":")[1], 10),
+								});
 
-			// 					end = set(baseDate, {
-			// 						hours: parseInt(endStr.split(":")[0], 10),
-			// 						minutes: parseInt(endStr.split(":")[1], 10),
-			// 					});
-			// 				} else {
-			// 					// fallback if time_range is "-"
-			// 					start = startOfDay(baseDate);
-			// 					end = endOfDay(baseDate);
-			// 				}
+								end = set(baseDate, {
+									hours: parseInt(endStr.split(":")[0], 10),
+									minutes: parseInt(endStr.split(":")[1], 10),
+								});
+							} else {
+								// fallback if time_range is "-"
+								start = startOfDay(baseDate);
+								end = endOfDay(baseDate);
+							}
 
-			// 				return {
-			// 					title: s?.tour?.tour_package?.name || "General Course Tour",
-			// 					start,
-			// 					end,
-			// 					type:
-			// 						s.tour.tour_package?.tour_packages_type?.toUpperCase() ??
-			// 						"GENERAL-COURSE",
-			// 					index: idx,
-			// 					description: s.tour.purpose_of_visit,
-			// 					id: s.tour.id,
-			// 				} as CalendarEvent;
-			// 			})
-			// 	);
-			// }
+							return {
+								title: s?.tour?.tour_package?.name || "General Course Tour",
+								start,
+								end,
+								type:
+									s.tour.tour_package?.tour_packages_type?.toUpperCase() ??
+									"GENERAL-COURSE",
+								index: idx,
+								description: s.tour.purpose_of_visit,
+								id: s.tour.id,
+							} as CalendarEvent;
+						})
+				);
+			}
 
 			allEvents.push(...dailyEvents);
 		});

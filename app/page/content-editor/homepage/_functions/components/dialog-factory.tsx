@@ -247,7 +247,7 @@ const DialogFactory = ({
 										label="Factory Name"
 										placeholder="Input factory name"
 										autoFocus={false}
-										required
+										required={!isDisabled}
 										disabled={isDisabled}
 									/>
 								</Grid>
@@ -331,7 +331,7 @@ const DialogFactory = ({
 													label="Route Name"
 													placeholder="Input route name"
 													autoFocus={false}
-													required
+													required={!isDisabled}
 													disabled={isDisabled}
 												/>
 											</Grid>

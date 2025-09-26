@@ -15,6 +15,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { useFormContext } from "react-hook-form";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 interface RHFSelectProps<T> {
 	name: string;
@@ -93,9 +94,20 @@ export default function RHFSelect<T>({
 											<SelectItem
 												key={value}
 												value={value}
-												className="border-b-[0.5px] py-2 data-[highlighted]:bg-hmmi-primary-900 data-[highlighted]:text-white data-[state=checked]:bg-hmmi-primary-900 data-[state=checked]:text-white"
+												disabled={(option as any)?.disabled}
+												className="border-b-[0.5px] py-2 data-[highlighted]:bg-hmmi-primary-900 data-[highlighted]:text-white data-[state=checked]:bg-hmmi-primary-900 data-[state=checked]:text-white flex items-center justify-between"
 											>
-												{label}
+												<div>{label} </div>
+
+												{(option as any)?.disabled && (
+													<Icon
+														className="self-end mb-[3px] ml-1"
+														icon="gg:close-o"
+														width="22"
+														height="22"
+														color="red"
+													/>
+												)}
 											</SelectItem>
 										);
 									})}
