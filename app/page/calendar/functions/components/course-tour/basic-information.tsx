@@ -285,36 +285,94 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 			{methods.watch("type") && (
 				<div className="mt-5 border-[1px] rounded-sm p-3">
 					<Typography className="font-bold">Vehicle Information</Typography>
-					<Grid container spacing={3} className="mt-3">
-						<Grid item xs={6} md={3}>
-							<RHFSelect
-								name="info_vehicle.vehicle_type"
-								label="Vehicle Type"
-								options={[
-									{ id: "private-car", name: "Private Car" },
-									{ id: "tour-bus", name: "Tour Bus" },
-								]}
-								placeholder="Choose Vehicle Type"
-								getOptionLabel={(user) => user.name}
-								getOptionValue={(user) => String(user.id)}
-								required
-							/>
-						</Grid>
-						<Grid item xs={6} md={3}>
-							<RHFTextField
-								name="info_vehicle.vehicle_plat"
-								label="Plate Number"
-								placeholder="Input Plate Number"
-								autoFocus={false}
-								required
-								maxLength={9}
-							/>
-						</Grid>
-					</Grid>
+					<Typography color="textSecondary" className="my-1 text-[10px]">
+						⚠️ Himbauan: Kendaraan pribadi hanya boleh <strong>Hyundai</strong>.
+					</Typography>
+					{methods.watch("info_vehicle").map((item, index) => {
+						return (
+							<div>
+								<Grid container spacing={3} className="mt-3" key={index}>
+									<Grid item xs={6} md={3}>
+										<RHFSelect
+											name={`info_vehicle.${index}.vehicle_type`}
+											label="Vehicle Type"
+											options={
+												methods.watch("info_vehicle")?.[0]?.vehicle_type ===
+												"private-car"
+													? [{ id: "private-car", name: "Private Car" }]
+													: methods.watch("info_vehicle")?.[0]?.vehicle_type ===
+														  "tour-bus"
+														? [{ id: "tour-bus", name: "Tour Bus" }]
+														: [
+																{ id: "private-car", name: "Private Car" },
+																{ id: "tour-bus", name: "Tour Bus" },
+															]
+											}
+											placeholder="Choose Vehicle Type"
+											getOptionLabel={(user) => user.name}
+											getOptionValue={(user) => String(user.id)}
+											required
+											onChange={(text) => {
+												methods.setValue(
+													`info_vehicle.${index}.vehicle_type`,
+													text
+												);
+											}}
+										/>
+									</Grid>
+									<Grid item xs={6} md={3}>
+										<RHFTextField
+											name={`info_vehicle.${index}.vehicle_plat`}
+											label="Plate Number"
+											placeholder="Input Plate Number"
+											autoFocus={false}
+											required
+											maxLength={9}
+										/>
+									</Grid>
+									{methods.watch("info_vehicle").length > 1 && (
+										<Grid item xs={12}>
+											<Button
+												variant={"hmmiGhost"}
+												color="red"
+												className="text-red-500 h-[20px] mx-0 px-0 hover:bg-transparent hover:text-red-500 cursor-pointer"
+												onClick={() => {
+													const current = methods.getValues("info_vehicle");
+													const updated = current.filter((_, i) => i !== index);
+													methods.setValue("info_vehicle", updated, {
+														shouldValidate: true,
+														shouldDirty: true,
+													});
+												}}
+											>
+												Hapus Kendaraan
+											</Button>
+										</Grid>
+									)}
+								</Grid>
+							</div>
+						);
+					})}
+					<div className="mt-3 flex flex-row justify-end">
+						<Button
+							variant={"hmmiOutline"}
+							onClick={() => {
+								let vehicle = methods.watch("info_vehicle");
+								vehicle.push({ vehicle_plat: "", vehicle_type: "" });
+								methods.setValue("info_vehicle", vehicle);
+							}}
+							disabled={
+								methods.watch("info_vehicle")?.[0].vehicle_type ===
+									"tour-bus" || methods.watch("info_vehicle").length === 6
+							}
+						>
+							Add Vehicle
+						</Button>
+					</div>
 				</div>
 			)}
 			{methods.watch("type") && (
-				<div className="mt-5 flex flex-row justify-end">
+				<div className="mt-5 flex flex-row justify-end mb-10">
 					<Button
 						onClick={() => {
 							methods.trigger().then((isValid) => {

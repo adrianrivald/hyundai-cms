@@ -36,6 +36,7 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 			date: new Date().toString(),
 			info_group: { email: "" },
 			group_member: [{}],
+			info_vehicle: [{}],
 		},
 		mode: "onChange",
 		resolver: yupResolver(FormRegisterTourSchema),
@@ -44,7 +45,6 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 	return (
 		<DialogModal
 			open={open}
-			//open
 			onOpenChange={() => {
 				if (methods.watch("step") !== "done") {
 					setDialogConfirm(true);

@@ -57,8 +57,12 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 			name: form.info_group.group_name,
 			purpose_of_visit: form?.info_group.purpose_visit,
 			city: form.info_group.city,
-			vehicle_type: form.info_vehicle.vehicle_type,
-			vehicle_plate_number: form.info_vehicle.vehicle_plat,
+			vehicles: form.info_vehicle.map((item) => ({
+				vehicle_plate_number: item.vehicle_plat,
+				vehicle_type: item.vehicle_type,
+			})),
+			// vehicle_type: form.info_vehicle.vehicle_type,
+			// vehicle_plate_number: form.info_vehicle.vehicle_plat,
 			attachments: form.info_group.purpose_letter
 				? [
 						{
@@ -357,7 +361,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 				<Typography>{}</Typography>
 			</div> */}
 
-			<div className="flex flex-row justify-between mt-10">
+			<div className="flex flex-row justify-between mt-10 mb-10">
 				<Button
 					className=""
 					startIcon={

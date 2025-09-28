@@ -52,8 +52,12 @@ export type TourRegisterType = {
 	name: string;
 	purpose_of_visit: string;
 	city: string;
-	vehicle_type: string;
-	vehicle_plate_number: string;
+	vehicles: {
+		vehicle_type: string;
+		vehicle_plate_number: string;
+	}[];
+	// vehicle_type: string;
+	// vehicle_plate_number: string;
 	attachments: {
 		original_filename: string;
 		attachment_path: string;

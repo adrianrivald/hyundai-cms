@@ -75,18 +75,23 @@ export const FormRegisterTourSchema = yup.object({
 		purpose_letter: yup.string().optional().nullable(),
 	}),
 
-	info_vehicle: yup.object({
-		vehicle_type: yup.string().when("..step", {
-			is: "info_dasar",
-			then: (schema) => schema.optional().nullable(),
-			otherwise: (schema) => schema.required("Vehicle type is required"),
-		}),
-		vehicle_plat: yup.string().when("..step", {
-			is: "info_dasar",
-			then: (schema) => schema.optional().nullable(),
-			otherwise: (schema) => schema.required("Vehicle plate is required"),
-		}),
-	}),
+	info_vehicle: yup
+		.array()
+		.of(
+			yup.object({
+				vehicle_type: yup.string().when("..step", {
+					is: "info_dasar",
+					then: (schema) => schema.optional().nullable(),
+					otherwise: (schema) => schema.required("Vehicle type is required"),
+				}),
+				vehicle_plat: yup.string().when("..step", {
+					is: "info_dasar",
+					then: (schema) => schema.optional().nullable(),
+					otherwise: (schema) => schema.required("Vehicle plate is required"),
+				}),
+			})
+		)
+		.min(1, "At least one vehicle is required"),
 
 	group_member: yup.array().when("step", {
 		is: "info_anggota",
@@ -135,7 +140,7 @@ export type FormRegisterTour = {
 	info_vehicle: {
 		vehicle_type: string;
 		vehicle_plat: string;
-	};
+	}[];
 	group_member: Array<{
 		name: string;
 		phone: string;
