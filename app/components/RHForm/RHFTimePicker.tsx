@@ -29,6 +29,7 @@ interface Props {
 	format?: string; // time format, default "HH:mm"
 	minTime?: string; // e.g. "09:00"
 	maxTime?: string; // e.g. "18:00"
+	disabledTimes?: string[];
 }
 
 export default function RHFTimePicker({
@@ -43,6 +44,7 @@ export default function RHFTimePicker({
 	format: timeFormat = "HH:mm",
 	minTime = "00:00",
 	maxTime = "23:59",
+	disabledTimes = [], // ⬅️ default empty
 }: Props) {
 	const { control } = useFormContext();
 
@@ -113,21 +115,27 @@ export default function RHFTimePicker({
 							align="start"
 						>
 							<div className="grid grid-cols-3 gap-2">
-								{timeSlots.map((label) => (
-									<Button
-										key={label}
-										type="button"
-										variant={field.value === label ? "default" : "outline"}
-										size="sm"
-										className="w-full"
-										onClick={() => {
-											field.onChange(label);
-											if (onChange) onChange(label);
-										}}
-									>
-										{label}
-									</Button>
-								))}
+								{timeSlots.map((label) => {
+									const isDisabled = disabledTimes.includes(label);
+
+									return (
+										<Button
+											key={label}
+											type="button"
+											variant={field.value === label ? "default" : "outline"}
+											size="sm"
+											className="w-full"
+											disabled={isDisabled}
+											onClick={() => {
+												if (isDisabled) return;
+												field.onChange(label);
+												if (onChange) onChange(label);
+											}}
+										>
+											{label}
+										</Button>
+									);
+								})}
 							</div>
 						</PopoverContent>
 					</Popover>

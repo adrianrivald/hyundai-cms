@@ -6,11 +6,40 @@ import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { addHours, format, isValid } from "date-fns";
+import {
+	addHours,
+	eachMinuteOfInterval,
+	format,
+	isValid,
+	parse,
+} from "date-fns";
 import { enqueueSnackbar } from "notistack";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+
+function getDisabledTimes(batches: any[], currentIndex: number) {
+	const disabled: string[] = [];
+
+	batches.forEach((batch, index) => {
+		if (index === currentIndex) return; // skip self
+		if (!batch.start_time || !batch.end_time) return;
+
+		const start = parse(batch.start_time, "HH:mm", new Date());
+		const end = parse(batch.end_time, "HH:mm", new Date());
+
+		const times = eachMinuteOfInterval(
+			{ start, end },
+			{ step: 60 } // 60 minutes step since your interval is hourly
+		);
+
+		times.forEach((t) => {
+			disabled.push(format(t, "HH:mm"));
+		});
+	});
+
+	return disabled;
+}
 
 const SettingVisitPage = () => {
 	const schema = yup.object({
@@ -96,13 +125,13 @@ const SettingVisitPage = () => {
 			</div>
 			<FormProvider methods={methods}>
 				{methods.watch("batches")?.map((_, index) => {
+					const batches = methods.watch("batches") || [];
+					const disabledTimes = getDisabledTimes(batches, index);
+
 					return (
 						<div key={index} className="mb-5">
 							<Typography className="font-bold">Batch {index + 1}</Typography>
-							<div
-								className="mt-2 w-[400px] flex flex-row gap-5 items-center"
-								key={index}
-							>
+							<div className="mt-2 w-[400px] flex flex-row gap-5 items-center">
 								<RHFTimePicker
 									name={`batches.${index}.start_time`}
 									label="Start Time"
@@ -113,6 +142,7 @@ const SettingVisitPage = () => {
 									placeholder="Pick a time"
 									className="w-full"
 									format="HH:mm"
+									disabledTimes={disabledTimes} // ⬅️ block already used times
 								/>
 								<RHFTimePicker
 									name={`batches.${index}.end_time`}
@@ -127,14 +157,16 @@ const SettingVisitPage = () => {
 									placeholder="Pick a time"
 									className="w-full"
 									format="HH:mm"
+									disabledTimes={[
+										...getDisabledTimes(batches, index),
+										methods.watch(`batches.${index}.start_time`), // ⬅️ block same as start
+									]}
 								/>
-								{(methods.watch("batches") || [])?.length > 1 && (
+								{batches.length > 1 && (
 									<div
 										className="cursor-pointer"
 										onClick={() => {
-											const data = methods.watch("batches") || [];
-											const newData = data.filter((_, i) => index !== i);
-
+											const newData = batches.filter((_, i) => index !== i);
 											methods.setValue("batches", newData);
 										}}
 									>
