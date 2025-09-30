@@ -45,6 +45,19 @@ const chartConfig = {
 		color: "#743F00",
 	},
 
+	general_reception: {
+		label: "General Reception",
+	},
+	body_shop: {
+		label: "Body Shop",
+	},
+	press_shop: {
+		label: "Press Shop",
+	},
+	assembly_shop: {
+		label: "Assembly Shop",
+	},
+
 	total: {
 		label: "Total",
 	},
@@ -97,6 +110,29 @@ export default function DashboardPage() {
 		dataBar.length <= 4
 			? baseHeight
 			: baseHeight + (dataBar.length - 4) * extraHeightPerBar;
+
+	const dataFavoritePie = [
+		{
+			name: "general_reception",
+			value: 25,
+			fill: "var(--color-general-tour)",
+		},
+		{
+			name: "press_shop",
+			value: 25,
+			fill: "var(--color-press-shop)",
+		},
+		{
+			name: "body_shop",
+			value: 25,
+			fill: "var(--color-body-shop)",
+		},
+		{
+			name: "assembly_shop",
+			value: 25,
+			fill: "var(--color-assembly-shop)",
+		},
+	];
 
 	return (
 		<Container>
@@ -258,6 +294,7 @@ export default function DashboardPage() {
 							</div>
 						</div>
 					</Grid>
+
 					<Grid item xs={12} className="bg-white rounded-sm pt-5">
 						<Typography className="text-center mb-5 text-[18px] font-bold">
 							Kota Asal
@@ -320,6 +357,99 @@ export default function DashboardPage() {
 								</Bar>
 							</BarChart>
 						</ChartContainer>
+					</Grid>
+
+					<Grid item xs={6} className="bg-white rounded-sm pt-5">
+						<Typography className="text-center font-bold">
+							Area Favorit
+						</Typography>
+						<ChartContainer
+							config={chartConfig}
+							className="mx-auto aspect-square max-h-[250px]"
+						>
+							<PieChart>
+								<ChartTooltip
+									cursor={false}
+									content={<ChartTooltipContent hideLabel />}
+								/>
+								<Pie
+									data={dataFavoritePie}
+									dataKey="value"
+									nameKey="name"
+									innerRadius={60}
+									label={({ payload, ...props }) => {
+										return (
+											<text
+												cx={props.cx}
+												cy={props.cy}
+												x={props.x}
+												y={props.y}
+												textAnchor={props.textAnchor}
+												dominantBaseline={props.dominantBaseline}
+												fill="hsla(var(--foreground))"
+											>
+												{payload.value} %
+											</text>
+										);
+									}}
+								/>
+								<ChartLegend
+									content={<ChartLegendContent nameKey="name" />}
+									className="-translate-y-2 flex-wrap gap-2 *:justify-center "
+								/>
+							</PieChart>
+						</ChartContainer>
+					</Grid>
+					<Grid item xs={6}>
+						<div className="bg-white rounded-sm pt-5 px-3 pb-3">
+							<Typography className="font-bold ">Rating & Feedback</Typography>
+							<div className="mt-5">
+								<div className="flex items-start gap-4 w-full">
+									<div className="flex flex-col items-center mt-5 px-5">
+										<span className="text-4xl font-bold">4,5</span>
+										<div className="flex mt-1">
+											{[1, 2, 3, 4].map((i) => (
+												<Icon
+													key={i}
+													icon="mdi:star"
+													className="text-yellow-400 w-6 h-6"
+												/>
+											))}
+											<Icon
+												icon="mdi:star-outline"
+												className="text-yellow-400 w-6 h-6"
+											/>
+										</div>
+									</div>
+
+									{/* Right Side: Progress bars */}
+									<div className="flex flex-col gap-1 w-full">
+										{[5, 4, 3, 2, 1].map((star) => (
+											<div key={star} className="flex items-center gap-2">
+												<span className="w-4 text-sm">{star}</span>
+												<div className="flex-1 h-3 bg-gray-200 rounded">
+													<div
+														className={`h-3 rounded bg-orange-500`}
+														style={{
+															width:
+																star === 5
+																	? "80%"
+																	: star === 4
+																		? "65%"
+																		: star === 3
+																			? "45%"
+																			: star === 2
+																				? "20%"
+																				: "15%",
+														}}
+													/>
+												</div>
+											</div>
+										))}
+									</div>
+								</div>
+							</div>
+						</div>
 					</Grid>
 				</Grid>
 			</FormProvider>

@@ -21,11 +21,20 @@ export const FormRegisterTourSchema = yup.object({
 	min_participant: yup.string().nullable().optional(),
 	max_participant: yup.string().nullable().optional(),
 
-	batch: yup.string().when("step", {
-		is: "info_dasar",
-		then: (schema) => schema.required("Batch number is required"),
-		otherwise: (schema) => schema.required("Batch number is required"),
-	}),
+	batch: yup
+		.array()
+		.of(yup.string())
+		.when("step", {
+			is: "info_dasar",
+			then: (schema) =>
+				schema
+					.min(1, "At least one batch number is required")
+					.required("Batch number is required"),
+			otherwise: (schema) =>
+				schema
+					.min(1, "At least one batch number is required")
+					.required("Batch number is required"),
+		}),
 
 	info_group: yup.object({
 		group_name: yup.string().when("..step", {
@@ -71,6 +80,7 @@ export const FormRegisterTourSchema = yup.object({
 			then: (schema) => schema.optional().nullable(),
 			otherwise: (schema) => schema.required("Dob is required"),
 		}),
+		phone_number: yup.string().nullable().optional(),
 		isDifabel: yup.string().nullable().optional(),
 		purpose_letter: yup.string().optional().nullable(),
 	}),
@@ -121,7 +131,7 @@ export type FormRegisterTour = {
 	date: string;
 	type: string;
 	tour_type: string;
-	batch: string;
+	batch: string[];
 	min_participant: string;
 	max_participant: string;
 	info_group: {

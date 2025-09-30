@@ -11,11 +11,12 @@ import { useTableConfig } from "@/hooks/use-table-config";
 import { useTableState } from "@/hooks/use-table-state";
 import { dataParticipantsColumn } from "../column/columns-detail-participants";
 import { DataTable } from "@/components/layout/table/data-table";
-import DialogDetailsVisitor from "./dialog-details-visitor";
 import { useForm } from "react-hook-form";
 import FormProvider from "@/components/RHForm/FormProvider";
 import RHFTextField from "@/components/RHForm/RHFTextField";
 import { SearchIcon } from "lucide-react";
+import { dataVehicleColumn } from "../column/column-vehicle";
+import DialogAddVip from "./dialog-add-vip";
 
 interface DialogDetailTourProps {
 	open: boolean;
@@ -24,7 +25,8 @@ interface DialogDetailTourProps {
 }
 
 const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
-	const { data: dataDetail } = useGetTourDetails(data?.id);
+	const { data: dataDetail, refetch } = useGetTourDetails(data?.id);
+	const [openVip, setOpenVip] = useState(false);
 	const tableState = useTableState({});
 	const [openEmail, setOpenEmail] = useState({ isOpen: false, email: "" });
 	const methods = useForm({
@@ -66,6 +68,17 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 		tableState,
 	});
 
+	const tableVehicle = useTableConfig({
+		data:
+			dataDetail?.vehicles.filter((item) => {
+				if (!search) return true; // no search → include all
+				const regex = new RegExp(search, "i"); // "i" = case-insensitive
+				return regex.test(item.vehicle_plate_number);
+			}) || [],
+		columns: dataVehicleColumn as any,
+		tableState,
+	});
+
 	return (
 		<DialogModal
 			open={open}
@@ -73,13 +86,20 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 				onClose();
 			}}
 			headerTitle={
-				<div className="flex flex-row justify-between">
+				<div className="flex flex-row justify-between ">
 					<div className="flex flex-row gap-2 items-center mt-[-5px]">
 						<Icon icon="fa7-solid:arrow-left" width="14" height="14" />
 						<Typography className="font-bold">Visit Information</Typography>
 					</div>
 					<div className="flex flex-row gap-3 mr-5">
-						<Button variant={"hmmiOutline"}>Ubah Jadwal</Button>
+						<Button
+							variant={"hmmiOutline"}
+							onClick={() => {
+								setOpenVip(true);
+							}}
+						>
+							Ubah Jadwal
+						</Button>
 						{dataDetail?.tour_package?.tour_packages_type !== "vip" && (
 							<Button
 								onClick={() =>
@@ -95,9 +115,9 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 					</div>
 				</div>
 			}
-			contentProps="w-[95%] max-h-[90%]"
+			contentProps="w-[95%] h-[90%] pb-10"
 			content={
-				<div>
+				<div className=" overflow-y-scroll pr-2">
 					<Typography className="font-medium">{dataDetail?.name}</Typography>
 					<Grid container spacing={3} className="mt-5">
 						<Grid item xs={6} md={3}>
@@ -139,23 +159,6 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 								<TextFieldDisabled title="Group Type" value={"-"} />
 							</Grid>
 						)}
-
-						<Grid item xs={6} md={3}>
-							<TextFieldDisabled
-								title="Vehicle Type"
-								value={
-									(dataDetail?.vehicle_type === "tour-bus"
-										? "Tour Bus"
-										: "Personal Car") || "-"
-								}
-							/>
-						</Grid>
-						<Grid item xs={6} md={3}>
-							<TextFieldDisabled
-								title="Vehicle Plate"
-								value={dataDetail?.vehicle_plate_number || "-"}
-							/>
-						</Grid>
 						<Grid item xs={6} md={3}>
 							<TextFieldDisabled
 								title="Email Address"
@@ -163,22 +166,28 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 							/>
 						</Grid>
 					</Grid>
+					<Typography className="font-bold mt-5 mb-2 text-[18px]">
+						List of Vehicle
+					</Typography>
+					<div className="max-h-[280px] overflow-y-scroll mb-5">
+						<DataTable table={tableVehicle} showPagination={false} />
+					</div>
 					<div>
-						<Typography className="font-bold my-5 text-[18px]">
-							Daftar Peserta
+						<Typography className="font-bold mt-5 mb-2 text-[18px]">
+							List of Participants
 						</Typography>
-						<div className="mt-3 mb-5 w-[300px]">
+						<div className=" mb-5 w-[300px]">
 							<FormProvider methods={methods}>
 								<RHFTextField
 									name="search"
-									label="Temukan Peserta"
-									placeholder="Cari nama peserta"
+									label="Find Participants"
+									placeholder="Find participants name"
 									endIcon={<SearchIcon className="mr-2" />}
 								/>
 							</FormProvider>
 						</div>
 
-						<div className="max-h-[280px] overflow-y-scroll mb-10">
+						<div className="max-h-[280px] overflow-y-scroll mb-5">
 							<DataTable table={table} showPagination={false} />
 						</div>
 					</div>
@@ -189,6 +198,13 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 							setOpenEmail({ isOpen: false, email: "" });
 						}}
 						email={openEmail.email}
+					/>
+
+					<DialogAddVip
+						onClose={() => setOpenVip(false)}
+						open={openVip}
+						refetch={refetch}
+						data={dataDetail}
 					/>
 				</div>
 			}

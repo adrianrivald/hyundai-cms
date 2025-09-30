@@ -11,15 +11,21 @@ import FormProvider from "@/components/RHForm/FormProvider";
 import BasicInformation from "./course-tour/basic-information";
 import MemberInformation from "./course-tour/member-information";
 import DialogConfirm from "@/components/custom/dialog/dialog-confirm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ScheduleDone from "./course-tour/schedule-done";
+import type { TourDetailsType } from "@/api/tour";
 
 interface DialogAddVipProps {
 	open: boolean;
 	onClose: () => void;
-	data?: any;
+	data?: TourDetailsType;
 	refetch?: () => void;
 }
+
+const toArrayBatch = (slot?: string) => {
+	if (!slot) return [];
+	return slot.includes(",") ? slot.split(",") : [slot];
+};
 
 const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 	const [dialogConfirm, setDialogConfirm] = useState(false);
@@ -41,6 +47,45 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 		mode: "onChange",
 		resolver: yupResolver(FormRegisterTourSchema),
 	});
+
+	useEffect(() => {
+		console.log("dataa", data);
+		if (open && data) {
+			methods.reset({
+				step: "info_dasar",
+				date: data?.tour_date,
+				type: String(data?.tour_package?.id),
+				tour_type: data?.tour_package?.tour_packages_type,
+				min_participant: String(data?.tour_package?.minimum_participant),
+				max_participant: String(data?.tour_package?.maximum_participant),
+				batch: toArrayBatch(data?.slot),
+				info_group: {
+					group_name: data?.name,
+					group_type: "",
+					group_leader: data?.leader?.name,
+					purpose_visit: data?.purpose_of_visit,
+					city: data?.city,
+					email: data?.leader?.email,
+					gender: data?.leader?.sex,
+					isDifabel: String(data?.leader?.is_special_need),
+					age: data?.leader?.dob,
+					phone_number: data?.leader?.phone_number,
+				},
+				info_vehicle: data?.vehicles?.map((item) => ({
+					vehicle_plat: item.vehicle_plate_number,
+					vehicle_type: item.vehicle_type,
+				})),
+				group_member: data?.participants?.map((item) => ({
+					name: item.name,
+					gender: item.sex,
+					dob: item.dob,
+					isDifabel: String(item.is_special_need),
+					email: item.email,
+					phone: item.phone_number,
+				})),
+			});
+		}
+	}, [open, data]);
 
 	return (
 		<DialogModal

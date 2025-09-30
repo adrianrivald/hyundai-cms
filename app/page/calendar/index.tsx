@@ -188,8 +188,6 @@ export default function CalendarPage() {
 				) === idx
 		);
 
-		console.log("dataa", uniqueAllEvents);
-
 		setEvents(uniqueAllEvents);
 	}, [data?.data]);
 
@@ -261,8 +259,6 @@ export default function CalendarPage() {
 			</>
 		);
 	};
-
-	console.log("dataa", events);
 
 	return (
 		<Container>

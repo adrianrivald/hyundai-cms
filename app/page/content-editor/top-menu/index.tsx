@@ -3,20 +3,20 @@ import { Tabs } from "@/components/custom/tabs/tabs";
 import { TabsContent } from "@/components/custom/tabs/tabs-content";
 import { TabsList } from "@/components/custom/tabs/tabs-list";
 import { TabsTrigger } from "@/components/custom/tabs/tabs-trigger";
+import { useListTopMenu } from "./_functions/hooks/use-list-top-menu";
 import { DataTable } from "@/components/layout/table/data-table";
-import { useListLegal } from "./_functions/hooks/use-list-legal";
 
-const LegalPage = () => {
-	const { table } = useListLegal();
+const TopMenuPage = () => {
+	const { table } = useListTopMenu();
 	return (
 		<Container>
-			<Tabs defaultValue="legal-content">
+			<Tabs defaultValue="top-menu">
 				<TabsList className="w-[calc(100%/3)] ">
-					<TabsTrigger value="legal-content" className="cursor-default">
-						Legal Content
+					<TabsTrigger value="top-menu" className="cursor-default">
+						Top Menu
 					</TabsTrigger>
 				</TabsList>
-				<TabsContent value="legal-content">
+				<TabsContent value="top-menu">
 					<DataTable table={table} showPagination={false} />
 				</TabsContent>
 			</Tabs>
@@ -24,4 +24,4 @@ const LegalPage = () => {
 	);
 };
 
-export default LegalPage;
+export default TopMenuPage;
