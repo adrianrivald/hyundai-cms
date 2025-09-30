@@ -31,6 +31,8 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 			: format(new Date(), "yyyy-MM")
 	);
 
+	console.log("dataa rhf", methods.watch());
+
 	return (
 		<div className="">
 			<div className="mt-5 mb-5">
@@ -80,6 +82,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 							onChange={(date) => {
 								if (date) {
 									methods.setValue("date", date.toISOString());
+									methods.setValue("batch", []);
 									setTimeout(() => {
 										refetch();
 									}, 500);
@@ -91,7 +94,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						{methods.watch("tour_type") !== "vip" ? (
 							<RHFSelect
 								className="space-y-0 w-[200px]"
-								name="batch"
+								name={`batch.${0}`}
 								label="Batch"
 								disabled={
 									isLoading ||
@@ -104,7 +107,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 											id: item.batch_time,
 											name: item.time_range,
 											disabled: item.tour !== null,
-										})).length === 0
+										}))?.length === 0
 								}
 								options={
 									(dataCalendar?.data || [])
@@ -338,7 +341,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 					<Typography color="textSecondary" className="my-1 text-[10px]">
 						⚠️ Himbauan: Kendaraan pribadi hanya boleh <strong>Hyundai</strong>.
 					</Typography>
-					{methods.watch("info_vehicle").map((item, index) => {
+					{methods?.watch("info_vehicle")?.map((item, index) => {
 						return (
 							<div>
 								<Grid container spacing={3} className="mt-3" key={index}>
@@ -380,7 +383,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 											maxLength={9}
 										/>
 									</Grid>
-									{methods.watch("info_vehicle").length > 1 && (
+									{methods.watch("info_vehicle")?.length > 1 && (
 										<Grid item xs={12}>
 											<Button
 												variant={"hmmiGhost"}
@@ -413,7 +416,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 							}}
 							disabled={
 								methods.watch("info_vehicle")?.[0].vehicle_type ===
-									"tour-bus" || methods.watch("info_vehicle").length === 6
+									"tour-bus" || methods.watch("info_vehicle")?.length === 6
 							}
 						>
 							Add Vehicle

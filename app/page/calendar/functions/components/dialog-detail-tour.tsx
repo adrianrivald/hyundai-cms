@@ -16,6 +16,7 @@ import FormProvider from "@/components/RHForm/FormProvider";
 import RHFTextField from "@/components/RHForm/RHFTextField";
 import { SearchIcon } from "lucide-react";
 import { dataVehicleColumn } from "../column/column-vehicle";
+import DialogAddVip from "./dialog-add-vip";
 
 interface DialogDetailTourProps {
 	open: boolean;
@@ -24,7 +25,8 @@ interface DialogDetailTourProps {
 }
 
 const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
-	const { data: dataDetail } = useGetTourDetails(data?.id);
+	const { data: dataDetail, refetch } = useGetTourDetails(data?.id);
+	const [openVip, setOpenVip] = useState(false);
 	const tableState = useTableState({});
 	const [openEmail, setOpenEmail] = useState({ isOpen: false, email: "" });
 	const methods = useForm({
@@ -90,7 +92,14 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 						<Typography className="font-bold">Visit Information</Typography>
 					</div>
 					<div className="flex flex-row gap-3 mr-5">
-						<Button variant={"hmmiOutline"}>Ubah Jadwal</Button>
+						<Button
+							variant={"hmmiOutline"}
+							onClick={() => {
+								setOpenVip(true);
+							}}
+						>
+							Ubah Jadwal
+						</Button>
 						{dataDetail?.tour_package?.tour_packages_type !== "vip" && (
 							<Button
 								onClick={() =>
@@ -189,6 +198,13 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 							setOpenEmail({ isOpen: false, email: "" });
 						}}
 						email={openEmail.email}
+					/>
+
+					<DialogAddVip
+						onClose={() => setOpenVip(false)}
+						open={openVip}
+						refetch={refetch}
+						data={dataDetail}
 					/>
 				</div>
 			}

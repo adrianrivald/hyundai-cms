@@ -61,7 +61,18 @@ export default [
 				"registration-guide",
 				"./routes/guard-route/content-editor/registration-guide.tsx"
 			),
-			route("top-menu", "./routes/guard-route/content-editor/top-menu.tsx"),
+			// route("top-menu", "./routes/guard-route/content-editor/top-menu.tsx"),
+			...prefix("top-menu", [
+				route("/", "./routes/guard-route/content-editor/top-menu/index.tsx"),
+				route(
+					"create",
+					"./routes/guard-route/content-editor/top-menu/create.tsx"
+				),
+				route(
+					"update/:id",
+					"./routes/guard-route/content-editor/top-menu/update.$id.tsx"
+				),
+			]),
 		]),
 
 		route("whistleblower", "./routes/guard-route/whistleblower/index.tsx"),

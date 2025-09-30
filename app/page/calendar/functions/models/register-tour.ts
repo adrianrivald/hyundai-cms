@@ -80,6 +80,7 @@ export const FormRegisterTourSchema = yup.object({
 			then: (schema) => schema.optional().nullable(),
 			otherwise: (schema) => schema.required("Dob is required"),
 		}),
+		phone_number: yup.string().nullable().optional(),
 		isDifabel: yup.string().nullable().optional(),
 		purpose_letter: yup.string().optional().nullable(),
 	}),

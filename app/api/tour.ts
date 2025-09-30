@@ -33,6 +33,10 @@ export type TourDetailsType = {
 		email: string;
 		phone_number: string;
 		verified_at: null;
+		sex: string;
+		dob: string;
+		is_leader: boolean;
+		is_special_need: boolean;
 	};
 	participants: ParticipantsType[];
 };
