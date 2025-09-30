@@ -10,8 +10,11 @@ export type TourDetailsType = {
 	tour_date: string;
 	slot: string;
 	reschedule_reason: string;
-	vehicle_type: string;
-	vehicle_plate_number: string;
+	vehicles: {
+		vehicle_type: string;
+		vehicle_plate_number: string;
+		id: number;
+	}[];
 	participants_count: number;
 	participants_verified_count: number;
 	participants_attended_count: number;

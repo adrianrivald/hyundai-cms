@@ -108,6 +108,13 @@ export const SIDEBAR_MENU = () => {
 					items: [],
 					authorized: ["Super", "CMS"],
 				},
+				{
+					id: "6",
+					title: "Top Menu",
+					url: "/content-editor/top-menu",
+					items: [],
+					authorized: ["Super", "CMS"],
+				},
 			],
 			authorized: ["Super", "CMS"],
 		},
