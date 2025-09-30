@@ -53,7 +53,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 			tour_package_id: Number(form.type),
 			group_type: form.info_group.group_type || "",
 			tour_date: format(new Date(form.date), "yyyy-MM-dd"),
-			slot: form.batch,
+			slot: form.batch.join(","),
 			name: form.info_group.group_name,
 			purpose_of_visit: form?.info_group.purpose_visit,
 			city: form.info_group.city,
@@ -178,8 +178,6 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 
 		reader.readAsArrayBuffer(file);
 	};
-
-	console.log("dataa www", methods.watch());
 
 	return (
 		<div>

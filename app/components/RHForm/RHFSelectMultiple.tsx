@@ -102,28 +102,32 @@ export default function RHFSelectMultiple<T>({
 								>
 									<div className="truncate ">
 										{Array.isArray(field.value) && field.value.length > 0 ? (
-											<div className="flex overflow-x-auto gap-2 pb-1 pt-1">
-												{field.value.map((option: T) => (
-													<div
-														key={getOptionValue(option)}
-														className="flex items-center gap-1 bg-secondary px-2 py-1 rounded-md"
-													>
-														<span className="text-sm">
-															{getOptionLabel(option)}
-														</span>
-														<X
-															className="h-3 w-3 cursor-pointer hover:text-destructive"
-															onClick={() => {
-																const newValue = field.value.filter(
-																	(v: T) =>
-																		getOptionValue(v) !== getOptionValue(option)
-																);
-																field.onChange(newValue);
-																onChange?.(newValue);
-															}}
-														/>
-													</div>
-												))}
+											<div className="flex overflow-x-auto gap-2 pb-1 pt-3">
+												{field.value.map((id: string) => {
+													const option = options.find(
+														(opt) => getOptionValue(opt) === id
+													);
+													return (
+														<div
+															key={id}
+															className="flex items-center gap-1 bg-secondary px-2 py-1 rounded-md"
+														>
+															<span className="text-sm">
+																{option ? getOptionLabel(option) : id}
+															</span>
+															<X
+																className="h-3 w-3 cursor-pointer hover:text-destructive"
+																onClick={() => {
+																	const newValue = field.value.filter(
+																		(v: string) => v !== id
+																	);
+																	field.onChange(newValue);
+																	onChange?.(newValue);
+																}}
+															/>
+														</div>
+													);
+												})}
 											</div>
 										) : (
 											<span className="text-muted-foreground">
@@ -138,6 +142,7 @@ export default function RHFSelectMultiple<T>({
 									</div>
 								</Button>
 							</PopoverTrigger>
+
 							<PopoverContent
 								className="w-[var(--radix-popover-trigger-width)] p-0"
 								align="start"
@@ -177,27 +182,16 @@ export default function RHFSelectMultiple<T>({
 											{filteredOptions.map((option) => {
 												const value = getOptionValue(option);
 												const label = getOptionLabel(option);
-												const isSelected = field.value?.some(
-													(v: T) => getOptionValue(v) === getOptionValue(option)
-												);
+												const isSelected = field.value?.includes(value);
 
 												return (
 													<CommandItem
 														key={value}
 														value={value}
 														onSelect={() => {
-															const isSelected = field.value?.some(
-																(v: T) =>
-																	getOptionValue(v) === getOptionValue(option)
-															);
-
 															const newValue = isSelected
-																? field.value.filter(
-																		(v: T) =>
-																			getOptionValue(v) !==
-																			getOptionValue(option)
-																	)
-																: [...(field.value || []), option];
+																? field.value.filter((v: string) => v !== value)
+																: [...(field.value || []), value];
 
 															field.onChange(newValue);
 															onChange?.(newValue);

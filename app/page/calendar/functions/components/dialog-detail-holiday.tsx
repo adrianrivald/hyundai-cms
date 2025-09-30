@@ -25,7 +25,6 @@ const DialogDetailHoliday = ({
 	const [openEdit, setOpenEdit] = useState(false);
 	const [openDelete, setOpenDelete] = useState(false);
 	const { mutate } = useDeleteHoliday();
-	console.log("dataa", data);
 
 	const onDelete = () => {
 		mutate(

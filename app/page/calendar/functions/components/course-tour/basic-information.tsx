@@ -12,6 +12,7 @@ import { useGetTourPackages } from "@/api/tour-package";
 import { useGetCalendars } from "@/api/batch";
 import { format, isSameDay, isValid } from "date-fns";
 import { RHFFileUpload } from "@/components/RHForm/RHFUploadInput";
+import RHFSelectMultiple from "@/components/RHForm/RHFSelectMultiple";
 
 interface BasicInformationProps {
 	methods: UseFormReturn<FormRegisterTour>;
@@ -30,115 +31,167 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 			: format(new Date(), "yyyy-MM")
 	);
 
-	console.log("dataa", methods.formState.errors);
+	console.log("dataa rhf", methods.watch());
 
 	return (
 		<div className="">
-			<div className="w-full border-[1px] rounded-sm p-5">
-				<div className="flex flex-row gap-3">
-					<RHFDatePicker
-						className="w-[200px]"
-						name="date"
-						label="Select Visit Date"
-						required
-						placeholder="Select Visit Date"
-						format="dd/MM/yyyy"
-						minDate={new Date()}
-						onChange={(date) => {
-							if (date) {
-								methods.setValue("date", date.toISOString());
-								setTimeout(() => {
-									refetch();
-								}, 500);
-							}
-						}}
+			<div className="mt-5 mb-5">
+				<RHFRadioGroup
+					name="type"
+					options={dataTourPackages?.data?.map((item) => item.name) || []}
+					values={
+						dataTourPackages?.data?.map((item) => String(item.id || "")) || []
+					}
+					getOptionLabel={
+						dataTourPackages?.data?.map((item) => item.name) || []
+					}
+					direction="row"
+					size="sm"
+					itemRadioProps={"border-[1px] rounded-sm px-5 py-2"}
+					onChange={(tour) => {
+						methods.resetField("batch");
+						let data = dataTourPackages?.data?.filter(
+							(item) => String(item.id) === tour
+						)?.[0];
 
-						//minDate={new Date()}
-					/>
-
-					<RHFSelect
-						className="space-y-0 w-[200px]"
-						name="batch"
-						label="Batch"
-						disabled={
-							isLoading ||
-							(dataCalendar?.data || [])
-								?.filter((item) =>
-									isSameDay(item.date, methods.watch("date"))
-								)?.[0]
-								?.slot?.filter((item) => item.time_range !== "-")
-								?.map((item) => ({
-									id: item.batch_time,
-									name: item.time_range,
-									disabled: item.tour !== null,
-								})).length === 0
-						}
-						options={
-							(dataCalendar?.data || [])
-								?.filter((item) =>
-									isSameDay(item.date, methods.watch("date"))
-								)?.[0]
-								?.slot?.filter((item) => item.time_range !== "-") //?.filter((item) => item.tour === null)
-								?.map((item) => ({
-									id: item.batch_time,
-									name: item.time_range,
-									disabled: item.tour !== null,
-								})) || []
-						}
-						placeholder={
-							(dataCalendar?.data || [])
-								?.filter((item) =>
-									isSameDay(item.date, methods.watch("date"))
-								)?.[0]
-								?.slot //?.filter((item) => item.tour === null)
-								?.map((item) => ({
-									id: item.batch_time,
-									name: item.time_range,
-								})).length === 0
-								? "No Batch"
-								: "Choose batch"
-						}
-						getOptionLabel={(user) => user.name}
-						getOptionValue={(user) => String(user.id)}
-						required
-					/>
-				</div>
+						methods.setValue("type", tour);
+						methods.setValue("tour_type", data?.tour_packages_type || "");
+						methods.setValue(
+							"min_participant",
+							String(data?.minimum_participant)
+						);
+						methods.setValue(
+							"max_participant",
+							String(data?.maximum_participant)
+						);
+					}}
+				/>
 			</div>
-			{methods.watch("batch") && (
-				<div className="mt-5">
-					<RHFRadioGroup
-						name="type"
-						options={dataTourPackages?.data?.map((item) => item.name) || []}
-						values={
-							dataTourPackages?.data?.map((item) => String(item.id || "")) || []
-						}
-						getOptionLabel={
-							dataTourPackages?.data?.map((item) => item.name) || []
-						}
-						direction="row"
-						size="sm"
-						itemRadioProps={"border-[1px] rounded-sm px-5 py-2"}
-						onChange={(tour) => {
-							let data = dataTourPackages?.data?.filter(
-								(item) => String(item.id) === tour
-							)?.[0];
-							console.log("dataa tour", data, dataTourPackages);
-							methods.setValue("type", tour);
-							methods.setValue("tour_type", data?.tour_packages_type || "");
-							methods.setValue(
-								"min_participant",
-								String(data?.minimum_participant)
-							);
-							methods.setValue(
-								"max_participant",
-								String(data?.maximum_participant)
-							);
-						}}
-					/>
+
+			{methods.watch("tour_type") && (
+				<div className="w-full border-[1px] rounded-sm p-5">
+					<div className="flex flex-row gap-3">
+						<RHFDatePicker
+							className="w-[200px]"
+							name="date"
+							label="Select Visit Date"
+							required
+							placeholder="Select Visit Date"
+							format="dd/MM/yyyy"
+							minDate={new Date()}
+							onChange={(date) => {
+								if (date) {
+									methods.setValue("date", date.toISOString());
+									methods.setValue("batch", []);
+									setTimeout(() => {
+										refetch();
+									}, 500);
+								}
+							}}
+
+							//minDate={new Date()}
+						/>
+						{methods.watch("tour_type") !== "vip" ? (
+							<RHFSelect
+								className="space-y-0 w-[200px]"
+								name={`batch.${0}`}
+								label="Batch"
+								disabled={
+									isLoading ||
+									(dataCalendar?.data || [])
+										?.filter((item) =>
+											isSameDay(item.date, methods.watch("date"))
+										)?.[0]
+										?.slot?.filter((item) => item.time_range !== "-")
+										?.map((item) => ({
+											id: item.batch_time,
+											name: item.time_range,
+											disabled: item.tour !== null,
+										}))?.length === 0
+								}
+								options={
+									(dataCalendar?.data || [])
+										?.filter((item) =>
+											isSameDay(item.date, methods.watch("date"))
+										)?.[0]
+										?.slot?.filter((item) => item.time_range !== "-") //?.filter((item) => item.tour === null)
+										?.map((item) => ({
+											id: item.batch_time,
+											name: item.time_range,
+											disabled: item.tour !== null,
+										})) || []
+								}
+								placeholder={
+									(dataCalendar?.data || [])
+										?.filter((item) =>
+											isSameDay(item.date, methods.watch("date"))
+										)?.[0]
+										?.slot //?.filter((item) => item.tour === null)
+										?.map((item) => ({
+											id: item.batch_time,
+											name: item.time_range,
+										})).length === 0
+										? "No Batch"
+										: "Choose batch"
+								}
+								getOptionLabel={(user) => user.name}
+								getOptionValue={(user) => String(user.id)}
+								required
+								onChange={(text) => methods.setValue(`batch.${0}`, text)}
+							/>
+						) : (
+							<RHFSelectMultiple
+								className="space-y-0 w-[400px] py-2"
+								name="batch"
+								label="Batch"
+								disabled={
+									isLoading ||
+									(dataCalendar?.data || [])
+										?.filter((item) =>
+											isSameDay(item.date, methods.watch("date"))
+										)?.[0]
+										?.slot?.filter((item) => item.time_range !== "-")
+										?.map((item) => ({
+											id: item.batch_time,
+											name: item.time_range,
+											disabled: item.tour !== null,
+										})).length === 0
+								}
+								options={
+									(dataCalendar?.data || [])
+										?.filter((item) =>
+											isSameDay(item.date, methods.watch("date"))
+										)?.[0]
+										?.slot?.filter((item) => item.time_range !== "-") //?.filter((item) => item.tour === null)
+										?.map((item) => ({
+											id: item.batch_time,
+											name: item.time_range,
+											disabled: item.tour !== null,
+										})) || []
+								}
+								placeholder={
+									(dataCalendar?.data || [])
+										?.filter((item) =>
+											isSameDay(item.date, methods.watch("date"))
+										)?.[0]
+										?.slot //?.filter((item) => item.tour === null)
+										?.map((item) => ({
+											id: item.batch_time,
+											name: item.time_range,
+										})).length === 0
+										? "No Batch"
+										: "Choose batch"
+								}
+								getOptionLabel={(user) => user.name}
+								getOptionValue={(user) => String(user.id)}
+								required
+							/>
+						)}
+					</div>
 				</div>
 			)}
 
-			{methods.watch("type") && (
+			{methods.watch("batch") && (
 				<div className="mt-5 border-[1px] rounded-sm p-3">
 					<Typography className="text-md font-bold">
 						Visiting Group Information
@@ -282,13 +335,13 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 				</div>
 			)}
 
-			{methods.watch("type") && (
+			{methods.watch("batch") && (
 				<div className="mt-5 border-[1px] rounded-sm p-3">
 					<Typography className="font-bold">Vehicle Information</Typography>
 					<Typography color="textSecondary" className="my-1 text-[10px]">
 						⚠️ Himbauan: Kendaraan pribadi hanya boleh <strong>Hyundai</strong>.
 					</Typography>
-					{methods.watch("info_vehicle").map((item, index) => {
+					{methods?.watch("info_vehicle")?.map((item, index) => {
 						return (
 							<div>
 								<Grid container spacing={3} className="mt-3" key={index}>
@@ -330,7 +383,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 											maxLength={9}
 										/>
 									</Grid>
-									{methods.watch("info_vehicle").length > 1 && (
+									{methods.watch("info_vehicle")?.length > 1 && (
 										<Grid item xs={12}>
 											<Button
 												variant={"hmmiGhost"}
@@ -363,7 +416,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 							}}
 							disabled={
 								methods.watch("info_vehicle")?.[0].vehicle_type ===
-									"tour-bus" || methods.watch("info_vehicle").length === 6
+									"tour-bus" || methods.watch("info_vehicle")?.length === 6
 							}
 						>
 							Add Vehicle
