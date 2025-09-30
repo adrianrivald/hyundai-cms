@@ -31,8 +31,6 @@ export function useListArticle() {
 		staleTime: 5 * 60 * 1000,
 	});
 
-	console.log("dataa", PageNumber);
-
 	const table = useTableConfig({
 		data: data?.data ?? [],
 		columns: dataArticleList,
