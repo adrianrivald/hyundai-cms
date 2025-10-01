@@ -181,12 +181,23 @@ export default function CalendarPage() {
 		});
 
 		// --- FINAL DEDUPLICATION across allEvents ---
-		const uniqueAllEvents = allEvents.filter(
-			(ev, idx, self) =>
-				self.findIndex(
-					(x) => String(x.id) === String(ev.id) && x.type === ev.type
-				) === idx
-		);
+		// const uniqueAllEvents = allEvents.filter(
+		// 	(ev, idx, self) =>
+		// 		self.findIndex(
+		// 			(x) => String(x.id) === String(ev.id) && x.type === ev.type
+		// 		) === idx
+		// );
+
+		const uniqueAllEvents = allEvents.filter((ev, idx, self) => {
+			if (ev.type === "HOLIDAY") {
+				return (
+					self.findIndex(
+						(x) => String(x.id) === String(ev.id) && x.type === "HOLIDAY"
+					) === idx
+				);
+			}
+			return true;
+		});
 
 		setEvents(uniqueAllEvents);
 	}, [data?.data]);
