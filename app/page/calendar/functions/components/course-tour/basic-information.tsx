@@ -31,8 +31,6 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 			: format(new Date(), "yyyy-MM")
 	);
 
-	console.log("dataa rhf", methods.watch());
-
 	return (
 		<div className="">
 			<div className="mt-5 mb-5">
@@ -70,124 +68,128 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 
 			{methods.watch("tour_type") && (
 				<div className="w-full border-[1px] rounded-sm p-5">
-					<div className="flex flex-row gap-3">
-						<RHFDatePicker
-							className="w-[200px]"
-							name="date"
-							label="Select Visit Date"
-							required
-							placeholder="Select Visit Date"
-							format="dd/MM/yyyy"
-							minDate={new Date()}
-							onChange={(date) => {
-								if (date) {
-									methods.setValue("date", date.toISOString());
-									methods.setValue("batch", []);
-									setTimeout(() => {
+					<Grid container spacing={4}>
+						<Grid item xs={4}>
+							<RHFDatePicker
+								className=""
+								name="date"
+								label="Select Visit Date"
+								required
+								placeholder="Select Visit Date"
+								format="dd/MM/yyyy"
+								minDate={new Date()}
+								onChange={(date) => {
+									if (date) {
+										// setTimeout(() => {
 										refetch();
-									}, 500);
-								}
-							}}
+										methods.setValue("date", date.toISOString());
+										methods.setValue("batch", []);
+										methods.clearErrors("date");
+									}
+								}}
 
-							//minDate={new Date()}
-						/>
-						{methods.watch("tour_type") !== "vip" ? (
-							<RHFSelect
-								className="space-y-0 w-[200px]"
-								name={`batch.${0}`}
-								label="Batch"
-								disabled={
-									isLoading ||
-									(dataCalendar?.data || [])
-										?.filter((item) =>
-											isSameDay(item.date, methods.watch("date"))
-										)?.[0]
-										?.slot?.filter((item) => item.time_range !== "-")
-										?.map((item) => ({
-											id: item.batch_time,
-											name: item.time_range,
-											disabled: item.tour !== null,
-										}))?.length === 0
-								}
-								options={
-									(dataCalendar?.data || [])
-										?.filter((item) =>
-											isSameDay(item.date, methods.watch("date"))
-										)?.[0]
-										?.slot?.filter((item) => item.time_range !== "-") //?.filter((item) => item.tour === null)
-										?.map((item) => ({
-											id: item.batch_time,
-											name: item.time_range,
-											disabled: item.tour !== null,
-										})) || []
-								}
-								placeholder={
-									(dataCalendar?.data || [])
-										?.filter((item) =>
-											isSameDay(item.date, methods.watch("date"))
-										)?.[0]
-										?.slot //?.filter((item) => item.tour === null)
-										?.map((item) => ({
-											id: item.batch_time,
-											name: item.time_range,
-										})).length === 0
-										? "No Batch"
-										: "Choose batch"
-								}
-								getOptionLabel={(user) => user.name}
-								getOptionValue={(user) => String(user.id)}
-								required
-								onChange={(text) => methods.setValue(`batch.${0}`, text)}
+								//minDate={new Date()}
 							/>
-						) : (
-							<RHFSelectMultiple
-								className="space-y-0 w-[400px] py-2"
-								name="batch"
-								label="Batch"
-								disabled={
-									isLoading ||
-									(dataCalendar?.data || [])
-										?.filter((item) =>
-											isSameDay(item.date, methods.watch("date"))
-										)?.[0]
-										?.slot?.filter((item) => item.time_range !== "-")
-										?.map((item) => ({
-											id: item.batch_time,
-											name: item.time_range,
-											disabled: item.tour !== null,
-										})).length === 0
-								}
-								options={
-									(dataCalendar?.data || [])
-										?.filter((item) =>
-											isSameDay(item.date, methods.watch("date"))
-										)?.[0]
-										?.slot?.filter((item) => item.time_range !== "-") //?.filter((item) => item.tour === null)
-										?.map((item) => ({
-											id: item.batch_time,
-											name: item.time_range,
-											disabled: item.tour !== null,
-										})) || []
-								}
-								placeholder={
-									(dataCalendar?.data || [])
-										?.filter((item) =>
-											isSameDay(item.date, methods.watch("date"))
-										)?.[0]
-										?.slot //?.filter((item) => item.tour === null)
-										?.map((item) => ({
-											id: item.batch_time,
-											name: item.time_range,
-										})).length === 0
-										? "No Batch"
-										: "Choose batch"
-								}
-								getOptionLabel={(user) => user.name}
-								getOptionValue={(user) => String(user.id)}
-								required
-							/>
-						)}
-					</div>
+						</Grid>
+						<Grid item xs={4}>
+							{methods.watch("tour_type") !== "vip" ? (
+								<RHFSelect
+									className="space-y-0"
+									name={`batch.${0}`}
+									label="Batch"
+									disabled={
+										isLoading ||
+										(dataCalendar?.data || [])
+											?.filter((item) =>
+												isSameDay(item.date, methods.watch("date"))
+											)?.[0]
+											?.slot?.filter((item) => item.time_range !== "-")
+											?.map((item) => ({
+												id: item.batch_time,
+												name: item.time_range,
+												disabled: item.tour !== null,
+											}))?.length === 0
+									}
+									options={
+										(dataCalendar?.data || [])
+											?.filter((item) =>
+												isSameDay(item.date, methods.watch("date"))
+											)?.[0]
+											?.slot?.filter((item) => item.time_range !== "-") //?.filter((item) => item.tour === null)
+											?.map((item) => ({
+												id: item.batch_time,
+												name: item.time_range,
+												disabled: item.tour !== null,
+											})) || []
+									}
+									placeholder={
+										(dataCalendar?.data || [])
+											?.filter((item) =>
+												isSameDay(item.date, methods.watch("date"))
+											)?.[0]
+											?.slot //?.filter((item) => item.tour === null)
+											?.map((item) => ({
+												id: item.batch_time,
+												name: item.time_range,
+											})).length === 0
+											? "No Batch"
+											: "Choose batch"
+									}
+									getOptionLabel={(user) => user.name}
+									getOptionValue={(user) => String(user.id)}
+									required
+									onChange={(text) => methods.setValue(`batch.${0}`, text)}
+								/>
+							) : (
+								<RHFSelectMultiple
+									className="space-y-0 py-2"
+									name="batch"
+									label="Batch"
+									disabled={
+										isLoading ||
+										(dataCalendar?.data || [])
+											?.filter((item) =>
+												isSameDay(item.date, methods.watch("date"))
+											)?.[0]
+											?.slot?.filter((item) => item.time_range !== "-")
+											?.map((item) => ({
+												id: item.batch_time,
+												name: item.time_range,
+												disabled: item.tour !== null,
+											})).length === 0
+									}
+									options={
+										(dataCalendar?.data || [])
+											?.filter((item) =>
+												isSameDay(item.date, methods.watch("date"))
+											)?.[0]
+											?.slot?.filter((item) => item.time_range !== "-") //?.filter((item) => item.tour === null)
+											?.map((item) => ({
+												id: item.batch_time,
+												name: item.time_range,
+												disabled: item.tour !== null,
+											})) || []
+									}
+									placeholder={
+										(dataCalendar?.data || [])
+											?.filter((item) =>
+												isSameDay(item.date, methods.watch("date"))
+											)?.[0]
+											?.slot //?.filter((item) => item.tour === null)
+											?.map((item) => ({
+												id: item.batch_time,
+												name: item.time_range,
+											})).length === 0
+											? "No Batch"
+											: "Choose batch"
+									}
+									getOptionLabel={(user) => user.name}
+									getOptionValue={(user) => String(user.id)}
+									required
+								/>
+							)}
+						</Grid>
+					</Grid>
 				</div>
 			)}
 
