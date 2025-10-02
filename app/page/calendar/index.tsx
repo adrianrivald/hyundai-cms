@@ -108,7 +108,6 @@ export default function CalendarPage() {
 
 			// --- HOLIDAYS ---
 			if (dayItem.events?.length > 0) {
-				// dedupe inside each dayItem.events by id
 				const uniqueEvents = dayItem.events.filter(
 					(h: any, idx: number, self: any[]) =>
 						self.findIndex((x) => String(x.id) === String(h.id)) === idx
@@ -123,7 +122,7 @@ export default function CalendarPage() {
 						index: idx,
 						description: h.description,
 						id: h.id,
-						allDay: true,
+						allDay: false,
 					}))
 				);
 			}
@@ -181,12 +180,23 @@ export default function CalendarPage() {
 		});
 
 		// --- FINAL DEDUPLICATION across allEvents ---
-		const uniqueAllEvents = allEvents.filter(
-			(ev, idx, self) =>
-				self.findIndex(
-					(x) => String(x.id) === String(ev.id) && x.type === ev.type
-				) === idx
-		);
+		// const uniqueAllEvents = allEvents.filter(
+		// 	(ev, idx, self) =>
+		// 		self.findIndex(
+		// 			(x) => String(x.id) === String(ev.id) && x.type === ev.type
+		// 		) === idx
+		// );
+
+		const uniqueAllEvents = allEvents.filter((ev, idx, self) => {
+			if (ev.type === "HOLIDAY") {
+				return (
+					self.findIndex(
+						(x) => String(x.id) === String(ev.id) && x.type === "HOLIDAY"
+					) === idx
+				);
+			}
+			return true;
+		});
 
 		setEvents(uniqueAllEvents);
 	}, [data?.data]);
@@ -260,6 +270,8 @@ export default function CalendarPage() {
 		);
 	};
 
+	console.log("dataa", events);
+
 	return (
 		<Container>
 			<Calendar
@@ -271,8 +283,11 @@ export default function CalendarPage() {
 				views={["month"]}
 				selectable
 				onNavigate={(date) => setCurrentDate(date)}
+				dayLayoutAlgorithm={"no-overlap"}
 				//enableAutoScroll={true}
-				style={{ height: "95vh" }}
+				style={{ height: "100vh" }}
+				showAllEvents={true}
+				showMultiDayTimes={true}
 				date={currentDate}
 				dayPropGetter={highlightWeekendAndCustomDays}
 				components={{
@@ -282,7 +297,7 @@ export default function CalendarPage() {
 					event: ({ event }: { event: any }) => {
 						return (
 							<div
-								className={`text-[11px] cursor-pointer ${event.type === "HOLIDAY" ? "text-hmmi-red-500" : "text-white"}  flex flex-row gap-1 items-center`}
+								className={` text-[11px] cursor-pointer ${event.type === "HOLIDAY" ? "text-hmmi-red-500" : "text-white"}  flex flex-row gap-1 items-center`}
 							>
 								{event.type !== "HOLIDAY" &&
 									format(event.start || new Date(), "HH:mm")}{" "}
@@ -291,8 +306,9 @@ export default function CalendarPage() {
 						);
 					},
 					eventContainerWrapper: ({ children, ...props }: any) => {
-						return <div style={{ marginTop: 2 }}>{children}</div>;
+						return <div style={{ marginTop: 2 }}> {children}</div>;
 					},
+
 					eventWrapper: ({ event, children }: any) => {
 						return (
 							<div>
@@ -305,7 +321,7 @@ export default function CalendarPage() {
 											setOpenTourDetail({ isOpen: true, event: event });
 										}
 									}}
-									className={`${event.index === 0 ? "mt-6" : ""} ${event.type === "HOLIDAY" ? "bg-white" : event.type === "GENERAL-COURSE" ? "bg-[#0A5CE6]" : event.type === "STUDENT-COURSE" ? "bg-[#00AE0F]" : "bg-[#FFCF31]"} `}
+									className={` ${event.type === "HOLIDAY" ? "bg-white" : event.type === "GENERAL-COURSE" ? "bg-[#0A5CE6]" : event.type === "STUDENT-COURSE" ? "bg-[#00AE0F]" : "bg-[#FFCF31]"} `}
 									style={{
 										borderRadius: 4,
 										overflow: "hidden",

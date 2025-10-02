@@ -7,7 +7,6 @@ import {
 	ScrollRestoration,
 	useNavigation,
 } from "react-router";
-
 import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -17,11 +16,6 @@ import { NotistackProvider } from "./components/notistack-provider";
 import { LoadingIndicator } from "./components/loading-indicator";
 import NotFound from "./components/not-found";
 import Cookies from "js-cookie";
-import { Typography } from "./components/typography";
-import { useForm } from "react-hook-form";
-import FormProvider from "./components/RHForm/FormProvider";
-import RHFTextField from "./components/RHForm/RHFTextField";
-import { Button } from "./components/ui/button";
 import AuthenticationPage from "./components/authentication";
 
 export const links: Route.LinksFunction = () => [

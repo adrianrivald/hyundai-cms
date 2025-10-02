@@ -115,6 +115,13 @@ export const SIDEBAR_MENU = () => {
 					items: [],
 					authorized: ["Super", "CMS"],
 				},
+				{
+					id: "6",
+					title: "Feedback",
+					url: "/content-editor/feedback",
+					items: [],
+					authorized: ["Super", "CMS"],
+				},
 			],
 			authorized: ["Super", "CMS"],
 		},
