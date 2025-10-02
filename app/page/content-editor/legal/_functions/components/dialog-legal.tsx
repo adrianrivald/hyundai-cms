@@ -2,7 +2,6 @@ import FormProvider from "@/components/RHForm/FormProvider";
 import DialogModal from "@/components/custom/dialog/dialog-modal";
 import { Grid } from "@/components/grid";
 import { Button } from "@/components/ui/button";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useForm } from "react-hook-form";
 import RHFTextField from "@/components/RHForm/RHFTextField";
