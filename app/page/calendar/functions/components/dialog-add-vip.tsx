@@ -39,7 +39,7 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 		defaultValues: {
 			step: "info_dasar",
 			type: "",
-			date: new Date().toString(),
+			date: "",
 			info_group: { email: "" },
 			group_member: [{}],
 			info_vehicle: [{}],

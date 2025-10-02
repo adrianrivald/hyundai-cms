@@ -89,10 +89,9 @@ export default function RHFDatePicker({
 								mode="single"
 								selected={field.value}
 								onSelect={(date) => {
+									if (!date) return;
 									field.onChange(date);
-									if (onChange && date) {
-										onChange(date);
-									}
+									onChange?.(date);
 								}}
 								captionLayout="dropdown"
 								//@ts-ignore

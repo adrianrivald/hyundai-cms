@@ -45,7 +45,7 @@ export const CustomDateCellWrapper =
 				</div>
 
 				{/* Events passed through children (still rendered by RBC) */}
-				<div className="">{children}</div>
+				<div className="mt-6">{children}</div>
 			</div>
 		);
 	};
