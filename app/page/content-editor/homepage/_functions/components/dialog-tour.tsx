@@ -243,7 +243,7 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 									<Grid container spacing={3}>
 										<Grid item xs={12}>
 											<Typography className="font-bold text-sm">
-												Preffered Route
+												Preferred Route
 											</Typography>
 										</Grid>
 										{dataRoute

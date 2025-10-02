@@ -57,6 +57,7 @@ export default [
 			route("about-us", "./routes/guard-route/content-editor/about-us.tsx"),
 			route("faq", "./routes/guard-route/content-editor/faq.tsx"),
 			route("legal", "./routes/guard-route/content-editor/legal.tsx"),
+			route("feedback", "./routes/guard-route/content-editor/feedback.tsx"),
 			route(
 				"registration-guide",
 				"./routes/guard-route/content-editor/registration-guide.tsx"

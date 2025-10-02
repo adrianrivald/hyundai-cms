@@ -359,46 +359,48 @@ export default function DashboardPage() {
 						</ChartContainer>
 					</Grid>
 
-					<Grid item xs={6} className="bg-white rounded-sm pt-5">
-						<Typography className="text-center font-bold">
-							Area Favorit
-						</Typography>
-						<ChartContainer
-							config={chartConfig}
-							className="mx-auto aspect-square max-h-[250px]"
-						>
-							<PieChart>
-								<ChartTooltip
-									cursor={false}
-									content={<ChartTooltipContent hideLabel />}
-								/>
-								<Pie
-									data={dataFavoritePie}
-									dataKey="value"
-									nameKey="name"
-									innerRadius={60}
-									label={({ payload, ...props }) => {
-										return (
-											<text
-												cx={props.cx}
-												cy={props.cy}
-												x={props.x}
-												y={props.y}
-												textAnchor={props.textAnchor}
-												dominantBaseline={props.dominantBaseline}
-												fill="hsla(var(--foreground))"
-											>
-												{payload.value} %
-											</text>
-										);
-									}}
-								/>
-								<ChartLegend
-									content={<ChartLegendContent nameKey="name" />}
-									className="-translate-y-2 flex-wrap gap-2 *:justify-center "
-								/>
-							</PieChart>
-						</ChartContainer>
+					<Grid item xs={6}>
+						<div className="bg-white rounded-sm pt-5">
+							<Typography className="text-center font-bold">
+								Area Favorit
+							</Typography>
+							<ChartContainer
+								config={chartConfig}
+								className="mx-auto aspect-square max-h-[250px]"
+							>
+								<PieChart>
+									<ChartTooltip
+										cursor={false}
+										content={<ChartTooltipContent hideLabel />}
+									/>
+									<Pie
+										data={dataFavoritePie}
+										dataKey="value"
+										nameKey="name"
+										innerRadius={60}
+										label={({ payload, ...props }) => {
+											return (
+												<text
+													cx={props.cx}
+													cy={props.cy}
+													x={props.x}
+													y={props.y}
+													textAnchor={props.textAnchor}
+													dominantBaseline={props.dominantBaseline}
+													fill="hsla(var(--foreground))"
+												>
+													{payload.value} %
+												</text>
+											);
+										}}
+									/>
+									<ChartLegend
+										content={<ChartLegendContent nameKey="name" />}
+										className="-translate-y-2 flex-wrap gap-2 *:justify-center "
+									/>
+								</PieChart>
+							</ChartContainer>
+						</div>
 					</Grid>
 					<Grid item xs={6}>
 						<div className="bg-white rounded-sm pt-5 px-3 pb-3">
@@ -448,6 +450,61 @@ export default function DashboardPage() {
 										))}
 									</div>
 								</div>
+							</div>
+							{/* FEEDBACK */}
+							<div className="mt-5">
+								{[1, 2].map((item) => {
+									return (
+										<div
+											className="p-3 bg-[#F7F7F7] rounded-sm mb-3"
+											key={item}
+										>
+											<div className="flex flex-row gap-3 items-center">
+												<img
+													src="/images/example-image.webp"
+													className="w-[50px] h-[50px] object-cover rounded-sm"
+												/>
+												<div>
+													<Typography className="text-xs font-bold">
+														Gilang Aditya R
+													</Typography>
+													<Typography className="text-xs">
+														SMK Adijaya
+													</Typography>
+												</div>
+											</div>
+
+											<div className="flex flex-row mt-1">
+												{[1, 2, 3, 4].map((i) => (
+													<Icon
+														key={i}
+														icon="mdi:star"
+														className="text-yellow-400 w-4 h-4"
+													/>
+												))}
+												<Icon
+													icon="mdi:star-outline"
+													className="text-yellow-400 w-4 h-4"
+												/>
+											</div>
+
+											<Typography className="text-xs text-[#383B46] mt-2">
+												Pengalaman mengikuti course tour di Hyundai HMMI sangat
+												bermanfaat bagi tim teknis kami. Kami belajar banyak
+												tentang penerapan teknologi, keselamatan kerja, serta
+												standar kualitas yang bisa diadaptasi di perusahaan
+												kami.
+											</Typography>
+										</div>
+									);
+								})}
+
+								<Button
+									className="w-full cursor-pointer"
+									variant={"hmmiOutline"}
+								>
+									Selengkapnya
+								</Button>
 							</div>
 						</div>
 					</Grid>
