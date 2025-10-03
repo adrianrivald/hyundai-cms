@@ -98,7 +98,7 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 				</>
 			);
 		},
-		cell: ({ row }) => {
+		cell: ({ row, table }) => {
 			const [open, setOpen] = useState(false);
 			return (
 				<div className="mt-5">
