@@ -97,6 +97,12 @@ export default function RHFSelect<T>({
 												disabled={(option as any)?.disabled}
 												className="border-b-[0.5px] py-2 data-[highlighted]:bg-hmmi-primary-900 data-[highlighted]:text-white data-[state=checked]:bg-hmmi-primary-900 data-[state=checked]:text-white flex items-center justify-between"
 											>
+												{(option as any)?.icon && (
+													<Icon
+														className="self-end mb-[2px] ml-1 hover:text-hmmi-white-20 "
+														icon={(option as any)?.icon}
+													/>
+												)}
 												<div>{label} </div>
 
 												{(option as any)?.disabled && (
