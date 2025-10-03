@@ -69,13 +69,8 @@ const DialogFeedback = ({ open, onClose }: DialogFeedbackProps) => {
 												autoFocus={false}
 												required
 											/>
-											<RHFTextField
-												name={`questions.${index}.question_en`}
-												placeholder="Input question EN"
-												autoFocus={false}
-												required
-											/>
 										</Grid>
+
 										<Grid item xs={5}>
 											<div className="flex flex-row gap-[6px] items-end ">
 												<RHFSelect
@@ -107,6 +102,29 @@ const DialogFeedback = ({ open, onClose }: DialogFeedbackProps) => {
 													placeholder="Choose"
 													getOptionLabel={(user) => user.name}
 													getOptionValue={(user) => String(user.type)}
+													onChange={(text) => {
+														methods.setValue(`questions.${index}.type`, text);
+														// if (text === "radio") {
+														methods.setValue(
+															`questions.${index}.answer.radio_answer`,
+															[{}]
+														);
+														methods.setValue(
+															`questions.${index}.answer.radio_answer_en`,
+															[{}]
+														);
+														//}
+														//if (text === "checkbox") {
+														methods.setValue(
+															`questions.${index}.answer.checkbox_answer`,
+															[{}]
+														);
+														methods.setValue(
+															`questions.${index}.answer.checkbox_answer_en`,
+															[{}]
+														);
+														//}
+													}}
 												/>
 												{methods.watch("questions")?.length > 1 && (
 													<div
@@ -130,11 +148,92 @@ const DialogFeedback = ({ open, onClose }: DialogFeedbackProps) => {
 												)}
 											</div>
 										</Grid>
+										<Grid item xs={7}>
+											<RHFTextField
+												name={`questions.${index}.question_en`}
+												placeholder="Input question EN"
+												autoFocus={false}
+												required
+												className="w-full"
+											/>
+										</Grid>
+
+										<Grid item xs={5}>
+											{(methods.watch(`questions.${index}.type`) === "radio" ||
+												methods.watch(`questions.${index}.type`) ===
+													"checkbox") && (
+												<div className=" flex flex-row justify-end">
+													<Button
+														onClick={() => {
+															if (
+																methods.watch(`questions.${index}.type`) === ""
+															) {
+																return;
+															}
+
+															if (
+																methods.watch(`questions.${index}.type`) ===
+																"radio"
+															) {
+																const data_id = methods.watch(
+																	`questions.${index}.answer.checkbox_answer`
+																);
+																const data_en = methods.watch(
+																	`questions.${index}.answer.checkbox_answer_en`
+																);
+
+																data_id.push({});
+																data_en.push({});
+
+																methods.setValue(
+																	`questions.${index}.answer.checkbox_answer`,
+																	data_id
+																);
+																methods.setValue(
+																	`questions.${index}.answer.checkbox_answer_en`,
+																	data_en
+																);
+															} else {
+																const data_id = methods.watch(
+																	`questions.${index}.answer.checkbox_answer`
+																);
+																const data_en = methods.watch(
+																	`questions.${index}.answer.checkbox_answer_en`
+																);
+
+																data_id.push({});
+																data_en.push({});
+
+																methods.setValue(
+																	`questions.${index}.answer.checkbox_answer`,
+																	data_id
+																);
+																methods.setValue(
+																	`questions.${index}.answer.checkbox_answer_en`,
+																	data_en
+																);
+															}
+														}}
+														className="hover:bg-transparent"
+														variant={"hmmiGhost"}
+														startIcon={
+															<Icon
+																icon="ic:sharp-plus"
+																width="20"
+																height="20"
+															/>
+														}
+													>
+														Add Choice
+													</Button>
+												</div>
+											)}
+										</Grid>
 
 										<Grid item xs={12}>
 											{methods.watch(`questions.${index}.type`) ===
 												"checkbox" && (
-												<div>
+												<div className="space-y-4">
 													{methods
 														.watch(`questions.${index}.answer.checkbox_answer`)
 														.map((idx) => {
@@ -172,6 +271,48 @@ const DialogFeedback = ({ open, onClose }: DialogFeedbackProps) => {
 																			}
 																		/>
 																	</Grid>
+																	{methods.watch(
+																		`questions.${index}.answer.checkbox_answer`
+																	).length > 1 && (
+																		<Grid item xs={2} className="">
+																			<div
+																				className="cursor-pointer mt-2  w-[30px]"
+																				onClick={() => {
+																					const answer_id = methods.watch(
+																						`questions.${index}.answer.checkbox_answer`
+																					);
+																					const answer_en = methods.watch(
+																						`questions.${index}.answer.checkbox_answer`
+																					);
+																					const updated = [...answer_id];
+																					const updated_en = [...answer_en];
+																					updated.splice(index, 1);
+																					updated_en.splice(index, 1);
+																					methods.setValue(
+																						`questions.${index}.answer.checkbox_answer`,
+																						updated,
+																						{
+																							shouldValidate: true,
+																						}
+																					);
+																					methods.setValue(
+																						`questions.${index}.answer.checkbox_answer_en`,
+																						updated_en,
+																						{
+																							shouldValidate: true,
+																						}
+																					);
+																				}}
+																			>
+																				<Icon
+																					icon="mage:trash"
+																					width="24"
+																					height="24"
+																					color="#FF3B30"
+																				/>
+																			</div>
+																		</Grid>
+																	)}
 																</Grid>
 															);
 														})}
@@ -179,15 +320,15 @@ const DialogFeedback = ({ open, onClose }: DialogFeedbackProps) => {
 											)}
 
 											{methods.watch(`questions.${index}.type`) === "radio" && (
-												<div>
+												<div className="space-y-4">
 													{methods
-														.watch(`questions.${index}.answer.checkbox_answer`)
+														.watch(`questions.${index}.answer.radio_answer`)
 														.map((idx) => {
 															return (
 																<Grid container spacing={4} className="w-full ">
 																	<Grid item xs={5}>
 																		<RHFTextField
-																			name={`questions.${index}.answer.checkbox_answer.${idx}`}
+																			name={`questions.${index}.answer.radio_answer.${idx}`}
 																			//label={`Question ${index + 1}`}
 																			placeholder="Input choice ID"
 																			autoFocus={false}
@@ -203,7 +344,7 @@ const DialogFeedback = ({ open, onClose }: DialogFeedbackProps) => {
 																	</Grid>
 																	<Grid item xs={5}>
 																		<RHFTextField
-																			name={`questions.${index}.answer.checkbox_answer_en.${idx}`}
+																			name={`questions.${index}.answer.radio_answer_en.${idx}`}
 																			//label={`Question ${index + 1}`}
 																			placeholder="Input choice EN"
 																			autoFocus={false}
@@ -217,6 +358,48 @@ const DialogFeedback = ({ open, onClose }: DialogFeedbackProps) => {
 																			}
 																		/>
 																	</Grid>
+																	{methods.watch(
+																		`questions.${index}.answer.radio_answer`
+																	).length > 1 && (
+																		<Grid item xs={2} className="">
+																			<div
+																				className="cursor-pointer mt-2  w-[30px]"
+																				onClick={() => {
+																					const answer_id = methods.watch(
+																						`questions.${index}.answer.radio_answer`
+																					);
+																					const answer_en = methods.watch(
+																						`questions.${index}.answer.radio_answer_en`
+																					);
+																					const updated = [...answer_id];
+																					const updated_en = [...answer_en];
+																					updated.splice(index, 1);
+																					updated_en.splice(index, 1);
+																					methods.setValue(
+																						`questions.${index}.answer.radio_answer`,
+																						updated,
+																						{
+																							shouldValidate: true,
+																						}
+																					);
+																					methods.setValue(
+																						`questions.${index}.answer.radio_answer_en`,
+																						updated_en,
+																						{
+																							shouldValidate: true,
+																						}
+																					);
+																				}}
+																			>
+																				<Icon
+																					icon="mage:trash"
+																					width="24"
+																					height="24"
+																					color="#FF3B30"
+																				/>
+																			</div>
+																		</Grid>
+																	)}
 																</Grid>
 															);
 														})}
@@ -252,6 +435,11 @@ const DialogFeedback = ({ open, onClose }: DialogFeedbackProps) => {
 									>
 										Question
 									</Button>
+								</div>
+							</Grid>
+							<Grid item xs={12} className="">
+								<div className="flex flex-row justify-end">
+									<Button className="w-[80px]">Save</Button>
 								</div>
 							</Grid>
 						</Grid>
