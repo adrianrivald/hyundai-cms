@@ -56,6 +56,7 @@ const DialogFeedback = ({ open, onClose, id }: DialogFeedbackProps) => {
 			id: form.id ? Number(form.id) : undefined,
 			name: form.name,
 			description: form.description,
+			is_publish: true,
 			questions: form?.questions
 				? form?.questions?.map((q: any) => {
 						const base = {

@@ -13,6 +13,7 @@ export type FeedbackTypePost = {
 	id?: number;
 	name: string;
 	description: string;
+	is_publish: boolean;
 	questions: {
 		question_id: string;
 		question_en: string;
