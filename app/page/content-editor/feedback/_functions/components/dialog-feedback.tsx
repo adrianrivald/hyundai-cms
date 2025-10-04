@@ -2,6 +2,7 @@ import {
 	usePostFeedback,
 	type FeedbackTypePost,
 	usePutFeedback,
+	useGetFeedback,
 } from "@/api/feedback";
 import FormProvider from "@/components/RHForm/FormProvider";
 import RHFSelect from "@/components/RHForm/RHFSelect";
@@ -14,6 +15,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useForm } from "react-hook-form";
 import { FeedbackSchema } from "../models/feedback";
 import { enqueueSnackbar } from "notistack";
+import { useEffect } from "react";
 
 interface DialogFeedbackProps {
 	open: boolean;
@@ -42,6 +44,10 @@ const DialogFeedback = ({ open, onClose, id }: DialogFeedbackProps) => {
 
 	const { mutate: mutatePost, isPending: pendingPost } = usePostFeedback();
 	const { mutate: mutateEdit, isPending: pendingEdit } = usePutFeedback();
+	const { data: dataFeedback } = useGetFeedback(String(id || ""), {
+		enabled: !!id,
+		queryKey: ["feedback-get", id],
+	});
 
 	const onSubmit = () => {
 		const form = methods.watch();
@@ -104,6 +110,28 @@ const DialogFeedback = ({ open, onClose, id }: DialogFeedbackProps) => {
 		}
 	};
 
+	useEffect(() => {
+		if (dataFeedback && open) {
+			methods.reset({
+				id: String(dataFeedback?.id),
+				name: dataFeedback?.name,
+				description: "-",
+				questions: dataFeedback?.questions?.map((item) => ({
+					question_id: item.question_id,
+					question_en: item?.question_en,
+					is_mandatory: true,
+					form_type: item?.form_type,
+					answers: item?.answers?.map((a) => ({
+						answer_id: a.answer_id ?? "",
+						answer_en: a.answer_en ?? "",
+					})),
+					min_range: item?.min_range,
+					max_range: item?.max_range,
+				})),
+			});
+		}
+	}, [dataFeedback, open]);
+
 	return (
 		<DialogModal
 			open={open}
@@ -112,7 +140,7 @@ const DialogFeedback = ({ open, onClose, id }: DialogFeedbackProps) => {
 				methods.clearErrors();
 				methods.reset();
 			}}
-			headerTitle={"Create Feedback"}
+			headerTitle={`${id ? "Update" : "Create"} Feedback`}
 			contentProps="w-[800px] max-h-[80%] overflow-y-scroll"
 			content={
 				<div className="">

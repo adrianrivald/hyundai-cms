@@ -31,7 +31,7 @@ export type FeedbackType = {
 	uri: string;
 	is_publish: number;
 	published_at: string;
-	question: {
+	questions: {
 		question_id: string;
 		question_en: string;
 		is_mandatory?: number;
