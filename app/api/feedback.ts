@@ -1,0 +1,172 @@
+import apiConfig from "@/config/api";
+import type { Meta } from "@/lib/convertPagination";
+import { queryClient } from "@/lib/queryClient";
+import {
+	useMutation,
+	type MutationObserverOptions,
+	type QueryObserverOptions,
+	useQuery,
+} from "@tanstack/react-query";
+import type { AxiosResponse, AxiosError } from "axios";
+
+export type FeedbackTypePost = {
+	id?: number;
+	name: string;
+	description: string;
+	questions: {
+		question_id: string;
+		question_en: string;
+		is_mandatory: string;
+		form_type: string;
+		answers?: {
+			answer_id?: string;
+			answer_en?: string;
+		}[];
+	}[];
+};
+
+export type FeedbackType = {
+	id?: number;
+	name: string;
+	uri: string;
+	is_publish: number;
+	published_at: string;
+	question: {
+		question_id: string;
+		question_en: string;
+		is_mandatory?: number;
+		is_deletable?: number;
+		form_type: string;
+		answers?: {
+			id: number;
+			sort: number;
+			answer_id?: string;
+			answer_en?: string;
+		}[];
+		min_range?: number;
+		max_range?: number;
+		sort: number;
+	}[];
+	created_at: string;
+	updated_at: string;
+};
+
+export async function postFeedback(
+	data: FeedbackTypePost
+): Promise<AxiosResponse<FeedbackType, AxiosError>> {
+	return await apiConfig.post("admin/forms", data);
+}
+
+export async function putFeedback(
+	data: FeedbackTypePost
+): Promise<AxiosResponse<FeedbackType, AxiosError>> {
+	return await apiConfig.put(`admin/forms/${data.id}`, data);
+}
+
+export async function getFeedback(id: string): Promise<FeedbackType> {
+	const response = await apiConfig.get(`admin/forms/${id}`);
+
+	return response.data.data;
+}
+
+export async function getFeedbackList(
+	search_query?: string,
+	page?: number
+): Promise<{ data: FeedbackType[]; meta: Meta }> {
+	const response = await apiConfig.get(
+		`admin/forms?search_query=${search_query}&page=${page}`
+	);
+	return response.data;
+}
+
+export async function deleteFeedback(id: string): Promise<{ message: string }> {
+	return await apiConfig.delete(`admin/forms/${id}`);
+}
+
+export const usePostFeedback = (
+	options?: MutationObserverOptions<FeedbackType, Error, FeedbackTypePost>
+) => {
+	return useMutation<FeedbackType, Error, FeedbackTypePost>({
+		mutationKey: ["feedback-post"],
+		mutationFn: async (data: FeedbackTypePost) => {
+			const response = await postFeedback(data);
+			queryClient.removeQueries({
+				predicate: (query) =>
+					typeof query.queryKey[0] === "string" &&
+					query.queryKey[0].startsWith("feedback-"),
+			});
+
+			return response.data;
+		},
+		...options,
+	});
+};
+
+export const useDeleteFeedback = (
+	options?: MutationObserverOptions<{ message: string }, Error, { id: string }>
+) => {
+	return useMutation<{ message: string }, Error, { id: string }>({
+		mutationKey: ["feedback-post"],
+		mutationFn: async ({ id }) => {
+			const response = await deleteFeedback(id);
+			queryClient.removeQueries({
+				predicate: (query) =>
+					typeof query.queryKey[0] === "string" &&
+					query.queryKey[0].startsWith("feedback-"),
+			});
+
+			return response;
+		},
+		...options,
+	});
+};
+
+export const usePutFeedback = (
+	options?: MutationObserverOptions<FeedbackType, Error, FeedbackTypePost>
+) => {
+	return useMutation<FeedbackType, Error, FeedbackTypePost>({
+		mutationKey: ["feedback-put"],
+		mutationFn: async (data: FeedbackTypePost) => {
+			const response = await putFeedback(data);
+			queryClient.removeQueries({
+				predicate: (query) =>
+					typeof query.queryKey[0] === "string" &&
+					query.queryKey[0].startsWith("feedback-"),
+			});
+
+			return response.data;
+		},
+		...options,
+	});
+};
+
+export const useGetFeedbacks = (
+	search_query: string,
+	page?: number,
+	options?: QueryObserverOptions<{ data: FeedbackType[]; meta: Meta }>
+) => {
+	return useQuery<{ data: FeedbackType[]; meta: Meta }>({
+		queryKey: ["feedback-get-all", search_query, page],
+		queryFn: async () => {
+			const response = await getFeedbackList(search_query, page);
+			return response;
+		},
+		placeholderData: (prev) => prev,
+		...options,
+	});
+};
+
+export const useGetFeedback = (
+	id: string,
+	options?: QueryObserverOptions<FeedbackType>
+) => {
+	return useQuery<FeedbackType>({
+		queryKey: ["feedback-get", id],
+		queryFn: async () => {
+			const response = await getFeedback(id);
+			return response;
+		},
+		placeholderData: (prev) => prev,
+		...options,
+	});
+};
