@@ -1,27 +1,12 @@
 import Container from "@/components/container";
-import { Typography } from "@/components/typography";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import DialogFeedback from "./components/dialog-feedback";
+import { useListFeedback } from "./_functions/hooks/use-list-feedback";
+import { DataTable } from "@/components/layout/table/data-table";
 
 const FeedbackPage = () => {
-	const [openFeedback, setOpenFeedback] = useState(false);
-
+	const { table } = useListFeedback();
 	return (
 		<Container>
-			<Typography>WIP</Typography>
-			<Button
-				onClick={() => {
-					setOpenFeedback(true);
-				}}
-			>
-				Create Feedback
-			</Button>
-
-			<DialogFeedback
-				open={openFeedback}
-				onClose={() => setOpenFeedback(false)}
-			/>
+			<DataTable table={table} showPagination={false} />
 		</Container>
 	);
 };
