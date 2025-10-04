@@ -17,6 +17,7 @@ import RHFTextField from "@/components/RHForm/RHFTextField";
 import { SearchIcon } from "lucide-react";
 import { dataVehicleColumn } from "../column/column-vehicle";
 import DialogAddVip from "./dialog-add-vip";
+import DialogReschedule from "./dialog-reschedule";
 
 interface DialogDetailTourProps {
 	open: boolean;
@@ -26,7 +27,7 @@ interface DialogDetailTourProps {
 
 const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 	const { data: dataDetail, refetch } = useGetTourDetails(data?.id);
-	const [openVip, setOpenVip] = useState(false);
+	const [openVip, setOpenVip] = useState({ isOpen: false, id: 0 });
 	const tableState = useTableState({});
 	const [openEmail, setOpenEmail] = useState({
 		isOpen: false,
@@ -99,7 +100,7 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 						<Button
 							variant={"hmmiOutline"}
 							onClick={() => {
-								setOpenVip(true);
+								setOpenVip({ isOpen: true, id: data?.id || 0 });
 							}}
 						>
 							Ubah Jadwal
@@ -207,12 +208,21 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 						refetch={refetch}
 					/>
 
-					<DialogAddVip
+					<DialogReschedule
+						id={openVip.id}
+						refetch={refetch}
+						open={openVip.isOpen}
+						onClose={() => {
+							setOpenVip({ isOpen: false, id: 0 });
+						}}
+					/>
+
+					{/* <DialogAddVip
 						onClose={() => setOpenVip(false)}
 						open={openVip}
 						refetch={refetch}
 						data={dataDetail}
-					/>
+					/> */}
 				</div>
 			}
 		/>

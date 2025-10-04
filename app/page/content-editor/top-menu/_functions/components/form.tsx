@@ -36,8 +36,6 @@ const Form = () => {
 		queryKey: ["top-menu-get", id],
 	});
 
-	console.log("data", dataArticle);
-
 	useEffect(() => {
 		if (id) {
 			methods.reset({

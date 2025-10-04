@@ -148,8 +148,6 @@ const DialogFeedback = ({
 		}
 	}, [dataFeedback, open]);
 
-	console.log("dataa", methods.watch());
-
 	return (
 		<DialogModal
 			open={open}

@@ -270,8 +270,6 @@ export default function CalendarPage() {
 		);
 	};
 
-	console.log("dataa", events);
-
 	return (
 		<Container>
 			<Calendar

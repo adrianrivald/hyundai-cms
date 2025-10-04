@@ -39,8 +39,6 @@ const DialogRescheduleEmail = ({
 		}
 	}, [open, email]);
 
-	console.log("dataa", methods.formState.errors);
-
 	const { mutate, isPending } = usePostRescheduleNotification();
 
 	const onSubmit = () => {
