@@ -6,6 +6,8 @@ export const FeedbackSchema = yup.object({
 	description: yup.string().required("Description is required").default("-"),
 	questions: yup.array().of(
 		yup.object({
+			id: yup.number().optional(),
+			delete: yup.string().optional(),
 			question_id: yup.string().required("Question is required"),
 			question_en: yup.string().required("Question is required"),
 			is_mandatory: yup.boolean().optional().default(true),
@@ -15,6 +17,7 @@ export const FeedbackSchema = yup.object({
 				.of(
 					yup.object({
 						id: yup.number().optional(),
+						delete: yup.string().optional(),
 						sort: yup.number().optional().default(1),
 						answer_id: yup.string().optional(),
 						answer_en: yup.string().optional(),

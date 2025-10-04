@@ -13,7 +13,7 @@ export type FeedbackTypePost = {
 	id?: number;
 	name: string;
 	description: string;
-	is_publish: boolean;
+	is_publish: string;
 	questions: {
 		question_id: string;
 		question_en: string;
@@ -33,13 +33,16 @@ export type FeedbackType = {
 	is_publish: number;
 	published_at: string;
 	questions: {
+		id?: number;
+		delete?: string;
 		question_id: string;
 		question_en: string;
 		is_mandatory?: number;
 		is_deletable?: number;
 		form_type: string;
 		answers?: {
-			id: number;
+			id?: number;
+			delete?: string;
 			sort: number;
 			answer_id?: string;
 			answer_en?: string;

@@ -1,13 +1,10 @@
 import CellText from "@/components/layout/table/data-table-cell";
-import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import type { ColumnDef, Row, Table } from "@tanstack/react-table";
-
 import { useState } from "react";
 import DialogDelete from "@/components/custom/dialog/dialog-delete";
 import { enqueueSnackbar } from "notistack";
-import { useDeleteFaq, type FAQType } from "@/api/faq";
 import { format, isValid } from "date-fns";
 import DialogFeedback from "../components/dialog-feedback";
 import { useDeleteFeedback } from "@/api/feedback";
@@ -82,7 +79,13 @@ export const dataFeedbackColumn: ColumnDef<FeedbackColumnType>[] = [
 					>
 						Add
 					</Button>
-					<DialogFeedback open={open} onClose={() => setOpen(false)} />
+					<DialogFeedback
+						open={open}
+						onClose={() => setOpen(false)}
+						refetch={() => {
+							table.resetPageIndex();
+						}}
+					/>
 				</>
 			);
 		},
@@ -161,6 +164,9 @@ const ActionCell = ({
 				open={openUpdate}
 				onClose={() => setOpenUpdate(false)}
 				id={row?.original?.id}
+				refetch={() => {
+					table.resetPageIndex();
+				}}
 			/>
 		</div>
 	);
