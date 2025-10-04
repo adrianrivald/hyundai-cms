@@ -1,3 +1,4 @@
+import { usePostRescheduleNotification } from "@/api/reschedule";
 import FormProvider from "@/components/RHForm/FormProvider";
 import RHFTextField from "@/components/RHForm/RHFTextField";
 import DialogModal from "@/components/custom/dialog/dialog-modal";
@@ -5,6 +6,7 @@ import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { enqueueSnackbar } from "notistack";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -12,13 +14,17 @@ import * as yup from "yup";
 interface DialogRescheduleEmailProps {
 	open: boolean;
 	onClose: () => void;
+	id: string;
 	email: string;
+	refetch: () => void;
 }
 
 const DialogRescheduleEmail = ({
 	open,
 	onClose,
 	email,
+	id,
+	refetch,
 }: DialogRescheduleEmailProps) => {
 	const methods = useForm({
 		defaultValues: { email: email },
@@ -32,6 +38,36 @@ const DialogRescheduleEmail = ({
 			methods.reset({ email });
 		}
 	}, [open, email]);
+
+	console.log("dataa", methods.formState.errors);
+
+	const { mutate, isPending } = usePostRescheduleNotification();
+
+	const onSubmit = () => {
+		const form = methods.watch();
+
+		let data = {
+			id: id,
+			email: form.email,
+		};
+
+		mutate(data, {
+			onSuccess: () => {
+				onClose();
+				methods.clearErrors();
+				methods.reset();
+				refetch && refetch();
+				enqueueSnackbar("Email has been sent", {
+					variant: "success",
+				});
+			},
+			onError: (err: any) => {
+				enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
+					variant: "error",
+				});
+			},
+		});
+	};
 
 	return (
 		<DialogModal
@@ -63,7 +99,18 @@ const DialogRescheduleEmail = ({
 								placeholder="Alamat email"
 								className="w-full"
 							/>
-							<Button>Kirim Email Konfirmasi</Button>
+							<Button
+								disabled={isPending}
+								onClick={() => {
+									methods.trigger().then((valid) => {
+										if (valid) {
+											onSubmit();
+										}
+									});
+								}}
+							>
+								Kirim Email Konfirmasi
+							</Button>
 						</div>
 					</FormProvider>
 				</div>

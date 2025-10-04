@@ -95,6 +95,7 @@ const DialogFeedback = ({
 				onSuccess: () => {
 					methods.reset();
 					onClose();
+					refetch();
 					enqueueSnackbar("Feedback updated", { variant: "success" });
 				},
 				onError: (err: any) => {
@@ -108,6 +109,7 @@ const DialogFeedback = ({
 				onSuccess: () => {
 					methods.reset();
 					onClose();
+					refetch();
 					enqueueSnackbar("Feedback created", { variant: "success" });
 				},
 				onError: (err: any) => {

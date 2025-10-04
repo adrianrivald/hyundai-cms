@@ -28,7 +28,11 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 	const { data: dataDetail, refetch } = useGetTourDetails(data?.id);
 	const [openVip, setOpenVip] = useState(false);
 	const tableState = useTableState({});
-	const [openEmail, setOpenEmail] = useState({ isOpen: false, email: "" });
+	const [openEmail, setOpenEmail] = useState({
+		isOpen: false,
+		email: "",
+		id: "",
+	});
 	const methods = useForm({
 		defaultValues: {
 			search: "",
@@ -106,6 +110,7 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 									setOpenEmail({
 										isOpen: true,
 										email: dataDetail?.leader?.email || "",
+										id: String(dataDetail?.id) || "",
 									})
 								}
 							>
@@ -195,9 +200,11 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 					<DialogRescheduleEmail
 						open={openEmail.isOpen}
 						onClose={() => {
-							setOpenEmail({ isOpen: false, email: "" });
+							setOpenEmail({ isOpen: false, email: "", id: "" });
 						}}
+						id={openEmail.id}
 						email={openEmail.email}
+						refetch={refetch}
 					/>
 
 					<DialogAddVip
