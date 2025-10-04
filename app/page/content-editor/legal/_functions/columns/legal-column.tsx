@@ -8,13 +8,10 @@ import { useState } from "react";
 import DialogLegal from "../components/dialog-legal";
 import type { LegalContentType } from "../models/legal";
 import {
-	useDeleteGlobalVariable,
 	useGetGlobalVariables,
 	usePutGlobalVariable,
 } from "@/api/global-variable";
 import DialogDelete from "@/components/custom/dialog/dialog-delete";
-import DialogContact from "@/page/content-editor/contact/_functions/components/dialog-contact";
-import type { ContactType } from "@/page/content-editor/contact/_functions/models/contact";
 import { enqueueSnackbar } from "notistack";
 import type { GlobalVariableTypes } from "@/types/GlobalVariableTypes";
 import DialogDetailContent from "@/components/custom/dialog/dialog-detail";

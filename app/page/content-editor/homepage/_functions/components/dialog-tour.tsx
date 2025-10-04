@@ -42,6 +42,7 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 			// min_occupy: null,
 			// max_occupy: null,
 		},
+		mode: "onChange",
 		resolver: yupResolver(TourSchema),
 	});
 
@@ -234,6 +235,13 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 											</Grid>
 										);
 									})}
+									<Grid item xs={12}>
+										{methods.formState?.errors && (
+											<Typography className="text-sm text-red-500">
+												{methods.formState?.errors?.factory_id?.message || ""}
+											</Typography>
+										)}
+									</Grid>
 								</Grid>
 							</Grid>
 
@@ -310,6 +318,14 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 													</Grid>
 												);
 											})}
+
+										<Grid item xs={12}>
+											{methods.formState?.errors && (
+												<Typography className="text-sm text-red-500">
+													{methods.formState?.errors?.route_id?.message || ""}
+												</Typography>
+											)}
+										</Grid>
 									</Grid>
 								</Grid>
 							)}
@@ -320,6 +336,14 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 									name="min_occupy"
 									label="Enter the minimum number of participants"
 									placeholder="Enter the minimum number of participants"
+									onChange={(e) => {
+										if (e?.target?.value?.length <= 4) {
+											methods.setValue(
+												"min_occupy",
+												Number(e?.target?.value || "")
+											);
+										}
+									}}
 								/>
 							</Grid>
 							<Grid item xs={6}>
@@ -328,6 +352,14 @@ const DialogTour = ({ onClose, open, data, refetch }: DialogTourProps) => {
 									name="max_occupy"
 									label="Enter the maximum number of participants"
 									placeholder="Enter the maximum number of participants"
+									onChange={(e) => {
+										if (e?.target?.value?.length <= 4) {
+											methods.setValue(
+												"max_occupy",
+												Number(e?.target?.value || "")
+											);
+										}
+									}}
 								/>
 							</Grid>
 

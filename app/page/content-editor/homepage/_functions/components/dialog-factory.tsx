@@ -88,7 +88,7 @@ const DialogFactory = ({
 				onSuccess: () => {
 					methods.clearErrors();
 					methods.setValue("step", "reg_route");
-					//refetch && refetch();
+					refetch && refetch();
 					enqueueSnackbar("Data has been changed", {
 						variant: "success",
 					});
@@ -105,7 +105,7 @@ const DialogFactory = ({
 					methods.clearErrors();
 					methods.setValue("step", "reg_route");
 					methods.setValue("id", data?.data?.id);
-					//refetch && refetch();
+					refetch && refetch();
 					enqueueSnackbar("Data has been added", {
 						variant: "success",
 					});
@@ -294,28 +294,29 @@ const DialogFactory = ({
 												<Typography className="text-lg font-bold ">
 													Route {index + 1}
 												</Typography>
-												{item.id && (
-													<div
-														className={cn(
-															`cursor-pointer`,
-															isDisabled ? "hidden" : "block"
-														)}
-														onClick={() => {
-															if (isDisabled) return;
-															setDeleteRoute({
-																isOpen: true,
-																id: item.id || "",
-															});
-														}}
-													>
-														<Icon
-															icon="mage:trash"
-															width="22"
-															height="22"
-															color={"#FF3B30"}
-														/>
-													</div>
-												)}
+												{(item.id || !isDisabled) &&
+													(methodRoutes.watch("route") || [])?.length > 1 && (
+														<div
+															className={cn(
+																`cursor-pointer`,
+																isDisabled ? "hidden" : "block"
+															)}
+															onClick={() => {
+																if (isDisabled) return;
+																setDeleteRoute({
+																	isOpen: true,
+																	id: item.id || "",
+																});
+															}}
+														>
+															<Icon
+																icon="mage:trash"
+																width="22"
+																height="22"
+																color={"#FF3B30"}
+															/>
+														</div>
+													)}
 											</Grid>
 											<Grid item xs={12}>
 												<RHFUploadFile
