@@ -9,7 +9,7 @@ import {
 } from "react";
 import { useFormContext } from "react-hook-form";
 
-interface RHFTextFieldProps extends InputHTMLAttributes<HTMLDivElement> {
+interface RHFTextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 	name: string;
 	required?: boolean;
 	label?: string;

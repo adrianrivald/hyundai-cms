@@ -3,67 +3,59 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import type { ColumnDef, Row, Table } from "@tanstack/react-table";
 import { useState } from "react";
-import DialogFactory from "../components/dialog-factory";
-import { useDeleteFactory, type FactoryType } from "@/api/factory";
 import DialogDelete from "@/components/custom/dialog/dialog-delete";
 import { enqueueSnackbar } from "notistack";
-import { Typography } from "@/components/typography";
+import { format, isValid } from "date-fns";
+import DialogFeedback from "../components/dialog-feedback";
+import { useDeleteFeedback } from "@/api/feedback";
 
-export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
-	{
-		accessorKey: "image_path",
-		header: "Title",
-		cell: ({ row }) => (
-			<CellText className="text-left">
-				<img
-					src={row?.original?.image_path || "-"}
-					className="h-[30px] w-[85px] object-cover"
-				/>
-			</CellText>
-		),
-		meta: {
-			cellProps: {
-				style: {
-					minWidth: 120,
-					maxWidth: 125,
-				},
-			},
-		},
-	},
+export type FeedbackColumnType = {
+	name: string;
+	uri: string;
+	is_publish: number;
+	published_at: string;
+	id: number;
+};
+
+export const dataFeedbackColumn: ColumnDef<FeedbackColumnType>[] = [
 	{
 		accessorKey: "name",
-		header: "Factory name",
+		header: "Name",
 		cell: ({ row }) => <CellText className="">{row.original?.name}</CellText>,
 		meta: {
 			cellProps: {
 				style: {
-					minWidth: 170,
-					maxWidth: 175,
+					minWidth: 200,
+					maxWidth: 205,
 				},
 			},
 		},
 	},
 	{
-		accessorKey: "description",
-		header: "Description",
+		accessorKey: "published_at",
+		header: "Publish Date",
 		cell: ({ row }) => (
-			<CellText className="text-left">
-				{row?.original?.description || "-"}
+			<CellText>
+				{row?.original?.published_at &&
+				isValid(new Date(row.original?.published_at))
+					? format(row.original?.published_at, "dd/MM/yyyy")
+					: "-"}
 			</CellText>
 		),
 		meta: {
 			cellProps: {
 				style: {
-					minWidth: 170,
-					maxWidth: 175,
+					minWidth: 200,
+					maxWidth: 205,
 				},
 			},
 		},
 	},
+
 	{
 		accessorKey: "completed",
 		header: "Action",
-		cell: ({ row, table }) => <ActionCell row={row} table={table} />,
+		cell: ({ row, table }) => <ActionCell table={table} row={row} />,
 		meta: {
 			cellProps: {
 				style: {
@@ -77,18 +69,17 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 		accessorKey: "ACTION_BUTTON",
 		header: ({ table }) => {
 			const [open, setOpen] = useState(false);
+
 			return (
 				<>
 					<Button
-						onClick={() => {
-							setOpen(true);
-						}}
+						onClick={() => setOpen(true)}
 						className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 					>
 						Add
 					</Button>
-					<DialogFactory
+					<DialogFeedback
 						open={open}
 						onClose={() => setOpen(false)}
 						refetch={() => {
@@ -98,33 +89,12 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 				</>
 			);
 		},
-		cell: ({ row, table }) => {
-			const [open, setOpen] = useState(false);
-			return (
-				<div className="mt-5">
-					<Typography
-						className="text-blue-500 underline cursor-pointer"
-						onClick={() => {
-							setOpen(true);
-						}}
-					>
-						View Details
-					</Typography>
-					<DialogFactory
-						open={open}
-						onClose={() => setOpen(false)}
-						data={row.original}
-						isDisabled
-					/>
-				</div>
-			);
-		},
 
 		meta: {
 			headerCellProps: {
 				style: {
-					minWidth: 130,
-					maxWidth: 135,
+					minWidth: 90,
+					maxWidth: 95,
 				},
 			},
 		},
@@ -135,16 +105,16 @@ const ActionCell = ({
 	row,
 	table,
 }: {
-	row: Row<FactoryType>;
-	table: Table<FactoryType>;
+	row: Row<FeedbackColumnType>;
+	table: Table<FeedbackColumnType>;
 }) => {
 	const [openDelete, setOpenDelete] = useState(false);
 	const [openUpdate, setOpenUpdate] = useState(false);
-	const { mutate: mutateDelete } = useDeleteFactory();
+	const { mutate: mutateDelete } = useDeleteFeedback();
 
 	const onDelete = () => {
 		mutateDelete(
-			{ id: row.original.id || "" },
+			{ id: String(row.original.id) || "" },
 			{
 				onSuccess: () => {
 					setOpenDelete(false);
@@ -157,7 +127,6 @@ const ActionCell = ({
 					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
 						variant: "error",
 					});
-					table.resetPageIndex();
 				},
 			}
 		);
@@ -191,13 +160,13 @@ const ActionCell = ({
 					onDelete();
 				}}
 			/>
-			<DialogFactory
+			<DialogFeedback
 				open={openUpdate}
 				onClose={() => setOpenUpdate(false)}
+				id={row?.original?.id}
 				refetch={() => {
 					table.resetPageIndex();
 				}}
-				data={row.original}
 			/>
 		</div>
 	);

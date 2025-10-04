@@ -59,7 +59,7 @@ export const usePostFactory = (
 	options?: MutationObserverOptions<FactoryType, Error, FactoryType>
 ) => {
 	return useMutation<FactoryType, Error, FactoryType>({
-		mutationKey: ["banner-post"],
+		mutationKey: ["factory-post"],
 		mutationFn: async (data: FactoryType) => {
 			const response = await postFactory(data);
 			queryClient.removeQueries({
@@ -78,7 +78,7 @@ export const useDeleteFactory = (
 	options?: MutationObserverOptions<{ message: string }, Error, { id: string }>
 ) => {
 	return useMutation<{ message: string }, Error, { id: string }>({
-		mutationKey: ["factory-post"],
+		mutationKey: ["factory-delete"],
 		mutationFn: async ({ id }) => {
 			const response = await deleteFactory(id);
 			queryClient.removeQueries({

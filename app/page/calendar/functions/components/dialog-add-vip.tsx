@@ -49,7 +49,6 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 	});
 
 	useEffect(() => {
-		console.log("dataa", data);
 		if (open && data) {
 			methods.reset({
 				step: "info_dasar",
