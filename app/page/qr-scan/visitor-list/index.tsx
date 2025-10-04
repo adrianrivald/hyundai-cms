@@ -3,26 +3,34 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import StickyFooter from "@/components/layout/sticky-footer";
 import StickyHeader from "@/components/layout/sticky-header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useGetParticipantsByDate } from "@/api/qr-scan";
+import { format } from "date-fns";
 
 export default function VisitorList() {
+  const today = format(new Date(), "yyyy-MM-dd");
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
+  const [paginate, setPaginate] = useState(false);
 
-  const visitors = [
-    { name: "John Doe", phone: "+2837720608484" },
-    { name: "Maria Culhane", phone: "+4448546368358" },
-    { name: "Hanna Carder", phone: "+9791802725322" },
-    { name: "Corey Passaquindici Arcand", phone: "+6964558702330" },
-    { name: "Zaire Dokidis", phone: "+2715308209964" },
-    { name: "Leo Dokidis", phone: "+1648807600440" },
-    { name: "James Curtis", phone: "+7020413720762" },
-    { name: "Roger Westervelt", phone: "+6421123644977" },
-    { name: "Cooper Aminoff", phone: "+9666457988681" },
-    { name: "Kaiya Lipshutz", phone: "+8435151306125" },
-  ];
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
+  const { data } = useGetParticipantsByDate({
+    date: today,
+    search_query: debouncedSearch,
+    paginate,
+  });
+
+  const visitors = data?.data?.data ?? [];
 
   const filteredVisitors = visitors.filter((visitor) =>
-    visitor.name.toLowerCase().includes(searchQuery.toLowerCase())
+    visitor.name.toLowerCase().includes(debouncedSearch.toLowerCase())
   );
 
   return (
@@ -33,14 +41,11 @@ export default function VisitorList() {
           background: "linear-gradient(to bottom, #153263, #00102B)",
         }}
       >
-        {/* Sticky Header */}
         <StickyHeader />
 
-        {/* Scrollable Main Content */}
         <div className="flex-1 overflow-auto">
           <ScrollArea className="h-full">
             <div className="p-6 text-white space-y-6">
-              {/* Page Title */}
               <Typography className="text-xl font-bold text-center">
                 Daftar Visitor
               </Typography>
@@ -70,7 +75,6 @@ export default function VisitorList() {
                 <Typography className="text-sm">29 February 2024</Typography>
               </div>
 
-              {/* Visitor List Header */}
               <div className="bg-black rounded-t-lg px-4 py-3 mb-0">
                 <div className="grid grid-cols-2 gap-4">
                   <Typography className="text-sm font-bold">
@@ -82,7 +86,6 @@ export default function VisitorList() {
                 </div>
               </div>
 
-              {/* Visitor List */}
               <div className=" rounded-b-lg overflow-hidden">
                 {filteredVisitors.map((visitor, index) => (
                   <div
@@ -98,7 +101,7 @@ export default function VisitorList() {
                         {visitor.name}
                       </Typography>
                       <Typography className="text-sm">
-                        {visitor.phone}
+                        {visitor.phone_number}
                       </Typography>
                     </div>
                   </div>
@@ -108,7 +111,6 @@ export default function VisitorList() {
           </ScrollArea>
         </div>
 
-        {/* Sticky Footer */}
         <StickyFooter activeItem="Visitor List" />
       </div>
     </div>

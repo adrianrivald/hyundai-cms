@@ -3,8 +3,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import StickyFooter from "@/components/layout/sticky-footer";
 import StickyHeader from "@/components/layout/sticky-header";
+import { useGetCalendarDaily } from "@/api/qr-scan";
+import { format } from "date-fns";
 
 export default function QRScan() {
+  const today = format(new Date(), "yyyy-MM-dd");
+  const { data } = useGetCalendarDaily(today);
+
+  const attended = data?.data.total?.attended ?? 0;
+  const participants = data?.data.total?.participants ?? 0;
+
+  const percentage = participants === 0 ? 0 : (attended / participants) * 100;
+
   return (
     <div className="flex justify-center min-h-screen bg-black">
       <div
@@ -23,7 +33,9 @@ export default function QRScan() {
               {/* Date Section */}
               <div className="flex items-center gap-2 mb-4">
                 <Icon icon="mdi:calendar" width="20" height="20" />
-                <Typography className="text-sm">26/08/2024</Typography>
+                <Typography className="text-sm">
+                  {format(new Date(), "dd/MM/yyyy")}
+                </Typography>
               </div>
 
               {/* Check-in Status Card */}
@@ -34,9 +46,11 @@ export default function QRScan() {
                 </div>
                 <div className="flex justify-center items-baseline gap-2">
                   <Typography className="text-[80px] font-bold text-white">
-                    32
+                    {data?.data.total.attended}
                   </Typography>
-                  <Typography className="text-lg text-white/70">/38</Typography>
+                  <Typography className="text-lg text-white/70">
+                    /{data?.data.total.participants}
+                  </Typography>
                 </div>
               </div>
 
@@ -53,7 +67,7 @@ export default function QRScan() {
                       Nama Instansi
                     </Typography>
                     <Typography className="text-sm font-medium">
-                      SMK Adijaya Ciputat
+                      {data?.data?.events[0]?.holiday_name}
                     </Typography>
                   </div>
                   <div className="flex justify-between">
@@ -61,7 +75,7 @@ export default function QRScan() {
                       Asal
                     </Typography>
                     <Typography className="text-sm font-medium">
-                      Ciputat Tangerang
+                      {data?.data?.events[0]?.description}
                     </Typography>
                   </div>
                   <div className="flex justify-between">
@@ -69,7 +83,7 @@ export default function QRScan() {
                       Nama ketua group
                     </Typography>
                     <Typography className="text-sm font-medium">
-                      +6964558702330
+                      {/* TODO: Integrate leader name */}
                     </Typography>
                   </div>
                   <div className="flex justify-between">
@@ -77,7 +91,7 @@ export default function QRScan() {
                       Nomor ketua group
                     </Typography>
                     <Typography className="text-sm font-medium">
-                      081321245212
+                      {/* TODO: Integrate leader phone number */}
                     </Typography>
                   </div>
                 </div>
@@ -96,13 +110,17 @@ export default function QRScan() {
                     <Typography className="text-xs text-white/80 mb-2">
                       Jumlah Peserta Tour
                     </Typography>
-                    <Typography className="text-2xl font-bold">38</Typography>
+                    <Typography className="text-2xl font-bold">
+                      {data?.data.total?.participants}
+                    </Typography>
                   </div>
                   <div className="bg-[#00235E] rounded-lg p-4">
                     <Typography className="text-xs text-white/80 mb-2">
                       Presentage
                     </Typography>
-                    <Typography className="text-2xl font-bold">87%</Typography>
+                    <Typography className="text-2xl font-bold">
+                      {percentage}%
+                    </Typography>
                   </div>
                 </div>
               </div>
