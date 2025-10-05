@@ -41,8 +41,6 @@ export default function VisitorList() {
           background: "linear-gradient(to bottom, #153263, #00102B)",
         }}
       >
-        <StickyHeader />
-
         <div className="flex-1 overflow-auto">
           <ScrollArea className="h-full">
             <div className="p-6 text-white space-y-6">
@@ -72,7 +70,10 @@ export default function VisitorList() {
               {/* Date Display */}
               <div className="flex items-center gap-2">
                 <Icon icon="mdi:calendar" width="20" height="20" />
-                <Typography className="text-sm">29 February 2024</Typography>
+                <Typography className="text-sm">
+                  {" "}
+                  {format(new Date(), "dd/MM/yyyy")}
+                </Typography>
               </div>
 
               <div className="bg-black rounded-t-lg px-4 py-3 mb-0">

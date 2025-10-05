@@ -59,7 +59,7 @@ export default function Settings() {
                     type="text"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
-                    className="w-full bg-[#1E3A5F] text-white px-4 py-3 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full bg-white text-[#9A9A9A] px-4 py-3 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter phone number"
                   />
                 </div>
@@ -73,7 +73,7 @@ export default function Settings() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-[#1E3A5F] text-white px-4 py-3 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full bg-white text-[#9A9A9A] px-4 py-3 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter email address"
                   />
                 </div>

@@ -285,3 +285,14 @@ body {
   }
 }
 
+/* Hide default calendar icon in Chrome, Edge, Safari */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  display: none;
+}
+
+/* Optional: also hide the spin buttons in some browsers */
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button {
+  display: none;
+}
