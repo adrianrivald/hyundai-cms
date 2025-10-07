@@ -229,11 +229,11 @@ const ActionCell = ({
 					color="#153263"
 				/>
 			</div>
-			{row.original?.content && row.original?.title && (
+			{/* {row.original?.content && row.original?.title && (
 				<div className="cursor-pointer " onClick={() => setOpenDelete(true)}>
 					<Icon icon="mage:trash" width="24" height="24" color="#FF3B30" />
 				</div>
-			)}
+			)} */}
 
 			<DialogDelete
 				open={openDelete}

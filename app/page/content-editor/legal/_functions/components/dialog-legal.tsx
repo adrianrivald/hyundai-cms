@@ -17,7 +17,8 @@ import { useEffect, useState } from "react";
 import { QuillEditor } from "@/components/RHForm/RHFQuillEditor";
 import { Typography } from "@/components/typography";
 import { cn } from "@/lib/utils";
-import { type LegalContentType } from "../models/legal";
+import { LegalContentSchema, type LegalContentType } from "../models/legal";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface DialogSocialMediaProps {
 	open: boolean;
@@ -45,7 +46,7 @@ const DialogLegal = ({
 		},
 		shouldFocusError: false,
 		mode: "onChange",
-		//resolver: yupResolver(LegalContentSchema),
+		resolver: yupResolver(LegalContentSchema),
 	});
 
 	const { mutate: mutatePost, isPending: pendingPost } =
@@ -217,6 +218,10 @@ const DialogLegal = ({
 										methods.trigger().then((isValid) => {
 											if (isValid) {
 												onSubmit();
+											} else {
+												enqueueSnackbar("Please fill all required fields", {
+													variant: "error",
+												});
 											}
 										});
 									}}

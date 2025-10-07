@@ -49,7 +49,7 @@ const DialogAboutUs = ({
 		},
 		shouldFocusError: false,
 		mode: "onChange",
-		//resolver: yupResolver(LegalContentSchema),
+		resolver: yupResolver(LegalContentSchema),
 	});
 
 	const { mutate: mutatePost, isPending: pendingPost } =
@@ -221,6 +221,10 @@ const DialogAboutUs = ({
 										methods.trigger().then((isValid) => {
 											if (isValid) {
 												onSubmit();
+											} else {
+												enqueueSnackbar("Please fill all required fields", {
+													variant: "error",
+												});
 											}
 										});
 									}}

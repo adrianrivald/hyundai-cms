@@ -6,7 +6,6 @@ import DialogSocialMedia from "../components/dialog-social-media";
 import { useState } from "react";
 import type { SocialMediaGlobal } from "../models/social-media";
 import {
-	useDeleteGlobalVariable,
 	useGetGlobalVariables,
 	usePutGlobalVariable,
 } from "@/api/global-variable";
@@ -17,7 +16,7 @@ import { enqueueSnackbar } from "notistack";
 export const dataSocmedColumn: ColumnDef<SocialMediaGlobal>[] = [
 	{
 		accessorKey: "title",
-		header: "Judul",
+		header: "Title",
 		cell: ({ row }) => (
 			<CellText className="text-left">{row?.original?.title || "-"}</CellText>
 		),
@@ -32,7 +31,7 @@ export const dataSocmedColumn: ColumnDef<SocialMediaGlobal>[] = [
 	},
 	{
 		accessorKey: "social_media",
-		header: "Tipe Sosial Media",
+		header: "Social Media Type",
 		cell: ({ row }) => (
 			<CellText className="">{row.original?.social_media}</CellText>
 		),
@@ -47,7 +46,7 @@ export const dataSocmedColumn: ColumnDef<SocialMediaGlobal>[] = [
 	},
 	{
 		accessorKey: "profile",
-		header: "Sosial Media Link",
+		header: "Social Media Link",
 		cell: ({ row }) => (
 			<CellText className="">{row.original?.profile}</CellText>
 		),
@@ -62,7 +61,7 @@ export const dataSocmedColumn: ColumnDef<SocialMediaGlobal>[] = [
 	},
 	{
 		accessorKey: "completed",
-		header: "Aksi",
+		header: "Action",
 		cell: ({ row, table }) => <ActionCell row={row} table={table} />,
 		meta: {
 			cellProps: {
@@ -84,7 +83,7 @@ export const dataSocmedColumn: ColumnDef<SocialMediaGlobal>[] = [
 						className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 					>
-						Tambah
+						Add
 					</Button>
 					<DialogSocialMedia
 						open={open}
