@@ -6,7 +6,6 @@ import DialogSocialMedia from "../components/dialog-social-media";
 import { useState } from "react";
 import type { SocialMediaGlobal } from "../models/social-media";
 import {
-	useDeleteGlobalVariable,
 	useGetGlobalVariables,
 	usePutGlobalVariable,
 } from "@/api/global-variable";

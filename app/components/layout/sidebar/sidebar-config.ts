@@ -41,6 +41,13 @@ export const SIDEBAR_MENU = () => {
 			authorized: ["Super", "PIC", "CMS"],
 		},
 		{
+			id: "2",
+			title: "Feedback",
+			url: "/feedback",
+			items: [],
+			authorized: ["Super", "PIC", "CMS"],
+		},
+		{
 			id: "4",
 			title: "Content Editor",
 			url: "/content-editor",
