@@ -55,7 +55,32 @@ const DialogContact = ({
 		return cleaned.replace(/(\d{3})(?=\d)/g, "$1 ");
 	};
 
+	const isValid = () => {
+		const form = methods.watch();
+		const firstContact = form.contact?.[0];
+
+		if (!firstContact) return false;
+
+		if (!firstContact.email) {
+			methods.setError(`contact.0.email`, { message: "Email is required" });
+		} else {
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+			if (!emailRegex.test(firstContact.email)) {
+				methods.setError(`contact.0.email`, { message: "Email must be valid" });
+			}
+		}
+
+		if (!firstContact.phone) {
+			methods.setError(`contact.0.phone`, {
+				message: "Phone number is required",
+			});
+		}
+
+		return Object.keys(methods.formState.errors).length === 0;
+	};
+
 	const onSubmit = () => {
+		if (!isValid()) return;
 		const form = methods.watch();
 
 		const formattedContacts = form.contact.map((c: any) => ({
@@ -146,10 +171,11 @@ const DialogContact = ({
 									disabled={isEditMode}
 									name="contact.0.phone"
 									label="Phone Number 1"
-									placeholder="Input Phone Number"
+									placeholder={isEditMode ? "" : "Input Phone Number"}
 									autoFocus={false}
-									//required={!isEditMode}
+									required={!isEditMode}
 									type="number"
+									className="disabled:opacity-100 disabled:bg-white"
 								/>
 							</Grid>
 							<Grid item xs={4}>
@@ -157,10 +183,11 @@ const DialogContact = ({
 									disabled={isEditMode}
 									name="contact.1.phone"
 									label="Phone Number 2"
-									placeholder="Input Phone Number"
+									placeholder={isEditMode ? "" : "Input Phone Number"}
 									autoFocus={false}
 									//required={!isEditMode}
 									type="number"
+									className="disabled:opacity-100 disabled:bg-white"
 								/>
 							</Grid>
 							<Grid item xs={4}>
@@ -168,10 +195,11 @@ const DialogContact = ({
 									disabled={isEditMode}
 									name="contact.2.phone"
 									label="Phone Number 3"
-									placeholder="Input Phone Number"
+									placeholder={isEditMode ? "" : "Input Phone Number"}
 									autoFocus={false}
 									//required={!isEditMode}
 									type="number"
+									className="disabled:opacity-100 disabled:bg-white"
 								/>
 							</Grid>
 							<Grid item xs={4}>
@@ -179,10 +207,11 @@ const DialogContact = ({
 									disabled={isEditMode}
 									name="contact.0.email"
 									label="Email Address 1"
-									placeholder="Input Email Address"
+									placeholder={isEditMode ? "" : "Input Email Address"}
 									autoFocus={false}
-									//required={!isEditMode}
+									required={!isEditMode}
 									type="email"
+									className="disabled:opacity-100 disabled:bg-white"
 								/>
 							</Grid>
 							<Grid item xs={4}>
@@ -190,10 +219,11 @@ const DialogContact = ({
 									disabled={isEditMode}
 									name="contact.1.email"
 									label="Email Address 2"
-									placeholder="Input Email Address"
+									placeholder={isEditMode ? "" : "Input Email Address"}
 									autoFocus={false}
 									//required={!isEditMode}
 									type="email"
+									className="disabled:opacity-100 disabled:bg-white"
 								/>
 							</Grid>
 							<Grid item xs={4}>
@@ -201,10 +231,11 @@ const DialogContact = ({
 									disabled={isEditMode}
 									name="contact.2.email"
 									label="Email Address 3"
-									placeholder="Input Email Address"
+									placeholder={isEditMode ? "" : "Input Email Address"}
 									autoFocus={false}
 									//required={!isEditMode}
 									type="email"
+									className="disabled:opacity-100 disabled:bg-white"
 								/>
 							</Grid>
 
@@ -216,6 +247,7 @@ const DialogContact = ({
 									placeholder="Input Address"
 									autoFocus={false}
 									required={!isEditMode}
+									className="disabled:opacity-100 disabled:bg-white"
 								/>
 							</Grid>
 
@@ -224,11 +256,11 @@ const DialogContact = ({
 									disabled={isEditMode}
 									loading={pendingEdit || pendingPost}
 									onClick={() => {
-										methods.trigger().then((isValid) => {
-											if (isValid) {
-												onSubmit();
-											}
-										});
+										// methods.trigger().then((isValid) => {
+										// 	if (isValid) {
+										onSubmit();
+										//}
+										//});
 									}}
 								>
 									{data?.id ? "Edit" : "Save"}

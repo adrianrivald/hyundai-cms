@@ -103,7 +103,7 @@ export const SIDEBAR_MENU = () => {
 				},
 				{
 					id: "6",
-					title: "Setting Kunjungan",
+					title: "Visit Setting",
 					url: "/content-editor/setting-visit",
 					items: [],
 					authorized: ["Super", "CMS"],
