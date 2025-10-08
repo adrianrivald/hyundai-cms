@@ -108,13 +108,15 @@ export const dataTopMenuList: ColumnDef<TopMenuTypePost>[] = [
 	},
 	{
 		accessorKey: "ACTION_BUTTON",
-		header: () => {
+		header: ({ table }) => {
 			const navigate = useNavigate();
+			console.log("taaa", table.getRowCount());
 			return (
 				<Button
 					onClick={() => {
 						navigate("/content-editor/top-menu/create");
 					}}
+					//disabled={table.getRowCount() >= 2}
 					className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 					startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
 				>

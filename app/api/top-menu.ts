@@ -45,7 +45,7 @@ export async function getTopMenus(
 }
 
 export async function deleteTopMenu(id: string): Promise<{ message: string }> {
-	return await apiConfig.delete(`admin/faqs/${id}`);
+	return await apiConfig.delete(`admin/top-menus/${id}`);
 }
 
 export const usePostTopMenu = (
