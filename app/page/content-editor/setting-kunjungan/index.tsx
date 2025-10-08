@@ -2,6 +2,7 @@ import { useGetBatches, usePostBatches } from "@/api/batch";
 import FormProvider from "@/components/RHForm/FormProvider";
 import RHFTimePicker from "@/components/RHForm/RHFTimePicker";
 import Container from "@/components/container";
+import { Grid } from "@/components/grid";
 import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -132,36 +133,43 @@ const SettingVisitPage = () => {
 						<div key={index} className="mb-5">
 							<Typography className="font-bold">Batch {index + 1}</Typography>
 							<div className="mt-2 w-[400px] flex flex-row gap-5 items-center">
-								<RHFTimePicker
-									name={`batches.${index}.start_time`}
-									label="Start Time"
-									required
-									interval={60}
-									minTime="08:00"
-									maxTime="18:00"
-									placeholder="Pick a time"
-									className="w-full"
-									format="HH:mm"
-									disabledTimes={disabledTimes} // ⬅️ block already used times
-								/>
-								<RHFTimePicker
-									name={`batches.${index}.end_time`}
-									label="End Time"
-									required
-									disabled={!methods.watch(`batches.${index}.start_time`)}
-									interval={60}
-									minTime={
-										methods.watch(`batches.${index}.start_time`) || "09:00"
-									}
-									maxTime="17:00"
-									placeholder="Pick a time"
-									className="w-full"
-									format="HH:mm"
-									disabledTimes={[
-										...getDisabledTimes(batches, index),
-										methods.watch(`batches.${index}.start_time`), // ⬅️ block same as start
-									]}
-								/>
+								<Grid container spacing={4} className="w-[400px]">
+									<Grid item xs={6}>
+										<RHFTimePicker
+											name={`batches.${index}.start_time`}
+											label="Start Time"
+											required
+											interval={60}
+											minTime="08:00"
+											maxTime="17:00"
+											placeholder="Pick a time"
+											className="w-full"
+											format="HH:mm"
+											disabledTimes={disabledTimes} // ⬅️ block already used times
+										/>
+									</Grid>
+									<Grid item xs={6}>
+										<RHFTimePicker
+											name={`batches.${index}.end_time`}
+											label="End Time"
+											required
+											disabled={!methods.watch(`batches.${index}.start_time`)}
+											interval={60}
+											minTime={
+												methods.watch(`batches.${index}.start_time`) || "09:00"
+											}
+											maxTime="18:00"
+											placeholder="Pick a time"
+											className="w-full"
+											format="HH:mm"
+											disabledTimes={[
+												...getDisabledTimes(batches, index),
+												methods.watch(`batches.${index}.start_time`), // ⬅️ block same as start
+											]}
+										/>
+									</Grid>
+								</Grid>
+
 								{batches.length > 1 && (
 									<div
 										className="cursor-pointer"

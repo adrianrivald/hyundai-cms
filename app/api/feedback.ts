@@ -174,3 +174,108 @@ export const useGetFeedback = (
 		...options,
 	});
 };
+
+export type FeedbackListTypes = {
+	id: number;
+	tour_name: string;
+	participant_name: string;
+	is_publish: number;
+	created_at: string;
+	updated_at: string;
+};
+
+export type FeedbackDetailTypes = {
+	id: number;
+	tour_name: string;
+	participant_name: string;
+	is_publish: number;
+	response: {
+		id: number;
+		form_type: string;
+		id_question: number;
+		question_id: string;
+		question_en: string;
+		answer_id: string;
+		answer_en: string;
+		value: null;
+		created_at: string;
+		updated_at: string;
+	}[];
+	created_at: string;
+	updated_at: string;
+};
+
+export async function getFeedbackReviewList(
+	search_query?: string,
+	page?: number
+): Promise<{ data: FeedbackDetailTypes[]; meta: Meta }> {
+	const response = await apiConfig.get(
+		`admin/feedbacks?search_query=${search_query}&page=${page}`
+	);
+	return response.data;
+}
+
+export async function getFeedbackReviewDetail(
+	id: string
+): Promise<FeedbackDetailTypes> {
+	const response = await apiConfig.get(`admin/feedbacks/${id}`);
+	return response.data.data;
+}
+
+export async function getFeedbackReviewPublish(
+	id: string
+): Promise<FeedbackDetailTypes> {
+	const response = await apiConfig.get(`admin/feedbacks/${id}/publish`);
+	return response.data;
+}
+
+export const useGetFeedbackReviewList = (
+	search_query: string,
+	page?: number,
+	options?: QueryObserverOptions<{ data: FeedbackListTypes[]; meta: Meta }>
+) => {
+	return useQuery<{ data: FeedbackListTypes[]; meta: Meta }>({
+		queryKey: ["feedbacks-review-get-all", search_query, page],
+		queryFn: async () => {
+			const response = await getFeedbackReviewList(search_query, page);
+			return response;
+		},
+		placeholderData: (prev) => prev,
+		...options,
+	});
+};
+
+export const useGetFeedbackReviewDetail = (
+	id: string,
+	options?: QueryObserverOptions<FeedbackDetailTypes>
+) => {
+	return useQuery<FeedbackDetailTypes>({
+		queryKey: ["feedbacks-review-get", id],
+		queryFn: async () => {
+			const response = await getFeedbackReviewDetail(id);
+			return response;
+		},
+		placeholderData: (prev) => prev,
+		...options,
+	});
+};
+
+export const useGetFeedbackReviewPublish = (
+	id: string,
+	options?: QueryObserverOptions<FeedbackDetailTypes>
+) => {
+	return useQuery<FeedbackDetailTypes>({
+		queryKey: ["feedbacks-review-publish", id],
+		queryFn: async () => {
+			const response = await getFeedbackReviewPublish(id);
+			queryClient.removeQueries({
+				predicate: (query) =>
+					typeof query.queryKey[0] === "string" &&
+					query.queryKey[0].startsWith("feedbacks-"),
+			});
+			return response;
+		},
+		placeholderData: (prev) => prev,
+		...options,
+	});
+};

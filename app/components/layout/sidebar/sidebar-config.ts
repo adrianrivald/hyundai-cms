@@ -41,6 +41,13 @@ export const SIDEBAR_MENU = () => {
 			authorized: ["Super", "PIC", "CMS"],
 		},
 		{
+			id: "2",
+			title: "Feedback",
+			url: "/feedback",
+			items: [],
+			authorized: ["Super", "PIC", "CMS"],
+		},
+		{
 			id: "4",
 			title: "Content Editor",
 			url: "/content-editor",
@@ -103,7 +110,7 @@ export const SIDEBAR_MENU = () => {
 				},
 				{
 					id: "6",
-					title: "Setting Kunjungan",
+					title: "Visit Setting",
 					url: "/content-editor/setting-visit",
 					items: [],
 					authorized: ["Super", "CMS"],

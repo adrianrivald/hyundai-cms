@@ -89,7 +89,7 @@ const Form = () => {
 				<DynamicBreadcrumb
 					items={[
 						{ label: "Home", href: "/" },
-						{ label: "Top Menu", href: "/content-editor/article" },
+						{ label: "Top Menu", href: "/content-editor/top-menu" },
 						{ label: id ? "Edit Top Menu" : "Add Top Menu" },
 					]}
 				/>
@@ -133,7 +133,7 @@ const Form = () => {
 								label="Title"
 								placeholder="Input title"
 								required
-								maxLength={200}
+								maxLength={30}
 							/>
 						</Grid>
 					</Grid>

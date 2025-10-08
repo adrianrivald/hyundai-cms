@@ -9,8 +9,6 @@ import { useState } from "react";
 import type { ContactType } from "../models/contact";
 import { useDeleteGlobalVariable } from "@/api/global-variable";
 import DialogDelete from "@/components/custom/dialog/dialog-delete";
-import DialogYoutube from "@/page/content-editor/homepage/_functions/components/dialog-youtube";
-import type { GlobalVariableTypes } from "@/types/GlobalVariableTypes";
 import { enqueueSnackbar } from "notistack";
 
 export const dataContactColumn: ColumnDef<ContactType>[] = [
@@ -188,9 +186,9 @@ const ActionCell = ({
 					color="#153263"
 				/>
 			</div>
-			<div className="cursor-pointer" onClick={() => setOpenDelete(true)}>
+			{/* <div className="cursor-pointer" onClick={() => setOpenDelete(true)}>
 				<Icon icon="mage:trash" width="24" height="24" color="#FF3B30" />
-			</div>
+			</div> */}
 
 			<DialogDelete
 				open={openDelete}
