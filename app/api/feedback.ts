@@ -219,7 +219,7 @@ export async function getFeedbackReviewDetail(
 	id: string
 ): Promise<FeedbackDetailTypes> {
 	const response = await apiConfig.get(`admin/feedbacks/${id}`);
-	return response.data;
+	return response.data.data;
 }
 
 export async function getFeedbackReviewPublish(

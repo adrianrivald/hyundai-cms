@@ -56,14 +56,14 @@ const DialogFeedback = ({
 		queryKey: ["feedback-get", id],
 	});
 
-	const onSubmit = () => {
+	const onSubmit = (is_publish: boolean) => {
 		const form = methods.getValues();
 
 		const data: FeedbackTypePost = {
 			id: form.id ? Number(form.id) : undefined,
 			name: form.name,
 			description: form.description,
-			is_publish: "true",
+			is_publish: String(is_publish),
 			questions: (form.questions || []).map((q: any) => {
 				const base = {
 					...(q.id ? { id: Number(q.id) } : {}),
@@ -520,14 +520,30 @@ const DialogFeedback = ({
 								</div>
 							</Grid>
 							<Grid item xs={12} className="">
-								<div className="flex flex-row justify-end">
+								<div className="flex flex-row justify-end gap-3">
+									{id && (
+										<Button
+											disabled={pendingEdit || pendingPost}
+											className="w-[80px] bg-amber-500 hover:bg-amber-400 cursor-pointer"
+											onClick={() => {
+												methods.trigger().then((valid) => {
+													if (valid) {
+														onSubmit(true);
+													}
+												});
+											}}
+										>
+											Publish
+										</Button>
+									)}
+
 									<Button
 										disabled={pendingEdit || pendingPost}
-										className="w-[80px]"
+										className="w-[80px] cursor-pointer"
 										onClick={() => {
 											methods.trigger().then((valid) => {
 												if (valid) {
-													onSubmit();
+													onSubmit(dataFeedback?.is_publish === 1);
 												}
 											});
 										}}
