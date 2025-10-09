@@ -124,7 +124,7 @@ export const SIDEBAR_MENU = () => {
 				},
 				{
 					id: "6",
-					title: "Feedback",
+					title: "Form Creator",
 					url: "/content-editor/feedback",
 					items: [],
 					authorized: ["Super", "CMS"],

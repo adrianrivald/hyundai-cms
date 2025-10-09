@@ -1,15 +1,20 @@
 import {
 	useGetFeedbackReviewDetail,
 	useGetFeedbackReviewPublish,
+	usePostImageFeedbackPublish,
 } from "@/api/feedback";
+import FormProvider from "@/components/RHForm/FormProvider";
+import RHFUploadFile from "@/components/RHForm/RHFUploadFile";
 import DialogModal from "@/components/custom/dialog/dialog-modal";
 import DialogPublish from "@/components/custom/dialog/dialog-publish";
+import { Grid } from "@/components/grid";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import type { ClassValue } from "clsx";
 import { enqueueSnackbar } from "notistack";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 interface DialogDetailFeedbackProps {
 	open: boolean;
@@ -30,6 +35,15 @@ const DialogDetailFeedback = ({
 			queryKey: ["feedbacks-review-get", id],
 			enabled: !!id && open,
 		});
+	const { mutate, isPending } = usePostImageFeedbackPublish();
+
+	const methods = useForm({
+		defaultValues: {
+			image: "",
+		},
+		shouldFocusError: false,
+		mode: "onChange",
+	});
 
 	const { refetch: publish } = useGetFeedbackReviewPublish(String(id) || "", {
 		queryKey: ["feedbacks-review-publish", id],
@@ -114,6 +128,14 @@ const DialogDetailFeedback = ({
 		) || []
 	);
 
+	useEffect(() => {
+		if (dataDetail && open) {
+			methods.reset({
+				image: dataDetail?.image_path,
+			});
+		}
+	}, [dataDetail, open]);
+
 	return (
 		<DialogModal
 			open={open}
@@ -124,6 +146,13 @@ const DialogDetailFeedback = ({
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
 				<div>
+					<FormProvider methods={methods}>
+						<Grid container spacing={4}>
+							<Grid item xs={12}>
+								<RHFUploadFile name="image" slug="banner" required />
+							</Grid>
+						</Grid>
+					</FormProvider>
 					<TextFieldDisabled
 						title="Member Name"
 						value={dataDetail?.participant_name || "-"}
@@ -248,16 +277,30 @@ const DialogDetailFeedback = ({
 							setOpenPublish(false);
 						}}
 						onSubmit={() => {
-							publish().then(() => {
-								refetch();
-								refetchDetail();
-								setOpenPublish(false);
-								enqueueSnackbar({
-									variant: "success",
-									message: `Review berhasil ${dataDetail?.is_publish === 0 ? "diterbitkan" : "ditarik"} `,
-								});
-								onClose();
-							});
+							const data = methods.watch("image");
+							mutate(
+								{
+									id: String(id) || "",
+									image_path: data,
+									image: data?.split("/")?.pop() || "",
+									image_name: data?.split("/")?.pop() || "",
+								},
+								{
+									onSuccess: () => {
+										refetch();
+										refetchDetail();
+										setOpenPublish(false);
+										enqueueSnackbar({
+											variant: "success",
+											message: `Review berhasil ${dataDetail?.is_publish === 0 ? "diterbitkan" : "ditarik"} `,
+										});
+										onClose();
+									},
+								}
+							);
+							// publish().then(() => {
+
+							// });
 						}}
 					/>
 				</div>

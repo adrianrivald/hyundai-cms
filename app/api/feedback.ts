@@ -189,6 +189,8 @@ export type FeedbackDetailTypes = {
 	tour_name: string;
 	participant_name: string;
 	is_publish: number;
+	image_path: string;
+	image: string;
 	response: {
 		id: number;
 		form_type: string;
@@ -204,6 +206,19 @@ export type FeedbackDetailTypes = {
 	created_at: string;
 	updated_at: string;
 };
+
+export type FeedbackPostImageTypes = {
+	id: string;
+	image_path: string;
+	image_name: string;
+	image: string;
+};
+
+export async function postPublishFeedback(
+	data: FeedbackPostImageTypes
+): Promise<AxiosResponse<FeedbackPostImageTypes, AxiosError>> {
+	return await apiConfig.post(`admin/feedbacks/${data?.id}/publish`, data);
+}
 
 export async function getFeedbackReviewList(
 	search_query?: string,
@@ -276,6 +291,29 @@ export const useGetFeedbackReviewPublish = (
 			return response;
 		},
 		placeholderData: (prev) => prev,
+		...options,
+	});
+};
+
+export const usePostImageFeedbackPublish = (
+	options?: MutationObserverOptions<
+		FeedbackPostImageTypes,
+		Error,
+		FeedbackPostImageTypes
+	>
+) => {
+	return useMutation<FeedbackPostImageTypes, Error, FeedbackPostImageTypes>({
+		mutationKey: ["feedbacks-post-publish"],
+		mutationFn: async (data: FeedbackPostImageTypes) => {
+			const response = await postPublishFeedback(data);
+			queryClient.removeQueries({
+				predicate: (query) =>
+					typeof query.queryKey[0] === "string" &&
+					query.queryKey[0].startsWith("feedbacks-"),
+			});
+
+			return response.data;
+		},
 		...options,
 	});
 };
