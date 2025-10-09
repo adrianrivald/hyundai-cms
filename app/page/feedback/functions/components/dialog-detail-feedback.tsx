@@ -278,29 +278,33 @@ const DialogDetailFeedback = ({
 						}}
 						onSubmit={() => {
 							const data = methods.watch("image");
-							mutate(
-								{
-									id: String(id) || "",
-									image_path: data,
-									image: data?.split("/")?.pop() || "",
-									image_name: data?.split("/")?.pop() || "",
-								},
-								{
-									onSuccess: () => {
-										refetch();
-										refetchDetail();
-										setOpenPublish(false);
-										enqueueSnackbar({
-											variant: "success",
-											message: `Review berhasil ${dataDetail?.is_publish === 0 ? "diterbitkan" : "ditarik"} `,
-										});
-										onClose();
+							if (!data) {
+								enqueueSnackbar({
+									variant: "error",
+									message: `Image is required. Please upload an image.`,
+								});
+							} else {
+								mutate(
+									{
+										id: String(id) || "",
+										image_path: data,
+										image: data?.split("/")?.pop() || "",
+										image_name: data?.split("/")?.pop() || "",
 									},
-								}
-							);
-							// publish().then(() => {
-
-							// });
+									{
+										onSuccess: () => {
+											refetch();
+											refetchDetail();
+											setOpenPublish(false);
+											enqueueSnackbar({
+												variant: "success",
+												message: `Review berhasil ${dataDetail?.is_publish === 0 ? "diterbitkan" : "ditarik"} `,
+											});
+											onClose();
+										},
+									}
+								);
+							}
 						}}
 					/>
 				</div>
