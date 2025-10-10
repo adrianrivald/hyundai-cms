@@ -70,7 +70,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarHeader>
 			<SidebarContent className="bg-[#f4f8ff] sidebar">
 				<SidebarGroup
-					className={`z-[10] gap-0 h-[120vh] pt-8 ${(state === "expanded" || state === "collapsed") && "w-60"} bg-[#0D254D]`}
+					className={`z-[10] gap-0 h-[125vh] max-h-[140vh] pt-8 ${(state === "expanded" || state === "collapsed") && "w-60"} bg-[#0D254D]`}
 				>
 					<SidebarMenu>
 						{SIDEBAR_MENU().map((item: Items, index: number) => {
@@ -150,7 +150,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 								>
 									<SidebarMenuButton
 										className={cn(
-											" rounded-none px-4 h-10 group-data-[collapsible=icon]:!w-full  cursor-pointer ",
+											" rounded-none px-4 h-10 group-data-[collapsible=icon]:!w-full  cursor-pointer",
 											open && "justify-start"
 										)}
 										tooltip={item.title}

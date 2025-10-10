@@ -1,6 +1,5 @@
 import {
 	useGetFeedbackReviewDetail,
-	useGetFeedbackReviewPublish,
 	usePostImageFeedbackPublish,
 } from "@/api/feedback";
 import FormProvider from "@/components/RHForm/FormProvider";
@@ -23,6 +22,14 @@ interface DialogDetailFeedbackProps {
 	refetch: () => void;
 }
 
+function splitImageUrl(url: string) {
+	const parts = url.split("/");
+	const image = parts.pop() as string; // filename (last part)
+	const image_path = parts.join("/"); // the rest
+
+	return { image_path, image };
+}
+
 const DialogDetailFeedback = ({
 	open,
 	onClose,
@@ -35,7 +42,7 @@ const DialogDetailFeedback = ({
 			queryKey: ["feedbacks-review-get", id],
 			enabled: !!id && open,
 		});
-	const { mutate, isPending } = usePostImageFeedbackPublish();
+	const { mutate } = usePostImageFeedbackPublish();
 
 	const methods = useForm({
 		defaultValues: {
@@ -43,11 +50,6 @@ const DialogDetailFeedback = ({
 		},
 		shouldFocusError: false,
 		mode: "onChange",
-	});
-
-	const { refetch: publish } = useGetFeedbackReviewPublish(String(id) || "", {
-		queryKey: ["feedbacks-review-publish", id],
-		enabled: false,
 	});
 
 	const TextFieldDisabled = ({
@@ -131,7 +133,7 @@ const DialogDetailFeedback = ({
 	useEffect(() => {
 		if (dataDetail && open) {
 			methods.reset({
-				image: dataDetail?.image_path,
+				image: dataDetail?.image_path + "/" + dataDetail?.image,
 			});
 		}
 	}, [dataDetail, open]);
@@ -278,18 +280,21 @@ const DialogDetailFeedback = ({
 						}}
 						onSubmit={() => {
 							const data = methods.watch("image");
+							let { image_path, image } = splitImageUrl(data);
+
 							if (!data) {
 								enqueueSnackbar({
 									variant: "error",
 									message: `Image is required. Please upload an image.`,
 								});
 							} else {
+								console.log("dataa");
 								mutate(
 									{
 										id: String(id) || "",
-										image_path: data,
-										image: data?.split("/")?.pop() || "",
-										image_name: data?.split("/")?.pop() || "",
+										image_path: image_path,
+										image: image,
+										image_name: image,
 									},
 									{
 										onSuccess: () => {
