@@ -1,3 +1,4 @@
+import { usePostDashboardTour, type DashboardTourType } from "@/api/dashboard";
 import FormProvider from "@/components/RHForm/FormProvider";
 import RHFDatePicker from "@/components/RHForm/RHFDatePicker";
 import Container from "@/components/container";
@@ -12,8 +13,11 @@ import {
 	ChartLegendContent,
 	ChartLegend,
 } from "@/components/ui/chart";
+import { useDebounce } from "@/hooks/use-debounce";
 import { cn } from "@/lib/utils";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { endOfMonth, format, startOfMonth } from "date-fns";
+import { useEffect, useMemo, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import {
@@ -23,10 +27,8 @@ import {
 	LineChart,
 	Legend,
 	YAxis,
-	Cell,
 	Pie,
 	PieChart,
-	Tooltip,
 	Bar,
 	BarChart,
 	LabelList,
@@ -43,6 +45,10 @@ const chartConfig = {
 	general_tour: {
 		label: "General Tour",
 		color: "#743F00",
+	},
+	vip_tour: {
+		label: "VIP Tour",
+		color: "#93BCFF",
 	},
 
 	general_reception: {
@@ -67,22 +73,63 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function DashboardPage() {
+	const [dataTour, setDataTour] = useState({} as DashboardTourType);
 	const methods = useForm({
 		defaultValues: {
-			start_date: "",
-			end_date: "",
+			start_date: startOfMonth(new Date()),
+			end_date: endOfMonth(new Date()),
 		},
 	});
 
-	const chartData = [
-		//{ date: "", student_tour: "", general_tour: "" },
-		{ date: "24 Sep 2024", student_tour: 186, general_tour: 184 },
-		{ date: "25 Sep 2024", student_tour: 305, general_tour: 150 },
-		{ date: "26 Sep 2024", student_tour: 237, general_tour: 120 },
-		{ date: "27 Sep 2024", student_tour: 73, general_tour: 110 },
-		{ date: "28 Sep 2024", student_tour: 209, general_tour: 194 },
-		{ date: "29 Sep 2024", student_tour: 214, general_tour: 104 },
-	];
+	const startDate = methods.watch("start_date");
+	const endDate = methods.watch("end_date");
+
+	const debounceStartDate = useDebounce(startDate, 500);
+	const debounceEndDate = useDebounce(endDate, 500);
+
+	const start_date = useMemo(() => {
+		if (!debounceStartDate) return "";
+		try {
+			return format(debounceStartDate, "yyyy-MM-dd");
+		} catch {
+			return "";
+		}
+	}, [debounceStartDate]);
+
+	const end_date = useMemo(() => {
+		if (!debounceEndDate) return "";
+		try {
+			return format(debounceEndDate, "yyyy-MM-dd");
+		} catch {
+			return "";
+		}
+	}, [debounceEndDate]);
+
+	const { mutate } = usePostDashboardTour();
+
+	useEffect(() => {
+		mutate(
+			{
+				start_date: start_date,
+				end_date: end_date,
+			},
+			{
+				onSuccess: (data) => {
+					setDataTour(data.data);
+				},
+			}
+		);
+	}, [end_date, start_date]);
+
+	const chartData =
+		dataTour?.registration_by_date && dataTour?.registration_by_date?.length > 0
+			? dataTour?.registration_by_date?.map((item) => ({
+					date: format(new Date(item.date), "dd MMM yyyy"),
+					vip: item.count.vip,
+					["general-course"]: item.count["general-course"],
+					["student-course"]: item.count["student-course"],
+				}))
+			: [];
 
 	const dataPie = [
 		{
@@ -95,14 +142,21 @@ export default function DashboardPage() {
 			value: 25,
 			fill: "var(--color-student-tour)",
 		},
+		{
+			name: "vip",
+			value: 10,
+			fill: "var(--color-press-shop)",
+		},
 	];
 
-	const dataBar = [
-		{ city: "Bekasi", total: 186 },
-		{ city: "Tambun", total: 305 },
-		{ city: "Cibitung", total: 237 },
-		{ city: "Cikarang", total: 214 },
-	];
+	//const dataPie = dataTour && dataTour?.tour_by_package_type?.
+
+	const dataBar = dataTour?.tour_by_city
+		? Object.entries(dataTour?.tour_by_city).map(([city, total]) => ({
+				city,
+				total,
+			}))
+		: [];
 
 	const baseHeight = 300; // for 4 items
 	const extraHeightPerBar = 50;
@@ -207,7 +261,7 @@ export default function DashboardPage() {
 									content={<ChartTooltipContent hideLabel />}
 								/>
 								<Line
-									dataKey="student_tour"
+									dataKey="student-course"
 									type="natural"
 									stroke="var(--color-student-tour)"
 									strokeWidth={2}
@@ -215,12 +269,20 @@ export default function DashboardPage() {
 									name={chartConfig.student_tour.label}
 								/>
 								<Line
-									dataKey="general_tour"
+									dataKey="general-course"
 									type="natural"
 									stroke="var(--color-general-tour)"
 									strokeWidth={2}
 									dot={true}
 									name={chartConfig.general_tour.label}
+								/>
+								<Line
+									dataKey="vip"
+									type="natural"
+									stroke="var(--color-press-shop)"
+									strokeWidth={2}
+									dot={true}
+									name={chartConfig.vip_tour.label}
 								/>
 								<Legend
 									margin={{ top: 20 }}
@@ -282,13 +344,13 @@ export default function DashboardPage() {
 								<div className="flex-1">
 									<Typography className="text-[#8E8E93]">Laki Laki</Typography>
 									<Typography className="font-medium text-[18px]">
-										2,690
+										{dataTour?.gender?.male || 0}
 									</Typography>
 								</div>
 								<div className="flex-1">
 									<Typography className="text-[#8E8E93]">Perempuan</Typography>
 									<Typography className="font-medium text-[18px]">
-										1,780
+										{dataTour?.gender?.female || 0}
 									</Typography>
 								</div>
 							</div>
@@ -297,7 +359,7 @@ export default function DashboardPage() {
 
 					<Grid item xs={12} className="bg-white rounded-sm pt-5">
 						<Typography className="text-center mb-5 text-[18px] font-bold">
-							Kota Asal
+							Provinsi Asal
 						</Typography>
 						<ChartContainer
 							config={chartConfig}
