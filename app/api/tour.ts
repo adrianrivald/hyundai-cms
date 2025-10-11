@@ -60,6 +60,12 @@ export async function getTourDetails(id: string): Promise<TourDetailsType> {
 	return response.data.data;
 }
 
+export async function getProvinces(): Promise<{ data: string[] }> {
+	const response = await apiConfig.get(`public/provinces`);
+
+	return response.data;
+}
+
 export const useGetTourDetails = (
 	id: string,
 	options?: QueryObserverOptions<TourDetailsType>
@@ -68,6 +74,20 @@ export const useGetTourDetails = (
 		queryKey: ["tours-details", id],
 		queryFn: async () => {
 			const response = await getTourDetails(id);
+			return response;
+		},
+		placeholderData: (prev) => prev,
+		...options,
+	});
+};
+
+export const useGetProvinces = (
+	options?: QueryObserverOptions<{ data: string[] }>
+) => {
+	return useQuery<{ data: string[] }>({
+		queryKey: ["provinces-all"],
+		queryFn: async () => {
+			const response = await getProvinces();
 			return response;
 		},
 		placeholderData: (prev) => prev,

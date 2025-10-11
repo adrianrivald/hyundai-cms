@@ -56,7 +56,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 			slot: form.batch.join(","),
 			name: form.info_group.group_name,
 			purpose_of_visit: form?.info_group.purpose_visit,
-			city: form.info_group.city,
+			province: form.info_group.city,
 			vehicles: form.info_vehicle.map((item) => ({
 				vehicle_plate_number: item.vehicle_plat,
 				vehicle_type: item.vehicle_type,

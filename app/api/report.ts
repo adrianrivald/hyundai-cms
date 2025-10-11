@@ -1,7 +1,10 @@
 import apiConfig from "@/config/api";
-import type { Meta } from "@/lib/convertPagination";
-import { type QueryObserverOptions, useQuery } from "@tanstack/react-query";
-import { type ArticleType, getArticles } from "./article";
+import {
+	type QueryObserverOptions,
+	useQuery,
+	type MutationObserverOptions,
+	useMutation,
+} from "@tanstack/react-query";
 
 export type ReportVisitorType = {
 	current_page: number;
@@ -87,6 +90,36 @@ export async function getColumnsVisitor(): Promise<{
 	return response.data;
 }
 
+export async function getColumnsRegistration(): Promise<{
+	data: ColumnVisitorType[];
+}> {
+	const response = await apiConfig.get(`admin/report/register/columns`);
+
+	return response.data;
+}
+
+export async function postReportRegistrationExport(
+	start_date: string,
+	end_date: string,
+	columns: string[]
+): Promise<{ data: any }> {
+	const body: Record<string, any> = {
+		start_date,
+		end_date,
+		columns,
+	};
+
+	Object.keys(body).forEach((key) => {
+		if (body[key] === "" || body[key] === undefined || body[key] === null) {
+			delete body[key];
+		}
+	});
+
+	const response = await apiConfig.post(`admin/report/register/export`, body);
+
+	return response.data;
+}
+
 export async function getReportVisitorList(
 	start_date: string,
 	end_date: string,
@@ -156,6 +189,40 @@ export const useGetColumnVisitor = (
 			return response;
 		},
 		placeholderData: (prev) => prev,
+		...options,
+	});
+};
+
+export const useGetColumnRegistration = (
+	options?: QueryObserverOptions<{ data: ColumnVisitorType[] }>
+) => {
+	return useQuery<{ data: ColumnVisitorType[] }>({
+		queryKey: ["column-registration-all"],
+		queryFn: async () => {
+			const response = await getColumnsRegistration();
+			return response;
+		},
+		placeholderData: (prev) => prev,
+		...options,
+	});
+};
+
+export const usePostExportRegistration = (
+	options?: MutationObserverOptions<any, Error, any>
+) => {
+	return useMutation<any, Error, any>({
+		mutationKey: ["export-registration"],
+		mutationFn: async ({ start_date, end_date, columns }) => {
+			const response = await postReportRegistrationExport(
+				start_date,
+				end_date,
+				columns
+			);
+
+			console.log("dataa 12", response.data);
+
+			return response.data;
+		},
 		...options,
 	});
 };

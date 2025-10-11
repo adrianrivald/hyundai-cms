@@ -13,6 +13,7 @@ import { useGetCalendars } from "@/api/batch";
 import { format, isSameDay, isValid } from "date-fns";
 import { RHFFileUpload } from "@/components/RHForm/RHFUploadInput";
 import RHFSelectMultiple from "@/components/RHForm/RHFSelectMultiple";
+import { useGetProvinces } from "@/api/tour";
 
 interface BasicInformationProps {
 	methods: UseFormReturn<FormRegisterTour>;
@@ -20,6 +21,7 @@ interface BasicInformationProps {
 
 const BasicInformation = ({ methods }: BasicInformationProps) => {
 	const { data: dataTourPackages } = useGetTourPackages("");
+	const { data: provinces } = useGetProvinces();
 
 	const {
 		data: dataCalendar,
@@ -252,11 +254,16 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 							/>
 						</Grid>
 						<Grid item xs={6} md={3}>
-							<RHFTextField
+							<RHFSelect
 								name="info_group.city"
-								label="City"
-								placeholder="Input City"
-								autoFocus={false}
+								label="Province"
+								options={
+									provinces?.data?.map((item) => ({ id: item, name: item })) ||
+									[]
+								}
+								placeholder="Choose province"
+								getOptionLabel={(user) => user.name}
+								getOptionValue={(user) => String(user.id)}
 								required
 							/>
 						</Grid>

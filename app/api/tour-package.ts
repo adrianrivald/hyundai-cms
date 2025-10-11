@@ -51,7 +51,8 @@ export type TourRegisterType = {
 	slot: string;
 	name: string;
 	purpose_of_visit: string;
-	city: string;
+	// city: string;
+	province: string;
 	vehicles: {
 		vehicle_type: string;
 		vehicle_plate_number: string;

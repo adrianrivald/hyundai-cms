@@ -1,6 +1,4 @@
 import Container from "@/components/container";
-import { useReportVisitorList } from "./functions/hooks/use-report-visitor";
-import { DataTable } from "@/components/layout/table/data-table";
 import { Typography } from "@/components/typography";
 import { useForm } from "react-hook-form";
 import FormProvider from "@/components/RHForm/FormProvider";
@@ -11,9 +9,9 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { format } from "date-fns";
-import DialogDownloadExcelVisitor from "./functions/components/dialog-excel-download-visitor";
+import DialogDownloadExcelRegistration from "./functions/components/dialog-excel-download-registration";
 
-const ReportVisitorPage = () => {
+const RegistrationReportPage = () => {
 	const [open, setOpen] = useState(false);
 	const methods = useForm({
 		defaultValues: {
@@ -51,15 +49,15 @@ const ReportVisitorPage = () => {
 		}
 	}, [debouncedDateRange?.to]);
 
-	const { table, metadata, fetchVisitor } = useReportVisitorList(
-		start_date,
-		end_date,
-		debouncedSearch
-	);
+	// const { table, metadata, fetchVisitor } = useReportVisitorList(
+	// 	start_date,
+	// 	end_date,
+	// 	debouncedSearch
+	// );
 
-	useEffect(() => {
-		fetchVisitor?.();
-	}, [debouncedSearch, start_date, end_date, fetchVisitor]);
+	// useEffect(() => {
+	// 	fetchVisitor?.();
+	// }, [debouncedSearch, start_date, end_date, fetchVisitor]);
 
 	return (
 		<Container>
@@ -72,7 +70,7 @@ const ReportVisitorPage = () => {
 				<div className="bg-white px-3 py-3 mb-4 flex flex-row justify-between items-center">
 					<div>
 						<Typography className="text-2xl font-bold">
-							Visitor Report
+							Registration Report
 						</Typography>
 					</div>
 					<div className="flex flex-row gap-3">
@@ -111,9 +109,9 @@ const ReportVisitorPage = () => {
 				</div>
 			</FormProvider>
 
-			<DataTable table={table} showPagination={true} pagination={metadata} />
+			{/* <DataTable table={table} showPagination={true} pagination={metadata} /> */}
 
-			<DialogDownloadExcelVisitor
+			<DialogDownloadExcelRegistration
 				open={open}
 				onClose={() => {
 					setOpen(false);
@@ -123,4 +121,4 @@ const ReportVisitorPage = () => {
 	);
 };
 
-export default ReportVisitorPage;
+export default RegistrationReportPage;
