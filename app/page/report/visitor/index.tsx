@@ -59,7 +59,7 @@ const ReportVisitorPage = () => {
 
 	useEffect(() => {
 		fetchVisitor?.();
-	}, [debouncedSearch, start_date, end_date, fetchVisitor]);
+	}, [debouncedSearch, start_date, end_date]);
 
 	return (
 		<Container>

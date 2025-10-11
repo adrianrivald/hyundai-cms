@@ -46,6 +46,10 @@ const chartConfig = {
 		label: "General Tour",
 		color: "#743F00",
 	},
+	vip: {
+		label: "VIP Tour",
+		color: "#93BCFF",
+	},
 	vip_tour: {
 		label: "VIP Tour",
 		color: "#93BCFF",
@@ -134,26 +138,26 @@ export default function DashboardPage() {
 	const dataPie = [
 		{
 			name: "general_tour",
-			value: 75,
+			value: dataTour?.visitor_by_package_type?.["general-course"],
 			fill: "var(--color-general-tour)",
 		},
 		{
 			name: "student_tour",
-			value: 25,
+			value: dataTour?.visitor_by_package_type?.["student-course"],
 			fill: "var(--color-student-tour)",
 		},
 		{
 			name: "vip",
-			value: 10,
+			value: dataTour?.visitor_by_package_type?.vip,
 			fill: "var(--color-press-shop)",
 		},
 	];
 
 	//const dataPie = dataTour && dataTour?.tour_by_package_type?.
 
-	const dataBar = dataTour?.tour_by_city
-		? Object.entries(dataTour?.tour_by_city).map(([city, total]) => ({
-				city,
+	const dataBar = dataTour?.tour_by_province
+		? Object.entries(dataTour?.tour_by_province).map(([city, total]) => ({
+				city: city.replace(/([a-z])([A-Z])/g, "$1 $2"),
 				total,
 			}))
 		: [];
@@ -323,7 +327,7 @@ export default function DashboardPage() {
 												dominantBaseline={props.dominantBaseline}
 												fill="hsla(var(--foreground))"
 											>
-												{payload.value} %
+												{payload.value}
 											</text>
 										);
 									}}

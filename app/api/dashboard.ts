@@ -15,10 +15,16 @@ export type DashboardTourType = {
 		};
 	}[];
 	tour_by_city: Record<string, number>;
+	tour_by_province: Record<string, number>;
 	tour_by_package_type: {
 		vip: number;
 		"general-course": number;
 		"student-course": number;
+	};
+	visitor_by_package_type: {
+		vip: number;
+		["general-course"]: number;
+		["student-course"]: number;
 	};
 	gender: {
 		male: number;

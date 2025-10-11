@@ -120,6 +120,28 @@ export async function postReportRegistrationExport(
 	return response.data;
 }
 
+export async function postReportVisitorExport(
+	start_date: string,
+	end_date: string,
+	columns: string[]
+): Promise<{ data: any }> {
+	const body: Record<string, any> = {
+		start_date,
+		end_date,
+		columns,
+	};
+
+	Object.keys(body).forEach((key) => {
+		if (body[key] === "" || body[key] === undefined || body[key] === null) {
+			delete body[key];
+		}
+	});
+
+	const response = await apiConfig.post(`admin/report/visitor/export`, body);
+
+	return response.data;
+}
+
 export async function getReportVisitorList(
 	start_date: string,
 	end_date: string,
@@ -219,7 +241,23 @@ export const usePostExportRegistration = (
 				columns
 			);
 
-			console.log("dataa 12", response.data);
+			return response.data;
+		},
+		...options,
+	});
+};
+
+export const usePostExportVisitor = (
+	options?: MutationObserverOptions<any, Error, any>
+) => {
+	return useMutation<any, Error, any>({
+		mutationKey: ["export-visitor"],
+		mutationFn: async ({ start_date, end_date, columns }) => {
+			const response = await postReportVisitorExport(
+				start_date,
+				end_date,
+				columns
+			);
 
 			return response.data;
 		},

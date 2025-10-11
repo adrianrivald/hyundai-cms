@@ -1,11 +1,13 @@
-import { useGetColumnVisitor } from "@/api/report";
+import { useGetColumnVisitor, usePostExportVisitor } from "@/api/report";
 import FormProvider from "@/components/RHForm/FormProvider";
 import RHFCheckboxGroup from "@/components/RHForm/RHFCheckboxGroup";
 import RHFDateRangePicker from "@/components/RHForm/RHFDateRangePicker";
 import DialogModal from "@/components/custom/dialog/dialog-modal";
 import { Grid } from "@/components/grid";
 import { Button } from "@/components/ui/button";
+import { exportToExcel } from "@/lib/excel-download";
 import { format } from "date-fns";
+import { enqueueSnackbar } from "notistack";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
@@ -18,7 +20,12 @@ const DialogDownloadExcelVisitor = ({
 	open,
 	onClose,
 }: DialogDownloadExcelVisitorProps) => {
-	const { data } = useGetColumnVisitor();
+	const { data } = useGetColumnVisitor({
+		enabled: open,
+		queryKey: ["column-visitor-all"],
+	});
+	const { mutate, isPending } = usePostExportVisitor();
+
 	const methods = useForm({
 		defaultValues: {
 			dateRange: {
@@ -39,27 +46,27 @@ const DialogDownloadExcelVisitor = ({
 			? format(new Date(form.dateRange.to), "yyyy-MM-dd")
 			: "";
 
-		// mutate(
-		// 	{
-		// 		start_date: startDate,
-		// 		end_date: endDate,
-		// 		//@ts-ignore
-		// 		columns: form.columns.map((item) => item.value),
-		// 	},
-		// 	{
-		// 		onSuccess: (data) => {
-		// 			const filename = `registration_report_${startDate || "all"}_${endDate || "all"}.xlsx`;
-		// 			exportToExcel(data, filename);
-		// 			enqueueSnackbar({
-		// 				message: "File downloaded successfully ",
-		// 				variant: "success",
-		// 			});
-		// 		},
-		// 		onError: () => {
-		// 			enqueueSnackbar({ message: "File error ", variant: "error" });
-		// 		},
-		// 	}
-		// );
+		mutate(
+			{
+				start_date: startDate,
+				end_date: endDate,
+				//@ts-ignore
+				columns: form.columns.map((item) => item.value),
+			},
+			{
+				onSuccess: (data) => {
+					const filename = `visitor_report_${startDate || "all"}_${endDate || "all"}.xlsx`;
+					exportToExcel(data, filename);
+					enqueueSnackbar({
+						message: "File downloaded successfully ",
+						variant: "success",
+					});
+				},
+				onError: () => {
+					enqueueSnackbar({ message: "File error ", variant: "error" });
+				},
+			}
+		);
 	};
 
 	useEffect(() => {
@@ -110,6 +117,7 @@ const DialogDownloadExcelVisitor = ({
 							<Grid item xs={12}>
 								<div className="mt-3 flex flex-row justify-end">
 									<Button
+										disabled={isPending}
 										onClick={() => {
 											handleExport();
 										}}
