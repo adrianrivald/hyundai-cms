@@ -112,7 +112,7 @@ export const dataReportVisitor: ColumnDef<VisitorType>[] = [
 	},
 	{
 		accessorKey: "last_check_in",
-		header: "Code",
+		header: "Last Check In",
 		cell: ({ row }) => {
 			return (
 				<CellText className="text-left font-light">

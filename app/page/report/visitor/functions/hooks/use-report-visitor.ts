@@ -32,12 +32,10 @@ export function useReportVisitorList(
 		setTableState,
 	]);
 
-	console.log("dataa");
-
 	const { data: detail, refetch: fetchVisitor } = useGetReportVisitor(
 		start_date || "",
 		end_date || "",
-		search || "hehe",
+		search || "",
 		PageNumber
 	);
 

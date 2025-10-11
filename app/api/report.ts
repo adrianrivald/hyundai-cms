@@ -68,11 +68,24 @@ export type VisitorType = {
 	};
 };
 
+export type ColumnVisitorType = {
+	value: string;
+	label: string;
+};
+
 // export async function postPublishFeedback(
 // 	data: FeedbackPostImageTypes
 // ): Promise<AxiosResponse<FeedbackPostImageTypes, AxiosError>> {
 // 	return await apiConfig.post(`admin/feedbacks/${data?.id}/publish`, data);
 // }
+
+export async function getColumnsVisitor(): Promise<{
+	data: ColumnVisitorType[];
+}> {
+	const response = await apiConfig.get(`admin/report/visitor/columns`);
+
+	return response.data;
+}
 
 export async function getReportVisitorList(
 	start_date: string,
@@ -126,6 +139,20 @@ export const useGetReportVisitor = (
 				true,
 				page
 			);
+			return response;
+		},
+		placeholderData: (prev) => prev,
+		...options,
+	});
+};
+
+export const useGetColumnVisitor = (
+	options?: QueryObserverOptions<{ data: ColumnVisitorType[] }>
+) => {
+	return useQuery<{ data: ColumnVisitorType[] }>({
+		queryKey: ["column-visitor-all"],
+		queryFn: async () => {
+			const response = await getColumnsVisitor();
 			return response;
 		},
 		placeholderData: (prev) => prev,
