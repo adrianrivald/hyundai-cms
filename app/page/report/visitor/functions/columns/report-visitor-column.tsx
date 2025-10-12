@@ -4,6 +4,7 @@ import { Typography } from "@/components/typography";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export const dataReportVisitor: ColumnDef<VisitorType>[] = [
 	{
@@ -137,13 +138,15 @@ export const dataReportVisitor: ColumnDef<VisitorType>[] = [
 		accessorKey: "ACTION_BUTTON",
 		header: "Action",
 		cell: ({ row }) => {
-			const [openDetail, setOpenDetail] = useState(false);
+			const navigate = useNavigate();
 			return (
 				<div className="flex gap-2 text-center">
 					<Typography
 						className="text-blue-500 underline cursor-pointer"
 						onClick={() => {
-							setOpenDetail(true);
+							navigate(
+								`/report/visitor-report/detail/${row?.original?.verification_code}`
+							);
 						}}
 					>
 						View Details
