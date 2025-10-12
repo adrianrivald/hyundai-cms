@@ -10,6 +10,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { format } from "date-fns";
 import DialogDownloadExcelRegistration from "./functions/components/dialog-excel-download-registration";
+import { useReportRegistrationList } from "./functions/hooks/use-report-registration";
+import { DataTable } from "@/components/layout/table/data-table";
 
 const RegistrationReportPage = () => {
 	const [open, setOpen] = useState(false);
@@ -49,15 +51,15 @@ const RegistrationReportPage = () => {
 		}
 	}, [debouncedDateRange?.to]);
 
-	// const { table, metadata, fetchVisitor } = useReportVisitorList(
-	// 	start_date,
-	// 	end_date,
-	// 	debouncedSearch
-	// );
+	const { table, metadata, fetchVisitor } = useReportRegistrationList(
+		start_date,
+		end_date,
+		debouncedSearch
+	);
 
-	// useEffect(() => {
-	// 	fetchVisitor?.();
-	// }, [debouncedSearch, start_date, end_date, fetchVisitor]);
+	useEffect(() => {
+		fetchVisitor?.();
+	}, [debouncedSearch, start_date, end_date, fetchVisitor]);
 
 	return (
 		<Container>
@@ -109,7 +111,7 @@ const RegistrationReportPage = () => {
 				</div>
 			</FormProvider>
 
-			{/* <DataTable table={table} showPagination={true} pagination={metadata} /> */}
+			<DataTable table={table} showPagination={true} pagination={metadata} />
 
 			<DialogDownloadExcelRegistration
 				open={open}

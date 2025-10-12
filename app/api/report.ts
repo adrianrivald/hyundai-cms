@@ -1,4 +1,5 @@
 import apiConfig from "@/config/api";
+import type { Meta } from "@/lib/convertPagination";
 import {
 	type QueryObserverOptions,
 	useQuery,
@@ -69,6 +70,18 @@ export type VisitorType = {
 			deleted_at: null;
 		};
 	};
+};
+
+export type RegistrationType = {
+	id: number;
+	name: string;
+	email: string;
+	tour_packages_type: string;
+	group_type: string;
+	tour_date: string;
+	participants_count: number;
+	verified_status: boolean;
+	registration_date: string;
 };
 
 export type ColumnVisitorType = {
@@ -170,6 +183,34 @@ export async function getReportVisitorList(
 	return response.data;
 }
 
+export async function getReportRegistrationList(
+	start_date: string,
+	end_date: string,
+	search: string,
+	paginate: boolean = true,
+	page: number = 1
+): Promise<{ data: RegistrationType[]; meta: Meta }> {
+	const body: Record<string, any> = {
+		start_date,
+		end_date,
+		search,
+		paginate,
+	};
+
+	Object.keys(body).forEach((key) => {
+		if (body[key] === "" || body[key] === undefined || body[key] === null) {
+			delete body[key];
+		}
+	});
+
+	const response = await apiConfig.post(
+		`admin/report/register?page=${page}`,
+		body
+	);
+
+	return response.data;
+}
+
 export const useGetReportVisitor = (
 	start_date: string,
 	end_date: string,
@@ -188,6 +229,37 @@ export const useGetReportVisitor = (
 		],
 		queryFn: async () => {
 			const response = await getReportVisitorList(
+				start_date,
+				end_date,
+				search,
+				true,
+				page
+			);
+			return response;
+		},
+		placeholderData: (prev) => prev,
+		...options,
+	});
+};
+
+export const useGetReportRegistration = (
+	start_date: string,
+	end_date: string,
+	search: string,
+	page: number = 1,
+	options?: QueryObserverOptions<{ data: RegistrationType[]; meta: Meta }>
+) => {
+	return useQuery<{ data: RegistrationType[]; meta: Meta }>({
+		queryKey: [
+			"report-visitor-all",
+			search,
+			page,
+			start_date,
+			end_date,
+			search,
+		],
+		queryFn: async () => {
+			const response = await getReportRegistrationList(
 				start_date,
 				end_date,
 				search,

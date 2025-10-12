@@ -34,6 +34,10 @@ export default [
 				"visitor-report/detail/:id",
 				"./routes/guard-route/report/report-visitor/detail.tsx"
 			),
+			route(
+				"registration-report/detail/:id",
+				"./routes/guard-route/report/report-registration/detail.tsx"
+			),
 		]),
 
 		...prefix("content-editor", [
