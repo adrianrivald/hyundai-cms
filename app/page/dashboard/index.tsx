@@ -1,4 +1,5 @@
 import { usePostDashboardTour, type DashboardTourType } from "@/api/dashboard";
+import { useGetFeedbackDashboard } from "@/api/feedback";
 import FormProvider from "@/components/RHForm/FormProvider";
 import RHFDatePicker from "@/components/RHForm/RHFDatePicker";
 import Container from "@/components/container";
@@ -14,12 +15,12 @@ import {
 	ChartLegend,
 } from "@/components/ui/chart";
 import { useDebounce } from "@/hooks/use-debounce";
-import { cn } from "@/lib/utils";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import {
 	CartesianGrid,
 	XAxis,
@@ -77,6 +78,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function DashboardPage() {
+	const navigate = useNavigate();
 	const [dataTour, setDataTour] = useState({} as DashboardTourType);
 	const methods = useForm({
 		defaultValues: {
@@ -110,6 +112,10 @@ export default function DashboardPage() {
 	}, [debounceEndDate]);
 
 	const { mutate } = usePostDashboardTour();
+	const { data, refetch } = useGetFeedbackDashboard(start_date, end_date, {
+		enabled: false,
+		queryKey: ["feedback-dashboard-get-all"],
+	});
 
 	useEffect(() => {
 		mutate(
@@ -123,6 +129,7 @@ export default function DashboardPage() {
 				},
 			}
 		);
+		refetch();
 	}, [end_date, start_date]);
 
 	const chartData =
@@ -169,28 +176,7 @@ export default function DashboardPage() {
 			? baseHeight
 			: baseHeight + (dataBar.length - 4) * extraHeightPerBar;
 
-	const dataFavoritePie = [
-		{
-			name: "general_reception",
-			value: 25,
-			fill: "var(--color-general-tour)",
-		},
-		{
-			name: "press_shop",
-			value: 25,
-			fill: "var(--color-press-shop)",
-		},
-		{
-			name: "body_shop",
-			value: 25,
-			fill: "var(--color-body-shop)",
-		},
-		{
-			name: "assembly_shop",
-			value: 25,
-			fill: "var(--color-assembly-shop)",
-		},
-	];
+	const maxCount = Math.max(...Object.values(data?.data?.rating_count || 0));
 
 	return (
 		<Container>
@@ -243,11 +229,12 @@ export default function DashboardPage() {
 							className="h-[350px] w-full mt-5"
 						>
 							<LineChart
-								accessibilityLayer
+								//accessibilityLayer
 								data={chartData}
 								margin={{
 									left: 10,
 									right: 55,
+									bottom: 0,
 								}}
 							>
 								<CartesianGrid vertical={false} />
@@ -259,14 +246,14 @@ export default function DashboardPage() {
 									tickMargin={8}
 									tickFormatter={(value) => value}
 								/>
-								<YAxis />
+								<YAxis domain={[1, (dataMax: any) => dataMax + 5]} />
 								<ChartTooltip
 									cursor={false}
 									content={<ChartTooltipContent hideLabel />}
 								/>
 								<Line
 									dataKey="student-course"
-									type="natural"
+									type="linear"
 									stroke="var(--color-student-tour)"
 									strokeWidth={2}
 									dot={true}
@@ -274,7 +261,7 @@ export default function DashboardPage() {
 								/>
 								<Line
 									dataKey="general-course"
-									type="natural"
+									type="linear"
 									stroke="var(--color-general-tour)"
 									strokeWidth={2}
 									dot={true}
@@ -282,7 +269,7 @@ export default function DashboardPage() {
 								/>
 								<Line
 									dataKey="vip"
-									type="natural"
+									type="linear"
 									stroke="var(--color-press-shop)"
 									strokeWidth={2}
 									dot={true}
@@ -425,7 +412,7 @@ export default function DashboardPage() {
 						</ChartContainer>
 					</Grid>
 
-					<Grid item xs={6}>
+					{/* <Grid item xs={6}>
 						<div className="bg-white rounded-sm pt-5">
 							<Typography className="text-center font-bold">
 								Area Favorit
@@ -467,99 +454,115 @@ export default function DashboardPage() {
 								</PieChart>
 							</ChartContainer>
 						</div>
-					</Grid>
-					<Grid item xs={6}>
+					</Grid> */}
+					<Grid item xs={12}>
 						<div className="bg-white rounded-sm pt-5 px-3 pb-3">
 							<Typography className="font-bold ">Rating & Feedback</Typography>
 							<div className="mt-5">
 								<div className="flex items-start gap-4 w-full">
 									<div className="flex flex-col items-center mt-5 px-5">
-										<span className="text-4xl font-bold">4,5</span>
+										<span className="text-4xl font-bold">
+											{data?.data?.rating_average}
+										</span>
 										<div className="flex mt-1">
-											{[1, 2, 3, 4].map((i) => (
+											{[1, 2, 3, 4, 5].map((i) => (
 												<Icon
 													key={i}
-													icon="mdi:star"
+													icon={
+														i <= (data?.data?.rating_average || 0)
+															? "mdi:star"
+															: "mdi:star-outline"
+													}
 													className="text-yellow-400 w-6 h-6"
 												/>
 											))}
-											<Icon
-												icon="mdi:star-outline"
-												className="text-yellow-400 w-6 h-6"
-											/>
 										</div>
 									</div>
 
 									{/* Right Side: Progress bars */}
-									<div className="flex flex-col gap-1 w-full">
-										{[5, 4, 3, 2, 1].map((star) => (
-											<div key={star} className="flex items-center gap-2">
-												<span className="w-4 text-sm">{star}</span>
-												<div className="flex-1 h-3 bg-gray-200 rounded">
-													<div
-														className={`h-3 rounded bg-orange-500`}
-														style={{
-															width:
-																star === 5
-																	? "80%"
-																	: star === 4
-																		? "65%"
-																		: star === 3
-																			? "45%"
-																			: star === 2
-																				? "20%"
-																				: "15%",
-														}}
-													/>
+									<div className="flex flex-col gap-2 w-full">
+										{[5, 4, 3, 2, 1].map((star) => {
+											//@ts-ignore
+											const count = data?.data?.rating_count?.[star];
+											const widthPercent =
+												maxCount === 0 ? 0 : (count / maxCount) * 100;
+
+											return (
+												<div
+													key={star}
+													className="flex items-center gap-2 w-full"
+												>
+													{/* Star number */}
+													<span className="w-4 text-sm font-semibold text-gray-800 text-right">
+														{star}
+													</span>
+
+													{/* Bar container */}
+													<div className="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
+														<div
+															className="h-4 bg-orange-500 rounded-full transition-all duration-300"
+															style={{ width: `${widthPercent}%` }}
+														/>
+													</div>
+
+													{/* Count number */}
+													<span className="w-4 text-sm font-semibold text-gray-600 text-right">
+														{count}
+													</span>
 												</div>
-											</div>
-										))}
+											);
+										})}
 									</div>
 								</div>
 							</div>
 							{/* FEEDBACK */}
 							<div className="mt-5">
-								{[1, 2].map((item) => {
+								{data?.data?.feedbacks?.map((item, index) => {
 									return (
 										<div
 											className="p-3 bg-[#F7F7F7] rounded-sm mb-3"
-											key={item}
+											key={index}
 										>
 											<div className="flex flex-row gap-3 items-center">
-												<img
-													src="/images/example-image.webp"
-													className="w-[50px] h-[50px] object-cover rounded-sm"
+												<Icon
+													icon="fluent:person-32-filled"
+													width="50"
+													height="50"
+													className="border-[1px] border-black rounded-sm"
 												/>
 												<div>
 													<Typography className="text-xs font-bold">
-														Gilang Aditya R
+														{item?.participant?.name}
 													</Typography>
 													<Typography className="text-xs">
-														SMK Adijaya
+														{item?.tour?.name}
 													</Typography>
 												</div>
 											</div>
 
 											<div className="flex flex-row mt-1">
-												{[1, 2, 3, 4].map((i) => (
+												{[1, 2, 3, 4, 5].map((i) => (
 													<Icon
 														key={i}
-														icon="mdi:star"
+														icon={
+															i <=
+															Number(
+																item?.responses?.[0]?.form_type === "rating"
+																	? item?.responses?.[0]?.value
+																	: 0
+															)
+																? "mdi:star"
+																: "mdi:star-outline"
+														}
 														className="text-yellow-400 w-4 h-4"
 													/>
 												))}
-												<Icon
-													icon="mdi:star-outline"
-													className="text-yellow-400 w-4 h-4"
-												/>
 											</div>
 
 											<Typography className="text-xs text-[#383B46] mt-2">
-												Pengalaman mengikuti course tour di Hyundai HMMI sangat
-												bermanfaat bagi tim teknis kami. Kami belajar banyak
-												tentang penerapan teknologi, keselamatan kerja, serta
-												standar kualitas yang bisa diadaptasi di perusahaan
-												kami.
+												{item.responses?.[1].form_type === "free_text"
+													? item?.responses?.[1]?.value
+													: "-"}
 											</Typography>
 										</div>
 									);
@@ -568,6 +571,9 @@ export default function DashboardPage() {
 								<Button
 									className="w-full cursor-pointer"
 									variant={"hmmiOutline"}
+									onClick={() => {
+										navigate("/feedback");
+									}}
 								>
 									Selengkapnya
 								</Button>

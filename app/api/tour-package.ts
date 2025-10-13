@@ -70,6 +70,7 @@ export type TourRegisterType = {
 		email: string;
 		phone_number: string;
 		is_special_need: boolean;
+		is_participant: boolean;
 	};
 	participants: {
 		name: string;

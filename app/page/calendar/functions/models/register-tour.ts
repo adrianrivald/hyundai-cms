@@ -144,6 +144,7 @@ export type FormRegisterTour = {
 		gender: string;
 		age: string;
 		isDifabel?: string | null;
+		isParticipant?: string | null;
 		purpose_letter: string;
 		phone_number: string;
 	};
