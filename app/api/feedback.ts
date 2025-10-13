@@ -317,3 +317,97 @@ export const usePostImageFeedbackPublish = (
 		...options,
 	});
 };
+
+export type FeedbackDashboardType = {
+	rating_average: number;
+	rating_count: {
+		"5": number;
+		"4": number;
+		"3": number;
+		"2": number;
+		"1": number;
+	};
+	feedbacks: {
+		id: number;
+		tour_id: number;
+		participant_id: number;
+		is_publish: number;
+		created_at: string;
+		updated_at: string;
+		deleted_at: string;
+		tour: {
+			id: number;
+			name: string;
+			purpose_of_visit: "industrial-visit";
+			city: string;
+			province: string;
+			allow_marketing: number;
+			tour_date: string;
+			slot: string;
+		};
+		participant: {
+			id: number;
+			tour_id: number;
+			name: string;
+			dob: string;
+			sex: string;
+			email: string;
+			phone_number: string;
+			is_leader: boolean;
+			is_special_need: boolean;
+			is_participant: boolean;
+			verification_code: string;
+			verified_at: string;
+			attended_at: string;
+			created_at: string;
+			updated_at: string;
+			deleted_at: string;
+		};
+		responses: {
+			id: number;
+			tour_feedback_id: number;
+			feedback_form_id: number;
+			feedback_form_question_id: number;
+			form_type: string;
+			feedback_form_answer_id: string;
+			value: string;
+			deleted_at: string;
+			created_at: string;
+			updated_at: string;
+		}[];
+	}[];
+};
+
+export async function getFeedbackDashboard(
+	start_date: string = "",
+	end_date: string = ""
+): Promise<{ data: FeedbackDashboardType }> {
+	const body: Record<string, any> = {
+		start_date,
+		end_date,
+	};
+
+	Object.keys(body).forEach((key) => {
+		if (body[key] === "" || body[key] === undefined || body[key] === null) {
+			delete body[key];
+		}
+	});
+	const response = await apiConfig.post(`admin/report/activity/feedback`, body);
+	return response.data;
+}
+
+export const useGetFeedbackDashboard = (
+	start_date: string,
+	end_date: string,
+	options?: QueryObserverOptions<{ data: FeedbackDashboardType }>
+) => {
+	return useQuery<{ data: FeedbackDashboardType }>({
+		queryKey: ["feedback-dashboard-get-all", start_date, end_date],
+		queryFn: async () => {
+			const response = await getFeedbackDashboard(start_date, end_date);
+			return response;
+		},
+		placeholderData: (prev) => prev,
+		...options,
+	});
+};

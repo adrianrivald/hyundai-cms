@@ -33,6 +33,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 			: format(new Date(), "yyyy-MM")
 	);
 
+	console.log("dataa", methods.watch());
 	return (
 		<div className="">
 			<div className="mt-5 mb-5">
@@ -49,7 +50,9 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 					size="sm"
 					itemRadioProps={"border-[1px] rounded-sm px-5 py-2"}
 					onChange={(tour) => {
-						methods.resetField("batch");
+						methods.resetField("date");
+						methods.setValue("batch", [""]);
+						methods.setValue("batch", []);
 						let data = dataTourPackages?.data?.filter(
 							(item) => String(item.id) === tour
 						)?.[0];
@@ -110,7 +113,8 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 												id: item.batch_time,
 												name: item.time_range,
 												disabled: item.tour !== null,
-											}))?.length === 0
+											}))?.length === 0 ||
+										!methods.watch("date")
 									}
 									options={
 										(dataCalendar?.data || [])
@@ -158,7 +162,8 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 												id: item.batch_time,
 												name: item.time_range,
 												disabled: item.tour !== null,
-											})).length === 0
+											})).length === 0 ||
+										!methods.watch("date")
 									}
 									options={
 										(dataCalendar?.data || [])
@@ -195,7 +200,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 				</div>
 			)}
 
-			{methods.watch("batch") && (
+			{methods.watch("batch") && methods.watch("date") && (
 				<div className="mt-5 border-[1px] rounded-sm p-3">
 					<Typography className="text-md font-bold">
 						Visiting Group Information
@@ -208,24 +213,43 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								placeholder="Input group name"
 								autoFocus={false}
 								required
+								className="space-y-0"
 							/>
 						</Grid>
-						{methods.watch("tour_type") === "student-course" && (
+						{methods.watch("tour_type") !== "vip" && (
 							<Grid item xs={6} md={3}>
 								<RHFSelect
 									name="info_group.group_type"
 									label="Group Type"
-									options={[
-										{ id: "sd", name: "SD" },
-										{ id: "smp", name: "SMP" },
-										{ id: "sma", name: "SMA" },
-										{ id: "smk", name: "SMK" },
-										{ id: "kuliah", name: "Kuliah" },
-									]}
+									options={
+										methods.watch("tour_type") === "student-course"
+											? [
+													{ id: "sd", name: "SD" },
+													{ id: "smp", name: "SMP" },
+													{ id: "sma", name: "SMA" },
+													{ id: "smk", name: "SMK" },
+													{ id: "kuliah", name: "Kuliah" },
+												]
+											: [
+													{
+														id: "government",
+														name: "Government",
+													},
+													{
+														id: "company",
+														name: "Company",
+													},
+													{
+														id: "community",
+														name: "Community/Association",
+													},
+												]
+									}
 									placeholder="Choose group type"
 									getOptionLabel={(user) => user.name}
 									getOptionValue={(user) => String(user.id)}
 									required
+									className="space-y-0"
 								/>
 							</Grid>
 						)}
@@ -237,6 +261,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								placeholder="Input group leader name"
 								autoFocus={false}
 								required
+								className="space-y-0"
 							/>
 						</Grid>
 						<Grid item xs={6} md={3}>
@@ -251,6 +276,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								getOptionLabel={(user) => user.name}
 								getOptionValue={(user) => String(user.id)}
 								required
+								className="space-y-0"
 							/>
 						</Grid>
 						<Grid item xs={6} md={3}>
@@ -265,6 +291,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								getOptionLabel={(user) => user.name}
 								getOptionValue={(user) => String(user.id)}
 								required
+								className="space-y-0"
 							/>
 						</Grid>
 						<Grid item xs={6} md={3}>
@@ -320,6 +347,20 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						</Grid>
 						<Grid item xs={6} md={3}>
 							<RHFSelect
+								name="info_group.isParticipant"
+								label="Group Leader Participant"
+								options={[
+									{ id: "true", name: "Yes" },
+									{ id: "false", name: "No" },
+								]}
+								placeholder="Choose"
+								getOptionLabel={(user) => user.name}
+								getOptionValue={(user) => String(user.id)}
+								className="space-y-0"
+							/>
+						</Grid>
+						<Grid item xs={6} md={3}>
+							<RHFSelect
 								name="info_group.isDifabel"
 								label="Berkebutuhan Khusus"
 								options={[
@@ -332,7 +373,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								className="space-y-0"
 							/>
 						</Grid>
-						<Grid item xs={12} md={6}>
+						<Grid item xs={6} md={3}>
 							<RHFFileUpload
 								name="info_group.purpose_letter"
 								label="Surat berkunjung"
@@ -344,7 +385,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 				</div>
 			)}
 
-			{methods.watch("batch") && (
+			{methods.watch("batch") && methods.watch("date") && (
 				<div className="mt-5 border-[1px] rounded-sm p-3">
 					<Typography className="font-bold">Vehicle Information</Typography>
 					<Typography color="textSecondary" className="my-1 text-[10px]">

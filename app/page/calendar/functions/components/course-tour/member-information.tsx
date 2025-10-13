@@ -79,6 +79,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 				email: form.info_group.email,
 				phone_number: form.info_group.phone_number,
 				is_special_need: form.info_group.isDifabel === "true",
+				is_participant: form.info_group.isParticipant === "true",
 			},
 			participants: form.group_member.map((item) => ({
 				name: item.name,
