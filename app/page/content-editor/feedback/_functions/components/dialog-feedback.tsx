@@ -40,7 +40,15 @@ const DialogFeedback = ({
 					question_id: "",
 					question_en: "",
 					is_mandatory: true,
-					form_type: "",
+					form_type: "rating",
+					delete: "false",
+					answers: [{ answer_id: "", answer_en: "", delete: "false" }],
+				},
+				{
+					question_id: "",
+					question_en: "",
+					is_mandatory: true,
+					form_type: "free_text",
 					delete: "false",
 					answers: [{ answer_id: "", answer_en: "", delete: "false" }],
 				},
@@ -193,6 +201,7 @@ const DialogFeedback = ({
 														<RHFSelect
 															name={`questions.${index}.form_type`}
 															label="Type of question"
+															disabled={index < 2}
 															options={[
 																{
 																	type: "free_text",
@@ -231,7 +240,7 @@ const DialogFeedback = ({
 																//}
 															}}
 														/>
-														{(methods.watch("questions")?.length || 0) > 1 && (
+														{index > 1 && (
 															<div
 																className="cursor-pointer mb-2"
 																onClick={() => {

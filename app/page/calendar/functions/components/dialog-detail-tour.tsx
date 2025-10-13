@@ -16,7 +16,6 @@ import FormProvider from "@/components/RHForm/FormProvider";
 import RHFTextField from "@/components/RHForm/RHFTextField";
 import { SearchIcon } from "lucide-react";
 import { dataVehicleColumn } from "../column/column-vehicle";
-import DialogAddVip from "./dialog-add-vip";
 import DialogReschedule from "./dialog-reschedule";
 
 interface DialogDetailTourProps {
@@ -74,12 +73,7 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 	});
 
 	const tableVehicle = useTableConfig({
-		data:
-			dataDetail?.vehicles.filter((item) => {
-				if (!search) return true; // no search → include all
-				const regex = new RegExp(search, "i"); // "i" = case-insensitive
-				return regex.test(item.vehicle_plate_number);
-			}) || [],
+		data: dataDetail?.vehicles || [],
 		columns: dataVehicleColumn as any,
 		tableState,
 	});

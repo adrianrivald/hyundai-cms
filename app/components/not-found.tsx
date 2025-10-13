@@ -2,7 +2,13 @@ import Container from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 
-export default function NotFound() {
+interface NotFoundProps {
+	message?: string;
+	onClick?: () => void;
+	btnName?: string;
+}
+
+export default function NotFound({ message, onClick, btnName }: NotFoundProps) {
 	const navigate = useNavigate();
 	return (
 		<Container className="">
@@ -18,16 +24,20 @@ export default function NotFound() {
 							Not Found
 						</div>
 						<div className="mt-3 font-sans text-hmmi-primary-900">
-							The page you are looking for might have been removed had its name
-							changed or is temporarily unavailable.
+							{message ||
+								"The page you are looking for might have been removed had its name changed or is temporarily unavailable."}
 						</div>
 						<Button
 							className="mt-5"
 							onClick={() => {
-								navigate("/", { replace: true });
+								if (onClick) {
+									onClick();
+								} else {
+									navigate("/", { replace: true });
+								}
 							}}
 						>
-							Back to Dashboard
+							{btnName || "Back to Dashboard"}
 						</Button>
 					</div>
 				</div>

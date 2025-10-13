@@ -19,8 +19,8 @@ export const FeedbackSchema = yup.object({
 						id: yup.number().optional(),
 						delete: yup.string().optional(),
 						sort: yup.number().optional().default(1),
-						answer_id: yup.string().optional(),
-						answer_en: yup.string().optional(),
+						answer_id: yup.string().required("Answer is required"),
+						answer_en: yup.string().required("Answer is required"),
 					})
 				)
 				.when("form_type", {

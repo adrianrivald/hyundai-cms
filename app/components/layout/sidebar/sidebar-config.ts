@@ -139,13 +139,6 @@ export const SIDEBAR_MENU = () => {
 			url: "/report/",
 			items: [
 				{
-					id: "1",
-					title: "Registration Report",
-					url: "/report/registration-report",
-					items: [],
-					authorized: ["Super", "PIC"],
-				},
-				{
 					id: "2",
 					title: "Visitor Report",
 					url: "/report/visitor-report",
@@ -153,16 +146,9 @@ export const SIDEBAR_MENU = () => {
 					authorized: ["Super", "PIC"],
 				},
 				{
-					id: "3",
-					title: "Activity Report",
-					url: "/report/activity-report",
-					items: [],
-					authorized: ["Super", "PIC"],
-				},
-				{
-					id: "2",
-					title: "User Report",
-					url: "/report/user-report",
+					id: "1",
+					title: "Registration Report",
+					url: "/report/registration-report",
 					items: [],
 					authorized: ["Super", "PIC"],
 				},
