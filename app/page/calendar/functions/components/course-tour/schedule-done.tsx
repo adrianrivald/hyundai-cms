@@ -24,11 +24,11 @@ const ScheduleDone = ({ methods, onClose, refetch }: ScheduleDoneProps) => {
 				</div>
 
 				<Typography className="text-center font-bold text-[18px]">
-					Penambahan pengunjung VIP berhasil terjadwal
+					The addition of visitors has been successfully scheduled
 				</Typography>
 				<Typography className="text-center text-[14px]">
-					Permintaan penambahan pengunjung VIP telah berhasil diproses dan masuk
-					ke dalam jadwal kunjungan yang ditentukan.
+					The visitor addition request has been successfully processed and added
+					to the scheduled visit.
 				</Typography>
 
 				<Button
@@ -39,7 +39,7 @@ const ScheduleDone = ({ methods, onClose, refetch }: ScheduleDoneProps) => {
 						refetch && refetch();
 					}}
 				>
-					Kembali ke menu utama
+					Back to main menu
 				</Button>
 			</div>
 		</div>
