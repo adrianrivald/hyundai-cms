@@ -78,7 +78,8 @@ const RegistrationReportPage = () => {
 					<div className="flex flex-row gap-3">
 						<RHFTextField
 							name="search"
-							placeholder="Search"
+							placeholder="Search by name or phone"
+							className="w-[230px]"
 							endIcon={
 								<Icon
 									icon="lets-icons:search-light"
@@ -90,7 +91,7 @@ const RegistrationReportPage = () => {
 						/>
 						<RHFDateRangePicker
 							name="dateRange"
-							placeholder="Start Date - End Date"
+							placeholder="Search visit date"
 						/>
 						<Button
 							onClick={() => {

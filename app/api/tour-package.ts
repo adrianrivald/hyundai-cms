@@ -53,6 +53,7 @@ export type TourRegisterType = {
 	purpose_of_visit: string;
 	// city: string;
 	province: string;
+	allow_marketing: boolean;
 	vehicles: {
 		vehicle_type: string;
 		vehicle_plate_number: string;

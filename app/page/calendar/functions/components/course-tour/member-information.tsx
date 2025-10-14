@@ -61,6 +61,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 				vehicle_plate_number: item.vehicle_plat,
 				vehicle_type: item.vehicle_type,
 			})),
+			allow_marketing: form.allow_marketing || false,
 			// vehicle_type: form.info_vehicle.vehicle_type,
 			// vehicle_plate_number: form.info_vehicle.vehicle_plat,
 			attachments: form.info_group.purpose_letter

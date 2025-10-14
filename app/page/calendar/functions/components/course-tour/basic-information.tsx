@@ -14,6 +14,7 @@ import { format, isSameDay, isValid } from "date-fns";
 import { RHFFileUpload } from "@/components/RHForm/RHFUploadInput";
 import RHFSelectMultiple from "@/components/RHForm/RHFSelectMultiple";
 import { useGetProvinces } from "@/api/tour";
+import RHFCheckbox from "@/components/RHForm/RHFCheckbox";
 
 interface BasicInformationProps {
 	methods: UseFormReturn<FormRegisterTour>;
@@ -33,7 +34,6 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 			: format(new Date(), "yyyy-MM")
 	);
 
-	console.log("dataa", methods.watch());
 	return (
 		<div className="">
 			<div className="mt-5 mb-5">
@@ -362,7 +362,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						<Grid item xs={6} md={3}>
 							<RHFSelect
 								name="info_group.isDifabel"
-								label="Berkebutuhan Khusus"
+								label="Special Need"
 								options={[
 									{ id: "true", name: "Yes" },
 									{ id: "false", name: "No" },
@@ -376,7 +376,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						<Grid item xs={6} md={3}>
 							<RHFFileUpload
 								name="info_group.purpose_letter"
-								label="Surat berkunjung"
+								label="Visiting Letter"
 								accept=".pdf,.word"
 								className="space-y-0"
 							/>
@@ -389,7 +389,8 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 				<div className="mt-5 border-[1px] rounded-sm p-3">
 					<Typography className="font-bold">Vehicle Information</Typography>
 					<Typography color="textSecondary" className="my-1 text-[10px]">
-						⚠️ Himbauan: Kendaraan pribadi hanya boleh <strong>Hyundai</strong>.
+						⚠️ Note: Private vehicles are only permitted in{" "}
+						<strong>Hyundai</strong> vehicles..
 					</Typography>
 					{methods?.watch("info_vehicle")?.map((item, index) => {
 						return (
@@ -474,6 +475,20 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 					</div>
 				</div>
 			)}
+
+			{methods.watch("type") && (
+				<div className="mt-5 border-[1px] rounded-sm p-3">
+					<RHFCheckbox
+						name="allow_marketing"
+						onChange={(checked) => {
+							methods.setValue("allow_marketing", !checked);
+						}}
+						label="Consent to Receive Information & Promotions from Hyundai"
+						description="I agree to receive information, promotions, and the latest offers from Hyundai, and I understand that my data will be used in accordance with the privacy policy. I can unsubscribe at any time."
+					/>
+				</div>
+			)}
+
 			{methods.watch("type") && (
 				<div className="mt-5 flex flex-row justify-end mb-10">
 					<Button
