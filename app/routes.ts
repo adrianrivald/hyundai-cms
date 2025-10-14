@@ -11,6 +11,10 @@ export default [
 	layout("./routes/__layout/__auth.layout.tsx", [
 		index("./routes/guard-route/dashboard/index.tsx"),
 		route("calendar", "./routes/guard-route/calendar/index.tsx"),
+		route(
+			"calendar/reschedule",
+			"./routes/guard-route/calendar/reschedule.tsx"
+		),
 		route("feedback", "./routes/guard-route/feedback/index.tsx"),
 
 		...prefix("user-management", [

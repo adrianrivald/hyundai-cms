@@ -4,18 +4,23 @@ interface DialogDeleteProps {
 	open: boolean;
 	onClose: () => void;
 	onSubmit: () => void;
-	type?: string;
+	approval?: "Menyetujui" | "Menolak";
 }
 
-const DialogConfirm = ({ open, onClose, onSubmit }: DialogDeleteProps) => {
+const DialogApproval = ({
+	open,
+	onClose,
+	onSubmit,
+	approval,
+}: DialogDeleteProps) => {
 	return (
 		<DialogModal
 			open={open}
 			onOpenChange={() => {
 				onClose();
 			}}
-			title="Apakah anda yakin untuk keluar dari halaman ini ?"
-			subtitle="Keputusan ini akan menghapus daftar yang sudah di isi, sehingga tidak dapat dikembalikan lagi."
+			title={`Apakah anda yakin untuk ${approval} ini ?`}
+			subtitle="Keputusan ini bersifat permanen, sehingga tidak dapat dikembalikan lagi."
 			contentProps="w-[350px]"
 			onClickLeft={() => {
 				onSubmit();
@@ -29,4 +34,4 @@ const DialogConfirm = ({ open, onClose, onSubmit }: DialogDeleteProps) => {
 	);
 };
 
-export default DialogConfirm;
+export default DialogApproval;
