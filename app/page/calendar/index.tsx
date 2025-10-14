@@ -33,6 +33,7 @@ import DialogAddVip from "./functions/components/dialog-add-vip";
 import { useGetCalendars } from "@/api/batch";
 import { Typography } from "@/components/typography";
 import DialogDetailTour from "./functions/components/dialog-detail-tour";
+import { useNavigate } from "react-router";
 
 const locales = {
 	enUS: en,
@@ -206,6 +207,7 @@ export default function CalendarPage() {
 		const goToNext = () => onNavigate("NEXT");
 		const [open, setOpen] = useState(false);
 		const [openVip, setOpenVip] = useState(false);
+		const navigate = useNavigate();
 
 		return (
 			<>
@@ -229,7 +231,17 @@ export default function CalendarPage() {
 							<Icon icon="formkit:right" width="16" height="16" />
 						</div>
 
-						<div></div>
+						<div>
+							<Button
+								variant={"hmmiOutline"}
+								className="text-sm"
+								onClick={() => {
+									navigate("/calendar/reschedule");
+								}}
+							>
+								Reschedule
+							</Button>
+						</div>
 					</div>
 
 					<div className="flex flex-row gap-2">

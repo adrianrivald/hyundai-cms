@@ -202,6 +202,7 @@ const DialogFeedback = ({
 															name={`questions.${index}.form_type`}
 															label="Type of question"
 															disabled={index < 2}
+															disableClearable={index < 2}
 															options={[
 																{
 																	type: "free_text",

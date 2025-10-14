@@ -1,6 +1,7 @@
 import { FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import type { ClassValue } from "clsx";
 import {
 	useEffect,
 	type InputHTMLAttributes,
@@ -16,6 +17,7 @@ interface RHFTextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 	startIcon?: ReactNode;
 	endIcon?: ReactNode;
 	variant?: "default" | "colored" | "highlighted";
+	labelClass?: ClassValue;
 }
 
 export default function RHFTextField({
@@ -26,6 +28,7 @@ export default function RHFTextField({
 	startIcon,
 	endIcon,
 	variant = "default",
+	labelClass,
 	...other
 }: RHFTextFieldProps) {
 	const { control } = useFormContext();
@@ -58,7 +61,8 @@ export default function RHFTextField({
 							className={cn(
 								required &&
 									"after:content-['*'] after:ml-0.5 after:text-red-500",
-								"truncate text-hmmi-grey-900 text-[14px]"
+								"truncate text-hmmi-grey-900 text-[14px]",
+								labelClass
 							)}
 						>
 							{label}

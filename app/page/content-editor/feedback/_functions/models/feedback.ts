@@ -19,8 +19,16 @@ export const FeedbackSchema = yup.object({
 						id: yup.number().optional(),
 						delete: yup.string().optional(),
 						sort: yup.number().optional().default(1),
-						answer_id: yup.string().required("Answer is required"),
-						answer_en: yup.string().required("Answer is required"),
+						answer_id: yup.string().when("$form_type", {
+							is: (val: string) => ["radio_button", "checkbox"].includes(val),
+							then: (schema) => schema.required("Answer is required"),
+							otherwise: (schema) => schema.optional(),
+						}),
+						answer_en: yup.string().when("$form_type", {
+							is: (val: string) => ["radio_button", "checkbox"].includes(val),
+							then: (schema) => schema.required("Answer is required"),
+							otherwise: (schema) => schema.optional(),
+						}),
 					})
 				)
 				.when("form_type", {
