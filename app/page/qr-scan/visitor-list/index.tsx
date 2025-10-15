@@ -37,7 +37,6 @@ export default function VisitorList() {
   const handleBypass = async (visitorCode: string, attendedAt: string) => {
     if (attendedAt === null) {
       await attendQr({ code: visitorCode }).then((response) => {
-        console.log(response, "resnya");
         if (response.status === 200) {
           refetch();
         }

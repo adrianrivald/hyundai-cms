@@ -8,7 +8,7 @@ import { format } from "date-fns";
 
 export default function QRScan() {
   const today = format(new Date(), "yyyy-MM-dd");
-  const { data } = useGetCalendarDaily("2025-10-01");
+  const { data } = useGetCalendarDaily(today);
 
   const attended = data?.data.total?.attended ?? 0;
   const participants = data?.data.total?.participants ?? 0;
