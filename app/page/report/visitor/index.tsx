@@ -91,7 +91,7 @@ const ReportVisitorPage = () => {
 						/>
 						<RHFDateRangePicker
 							name="dateRange"
-							placeholder="Search registration date"
+							placeholder="Search visit date"
 						/>
 						<Button
 							onClick={() => {

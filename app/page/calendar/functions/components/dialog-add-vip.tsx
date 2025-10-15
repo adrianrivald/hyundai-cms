@@ -88,8 +88,7 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 
 	return (
 		<DialogModal
-			//open={open}
-			open
+			open={open}
 			onOpenChange={() => {
 				if (methods.watch("step") !== "done") {
 					setDialogConfirm(true);
