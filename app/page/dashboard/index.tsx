@@ -219,7 +219,7 @@ export default function DashboardPage() {
 							<Icon icon="simple-line-icons:magnifier" width="16" height="16" />
 						}
 					>
-						Cari Data
+						Search Data
 					</Button>
 				</div>
 				<Grid container>
@@ -329,17 +329,17 @@ export default function DashboardPage() {
 					<Grid item xs={6} className="">
 						<div className="relative bg-white rounded-sm py-5 px-5">
 							<Typography className="font-bold text-[18px]">
-								Jenis Gender Pengunjung
+								Visitor Gender Type
 							</Typography>
 							<div className="mt-5 flex flex-row">
 								<div className="flex-1">
-									<Typography className="text-[#8E8E93]">Laki Laki</Typography>
+									<Typography className="text-[#8E8E93]">Male</Typography>
 									<Typography className="font-medium text-[18px]">
 										{dataTour?.gender?.male || 0}
 									</Typography>
 								</div>
 								<div className="flex-1">
-									<Typography className="text-[#8E8E93]">Perempuan</Typography>
+									<Typography className="text-[#8E8E93]">Female</Typography>
 									<Typography className="font-medium text-[18px]">
 										{dataTour?.gender?.female || 0}
 									</Typography>
@@ -350,7 +350,7 @@ export default function DashboardPage() {
 
 					<Grid item xs={12} className="bg-white rounded-sm pt-5">
 						<Typography className="text-center mb-5 text-[18px] font-bold">
-							Provinsi Asal
+							Province of Origin
 						</Typography>
 						<ChartContainer
 							config={chartConfig}
@@ -575,7 +575,7 @@ export default function DashboardPage() {
 										navigate("/feedback");
 									}}
 								>
-									Selengkapnya
+									More Details
 								</Button>
 							</div>
 						</div>

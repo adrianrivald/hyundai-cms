@@ -78,23 +78,22 @@ const DialogRescheduleEmail = ({
 			content={
 				<div className="mt-5">
 					<Typography className="text-[25px] font-medium text-center">
-						Penyesuaian dan Pergantian Jadwal Kegiatan Sehubungan dengan
-						Kedatangan Tamu VIP
+						Schedule Changes for VIP Guest Visit
 					</Typography>
 					<Typography className="text-[#6D717F] text-center mt-3 mb-5">
-						Mohon perhatian, jadwal yang telah tersusun sebelumnya akan
-						digantikan untuk memberikan prioritas kepada tamu VIP. Apabila
-						terdapat perubahan jadwal karena ketentuan dari pihak manajemen
-						HMMI, mohon agar segera mengirimkan email pemberitahuan kepada
-						visitor yang sudah terdaftar sebelumnya.
+						Please be advised that the previously arranged schedule will be
+						replaced to give priority to the VIP guest. Should there be any
+						schedule changes based on HMMI management’s directives, kindly send
+						an email notification promptly to the visitors who have already
+						registered.
 					</Typography>
 
 					<FormProvider methods={methods}>
 						<div className="flex flex-row items-end">
 							<RHFTextField
 								name="email"
-								label="Alamat email ketua group"
-								placeholder="Alamat email"
+								label="Email Address Leader Group"
+								placeholder="Email Address"
 								className="w-full"
 							/>
 							<Button
@@ -107,7 +106,7 @@ const DialogRescheduleEmail = ({
 									});
 								}}
 							>
-								Kirim Email Konfirmasi
+								Send Confirmation Email
 							</Button>
 						</div>
 					</FormProvider>
