@@ -476,12 +476,12 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 				</div>
 			)}
 
-			{methods.watch("type") && (
+			{methods.watch("batch") && methods.watch("date") && (
 				<div className="mt-5 border-[1px] rounded-sm p-3">
 					<RHFCheckbox
 						name="allow_marketing"
 						onChange={(checked) => {
-							methods.setValue("allow_marketing", !checked);
+							methods.setValue("allow_marketing", checked);
 						}}
 						label="Consent to Receive Information & Promotions from Hyundai"
 						description="I agree to receive information, promotions, and the latest offers from Hyundai, and I understand that my data will be used in accordance with the privacy policy. I can unsubscribe at any time."

@@ -96,7 +96,16 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 			}}
 			headerTitle={
 				<div className="flex flex-row gap-2 items-center mt-[-5px]">
-					<Icon icon="fa7-solid:arrow-left" width="14" height="14" />
+					<Icon
+						icon="fa7-solid:arrow-left"
+						width="14"
+						height="14"
+						className="cursor-pointer"
+						onClick={() => {
+							onClose();
+							methods.reset();
+						}}
+					/>
 					<Typography className="font-bold">Register Tour</Typography>
 				</div>
 			}

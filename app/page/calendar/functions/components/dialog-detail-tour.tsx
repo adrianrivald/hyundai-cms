@@ -87,7 +87,16 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 			headerTitle={
 				<div className="flex flex-row justify-between ">
 					<div className="flex flex-row gap-2 items-center mt-[-5px]">
-						<Icon icon="fa7-solid:arrow-left" width="14" height="14" />
+						<Icon
+							icon="fa7-solid:arrow-left"
+							width="14"
+							height="14"
+							className="cursor-pointer"
+							onClick={() => {
+								onClose();
+								methods.reset();
+							}}
+						/>
 						<Typography className="font-bold">Visit Information</Typography>
 					</div>
 					<div className="flex flex-row gap-3 mr-5">
