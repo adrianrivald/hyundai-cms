@@ -3,32 +3,52 @@ import { Icon } from "@iconify/react";
 import { Typography } from "@/components/typography";
 import StickyFooter from "@/components/layout/sticky-footer";
 import { useNavigate } from "react-router";
+import { addVisitor, useGetToursByDate } from "@/api/qr-scan";
+import { format } from "date-fns";
 
 type VisitorForm = {
   name: string;
-  birthdate: string;
-  phone: string;
+  dob: string;
+  phone_number: string;
   email: string;
-  gender: string;
-  specialNeeds: string;
+  sex: string;
+  is_special_need: string;
+  tour_number: string;
 };
 
 export default function AddVisitor() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
-    birthdate: "",
-    phone: "",
+    dob: "",
+    phone_number: "",
     email: "",
-    gender: "",
-    specialNeeds: "",
+    sex: "",
+    is_special_need: "",
+    tour_number: "",
   });
+  const today = format(new Date(), "yyyy-MM-dd");
+
+  const { data } = useGetToursByDate(today);
 
   const handleChange = <K extends keyof VisitorForm>(
     field: K,
     value: VisitorForm[K]
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const onSubmit = async () => {
+    const payload = {
+      ...formData,
+      is_special_need: formData?.is_special_need === "yes" ? true : false,
+    };
+
+    const res = await addVisitor(payload);
+
+    setTimeout(() => {
+      navigate("/qr-scan/visitor-list");
+    }, 1000);
   };
 
   return (
@@ -55,6 +75,21 @@ export default function AddVisitor() {
 
         {/* Form */}
         <div className="flex-1 overflow-y-auto px-6 pb-6 space-y-5 mt-8">
+          <div>
+            <Typography className="text-sm text-white mb-2">
+              Pilih Tour Number
+            </Typography>
+            <select
+              value={formData.tour_number}
+              onChange={(e) => handleChange("tour_number", e.target.value)}
+              className="w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="">Pilih tour number</option>
+              {data?.data?.map((d: any) => (
+                <option value={d?.tour_number}>{d?.tour_number}</option>
+              ))}
+            </select>
+          </div>
           {/* Nama Lengkap */}
           <div>
             <Typography className="text-sm text-white mb-2">
@@ -81,9 +116,9 @@ export default function AddVisitor() {
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
               />
               <input
-                type="text"
-                value={formData.birthdate}
-                onChange={(e) => handleChange("birthdate", e.target.value)}
+                type="date"
+                value={formData.dob}
+                onChange={(e) => handleChange("dob", e.target.value)}
                 placeholder="mm/dd/yyyy"
                 className="w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 pl-10 pr-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 onFocus={(e) => (e.target.type = "date")}
@@ -99,8 +134,8 @@ export default function AddVisitor() {
             </Typography>
             <input
               type="tel"
-              value={formData.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
+              value={formData.phone_number}
+              onChange={(e) => handleChange("phone_number", e.target.value)}
               placeholder="Masukan nomor HP"
               className="w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
@@ -126,8 +161,8 @@ export default function AddVisitor() {
               Jenis Kelamin
             </Typography>
             <select
-              value={formData.gender}
-              onChange={(e) => handleChange("gender", e.target.value)}
+              value={formData.sex}
+              onChange={(e) => handleChange("sex", e.target.value)}
               className="w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">Pilih jenis kelamin</option>
@@ -142,22 +177,23 @@ export default function AddVisitor() {
               Berkebutuhan khusus? (Difabel)
             </Typography>
             <select
-              value={formData.specialNeeds}
-              onChange={(e) => handleChange("specialNeeds", e.target.value)}
+              value={formData.is_special_need}
+              onChange={(e) => handleChange("is_special_need", e.target.value)}
               className="w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">Pilih kebutuhan anda</option>
-              <option value="none">Tidak ada</option>
-              <option value="wheelchair">Kursi roda</option>
-              <option value="hearing">Gangguan pendengaran</option>
-              <option value="visual">Gangguan penglihatan</option>
+              <option value="yes">Ya</option>
+              <option value="no">Tidak</option>
             </select>
           </div>
         </div>
 
         {/* Footer Button */}
         <div className="px-6 pb-8 mt-12">
-          <button className="w-full bg-[#1E3A5F] hover:bg-[#274873] text-white text-base font-medium py-3 rounded-lg">
+          <button
+            onClick={onSubmit}
+            className="w-full bg-[#1E3A5F] hover:bg-[#274873] text-white text-base font-medium py-3 rounded-lg"
+          >
             Tambah Visitor
           </button>
         </div>
