@@ -51,7 +51,9 @@ export type TourRegisterType = {
 	slot: string;
 	name: string;
 	purpose_of_visit: string;
-	city: string;
+	// city: string;
+	province: string;
+	allow_marketing: boolean;
 	vehicles: {
 		vehicle_type: string;
 		vehicle_plate_number: string;
@@ -69,6 +71,7 @@ export type TourRegisterType = {
 		email: string;
 		phone_number: string;
 		is_special_need: boolean;
+		is_participant: boolean;
 	};
 	participants: {
 		name: string;

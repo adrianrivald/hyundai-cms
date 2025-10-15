@@ -13,14 +13,14 @@ const DialogDelete = ({ open, onClose, onSubmit }: DialogDeleteProps) => {
 			onOpenChange={() => {
 				onClose();
 			}}
-			title="Apakah anda yakin untuk menghapus daftar ini?"
-			subtitle="Keputusan ini akan menghapus daftar secara permanen dari sistem, sehingga tidak dapat dikembalikan lagi."
+			title="Are you sure you want to delete this list?"
+			subtitle="This action will permanently remove the list from the system and cannot be undone."
 			contentProps="w-[350px]"
 			onClickLeft={() => {
 				onSubmit();
 			}}
-			leftButtonTitle="Ya"
-			rightButtonTitle="Tidak"
+			leftButtonTitle="Yes"
+			rightButtonTitle="No"
 			onClickRight={() => {
 				onClose();
 			}}

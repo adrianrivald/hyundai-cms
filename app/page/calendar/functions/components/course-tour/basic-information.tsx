@@ -13,6 +13,8 @@ import { useGetCalendars } from "@/api/batch";
 import { format, isSameDay, isValid } from "date-fns";
 import { RHFFileUpload } from "@/components/RHForm/RHFUploadInput";
 import RHFSelectMultiple from "@/components/RHForm/RHFSelectMultiple";
+import { useGetProvinces } from "@/api/tour";
+import RHFCheckbox from "@/components/RHForm/RHFCheckbox";
 
 interface BasicInformationProps {
 	methods: UseFormReturn<FormRegisterTour>;
@@ -20,6 +22,7 @@ interface BasicInformationProps {
 
 const BasicInformation = ({ methods }: BasicInformationProps) => {
 	const { data: dataTourPackages } = useGetTourPackages("");
+	const { data: provinces } = useGetProvinces();
 
 	const {
 		data: dataCalendar,
@@ -47,7 +50,9 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 					size="sm"
 					itemRadioProps={"border-[1px] rounded-sm px-5 py-2"}
 					onChange={(tour) => {
-						methods.resetField("batch");
+						methods.resetField("date");
+						methods.setValue("batch", [""]);
+						methods.setValue("batch", []);
 						let data = dataTourPackages?.data?.filter(
 							(item) => String(item.id) === tour
 						)?.[0];
@@ -108,7 +113,8 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 												id: item.batch_time,
 												name: item.time_range,
 												disabled: item.tour !== null,
-											}))?.length === 0
+											}))?.length === 0 ||
+										!methods.watch("date")
 									}
 									options={
 										(dataCalendar?.data || [])
@@ -156,7 +162,8 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 												id: item.batch_time,
 												name: item.time_range,
 												disabled: item.tour !== null,
-											})).length === 0
+											})).length === 0 ||
+										!methods.watch("date")
 									}
 									options={
 										(dataCalendar?.data || [])
@@ -193,7 +200,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 				</div>
 			)}
 
-			{methods.watch("batch") && (
+			{methods.watch("batch") && methods.watch("date") && (
 				<div className="mt-5 border-[1px] rounded-sm p-3">
 					<Typography className="text-md font-bold">
 						Visiting Group Information
@@ -206,24 +213,43 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								placeholder="Input group name"
 								autoFocus={false}
 								required
+								className="space-y-0"
 							/>
 						</Grid>
-						{methods.watch("tour_type") === "student-course" && (
+						{methods.watch("tour_type") !== "vip" && (
 							<Grid item xs={6} md={3}>
 								<RHFSelect
 									name="info_group.group_type"
 									label="Group Type"
-									options={[
-										{ id: "sd", name: "SD" },
-										{ id: "smp", name: "SMP" },
-										{ id: "sma", name: "SMA" },
-										{ id: "smk", name: "SMK" },
-										{ id: "kuliah", name: "Kuliah" },
-									]}
+									options={
+										methods.watch("tour_type") === "student-course"
+											? [
+													{ id: "sd", name: "SD" },
+													{ id: "smp", name: "SMP" },
+													{ id: "sma", name: "SMA" },
+													{ id: "smk", name: "SMK" },
+													{ id: "kuliah", name: "Kuliah" },
+												]
+											: [
+													{
+														id: "government",
+														name: "Government",
+													},
+													{
+														id: "company",
+														name: "Company",
+													},
+													{
+														id: "community",
+														name: "Community/Association",
+													},
+												]
+									}
 									placeholder="Choose group type"
 									getOptionLabel={(user) => user.name}
 									getOptionValue={(user) => String(user.id)}
 									required
+									className="space-y-0"
 								/>
 							</Grid>
 						)}
@@ -235,6 +261,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								placeholder="Input group leader name"
 								autoFocus={false}
 								required
+								className="space-y-0"
 							/>
 						</Grid>
 						<Grid item xs={6} md={3}>
@@ -249,15 +276,22 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								getOptionLabel={(user) => user.name}
 								getOptionValue={(user) => String(user.id)}
 								required
+								className="space-y-0"
 							/>
 						</Grid>
 						<Grid item xs={6} md={3}>
-							<RHFTextField
+							<RHFSelect
 								name="info_group.city"
-								label="City"
-								placeholder="Input City"
-								autoFocus={false}
+								label="Province"
+								options={
+									provinces?.data?.map((item) => ({ id: item, name: item })) ||
+									[]
+								}
+								placeholder="Choose province"
+								getOptionLabel={(user) => user.name}
+								getOptionValue={(user) => String(user.id)}
 								required
+								className="space-y-0"
 							/>
 						</Grid>
 						<Grid item xs={6} md={3}>
@@ -313,8 +347,8 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						</Grid>
 						<Grid item xs={6} md={3}>
 							<RHFSelect
-								name="info_group.isDifabel"
-								label="Berkebutuhan Khusus"
+								name="info_group.isParticipant"
+								label="Group Leader Participant"
 								options={[
 									{ id: "true", name: "Yes" },
 									{ id: "false", name: "No" },
@@ -325,10 +359,24 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								className="space-y-0"
 							/>
 						</Grid>
-						<Grid item xs={12} md={6}>
+						<Grid item xs={6} md={3}>
+							<RHFSelect
+								name="info_group.isDifabel"
+								label="Any special needs? (Disability)"
+								options={[
+									{ id: "true", name: "Yes" },
+									{ id: "false", name: "No" },
+								]}
+								placeholder="Choose"
+								getOptionLabel={(user) => user.name}
+								getOptionValue={(user) => String(user.id)}
+								className="space-y-0"
+							/>
+						</Grid>
+						<Grid item xs={6} md={3}>
 							<RHFFileUpload
 								name="info_group.purpose_letter"
-								label="Surat berkunjung"
+								label="Visiting Letter"
 								accept=".pdf,.word"
 								className="space-y-0"
 							/>
@@ -337,11 +385,12 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 				</div>
 			)}
 
-			{methods.watch("batch") && (
+			{methods.watch("batch") && methods.watch("date") && (
 				<div className="mt-5 border-[1px] rounded-sm p-3">
 					<Typography className="font-bold">Vehicle Information</Typography>
 					<Typography color="textSecondary" className="my-1 text-[10px]">
-						⚠️ Himbauan: Kendaraan pribadi hanya boleh <strong>Hyundai</strong>.
+						⚠️ Note: Private vehicles are only permitted in{" "}
+						<strong>Hyundai</strong> vehicles..
 					</Typography>
 					{methods?.watch("info_vehicle")?.map((item, index) => {
 						return (
@@ -426,6 +475,20 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 					</div>
 				</div>
 			)}
+
+			{methods.watch("batch") && methods.watch("date") && (
+				<div className="mt-5 border-[1px] rounded-sm p-3">
+					<RHFCheckbox
+						name="allow_marketing"
+						onChange={(checked) => {
+							methods.setValue("allow_marketing", checked);
+						}}
+						label="Consent to Receive Information & Promotions from Hyundai"
+						description="I agree to receive information, promotions, and the latest offers from Hyundai, and I understand that my data will be used in accordance with the privacy policy. I can unsubscribe at any time."
+					/>
+				</div>
+			)}
+
 			{methods.watch("type") && (
 				<div className="mt-5 flex flex-row justify-end mb-10">
 					<Button

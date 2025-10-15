@@ -29,7 +29,7 @@ const DialogDetailContent = ({
 			content={
 				<div>
 					<Typography>
-						Judul : {title} ({language.toUpperCase()})
+						Title : {title} ({language.toUpperCase()})
 					</Typography>
 					<div
 						dangerouslySetInnerHTML={{ __html: content }}

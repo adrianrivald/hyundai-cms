@@ -16,7 +16,7 @@ export const FormRegisterTourSchema = yup.object({
 		then: (schema) => schema.required("Type tour is required"),
 		otherwise: (schema) => schema.required("Type tour is required"),
 	}),
-
+	allow_marketing: yup.boolean().optional().default(false),
 	tour_type: yup.string().nullable().optional(),
 	min_participant: yup.string().nullable().optional(),
 	max_participant: yup.string().nullable().optional(),
@@ -134,6 +134,7 @@ export type FormRegisterTour = {
 	batch: string[];
 	min_participant: string;
 	max_participant: string;
+	allow_marketing: boolean;
 	info_group: {
 		group_name: string;
 		group_type?: string | null; // optional or nullable depending on type
@@ -144,6 +145,7 @@ export type FormRegisterTour = {
 		gender: string;
 		age: string;
 		isDifabel?: string | null;
+		isParticipant?: string | null;
 		purpose_letter: string;
 		phone_number: string;
 	};

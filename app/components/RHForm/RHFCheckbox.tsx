@@ -46,7 +46,7 @@ export default function RHFCheckbox({
 				>
 					<FormControl>
 						<Checkbox
-							checked={defaultChecked ?? field.value}
+							checked={field.value ?? defaultChecked}
 							onCheckedChange={(checked) => {
 								if (onChange) {
 									onChange(checked as boolean);

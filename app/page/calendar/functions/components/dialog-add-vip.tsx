@@ -30,9 +30,9 @@ const toArrayBatch = (slot?: string) => {
 const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 	const [dialogConfirm, setDialogConfirm] = useState(false);
 	const steps = [
-		{ key: "info_dasar", label: "Isi Informasi Dasar" },
-		{ key: "info_anggota", label: "Isi Daftar Anggota Group" },
-		{ key: "done", label: "Selesai" },
+		{ key: "info_dasar", label: " Basic Information" },
+		{ key: "info_anggota", label: " Participant List" },
+		{ key: "done", label: "Done" },
 	];
 
 	const methods = useForm({
@@ -96,8 +96,17 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 			}}
 			headerTitle={
 				<div className="flex flex-row gap-2 items-center mt-[-5px]">
-					<Icon icon="fa7-solid:arrow-left" width="14" height="14" />
-					<Typography className="font-bold">Isi Daftar Peserta</Typography>
+					<Icon
+						icon="fa7-solid:arrow-left"
+						width="14"
+						height="14"
+						className="cursor-pointer"
+						onClick={() => {
+							onClose();
+							methods.reset();
+						}}
+					/>
+					<Typography className="font-bold">Register Tour</Typography>
 				</div>
 			}
 			contentProps="w-[95%] max-h-[90%]"
@@ -107,9 +116,9 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 						steps={steps}
 						value={methods.watch("step")}
 						onChange={(key) => {
-							if (methods.formState.isValid) {
-								methods.setValue("step", key);
-							}
+							//if (methods.formState.isValid) {
+							methods.setValue("step", key);
+							//}
 						}}
 						activeColor="#153263"
 						inactiveColor="#A8C5F7"

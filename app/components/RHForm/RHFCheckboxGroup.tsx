@@ -55,7 +55,7 @@ export default function RHFCheckboxGroup<T>({
 					<FormControl>
 						<div
 							className={cn(
-								"flex gap-4",
+								"flex gap-5",
 								direction === "column" ? "flex-col" : "flex-row flex-wrap",
 								containerBox
 							)}

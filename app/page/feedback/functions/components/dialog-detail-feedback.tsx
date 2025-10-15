@@ -1,21 +1,33 @@
 import {
 	useGetFeedbackReviewDetail,
-	useGetFeedbackReviewPublish,
+	usePostImageFeedbackPublish,
 } from "@/api/feedback";
+import FormProvider from "@/components/RHForm/FormProvider";
+import RHFUploadFile from "@/components/RHForm/RHFUploadFile";
 import DialogModal from "@/components/custom/dialog/dialog-modal";
 import DialogPublish from "@/components/custom/dialog/dialog-publish";
+import { Grid } from "@/components/grid";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import type { ClassValue } from "clsx";
 import { enqueueSnackbar } from "notistack";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 interface DialogDetailFeedbackProps {
 	open: boolean;
 	onClose: () => void;
 	id: number;
 	refetch: () => void;
+}
+
+function splitImageUrl(url: string) {
+	const parts = url.split("/");
+	const image = parts.pop() as string; // filename (last part)
+	const image_path = parts.join("/"); // the rest
+
+	return { image_path, image };
 }
 
 const DialogDetailFeedback = ({
@@ -30,10 +42,14 @@ const DialogDetailFeedback = ({
 			queryKey: ["feedbacks-review-get", id],
 			enabled: !!id && open,
 		});
+	const { mutate } = usePostImageFeedbackPublish();
 
-	const { refetch: publish } = useGetFeedbackReviewPublish(String(id) || "", {
-		queryKey: ["feedbacks-review-publish", id],
-		enabled: false,
+	const methods = useForm({
+		defaultValues: {
+			image: "",
+		},
+		shouldFocusError: false,
+		mode: "onChange",
 	});
 
 	const TextFieldDisabled = ({
@@ -114,6 +130,14 @@ const DialogDetailFeedback = ({
 		) || []
 	);
 
+	useEffect(() => {
+		if (dataDetail && open) {
+			methods.reset({
+				image: dataDetail?.image_path + "/" + dataDetail?.image,
+			});
+		}
+	}, [dataDetail, open]);
+
 	return (
 		<DialogModal
 			open={open}
@@ -124,6 +148,13 @@ const DialogDetailFeedback = ({
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
 				<div>
+					<FormProvider methods={methods}>
+						<Grid container spacing={4}>
+							<Grid item xs={12}>
+								<RHFUploadFile name="image" slug="banner" required />
+							</Grid>
+						</Grid>
+					</FormProvider>
 					<TextFieldDisabled
 						title="Member Name"
 						value={dataDetail?.participant_name || "-"}
@@ -248,16 +279,37 @@ const DialogDetailFeedback = ({
 							setOpenPublish(false);
 						}}
 						onSubmit={() => {
-							publish().then(() => {
-								refetch();
-								refetchDetail();
-								setOpenPublish(false);
+							const data = methods.watch("image");
+							let { image_path, image } = splitImageUrl(data);
+
+							if (!data) {
 								enqueueSnackbar({
-									variant: "success",
-									message: `Review berhasil ${dataDetail?.is_publish === 0 ? "diterbitkan" : "ditarik"} `,
+									variant: "error",
+									message: `Image is required. Please upload an image.`,
 								});
-								onClose();
-							});
+							} else {
+								console.log("dataa");
+								mutate(
+									{
+										id: String(id) || "",
+										image_path: image_path,
+										image: image,
+										image_name: image,
+									},
+									{
+										onSuccess: () => {
+											refetch();
+											refetchDetail();
+											setOpenPublish(false);
+											enqueueSnackbar({
+												variant: "success",
+												message: `Review berhasil ${dataDetail?.is_publish === 0 ? "diterbitkan" : "ditarik"} `,
+											});
+											onClose();
+										},
+									}
+								);
+							}
 						}}
 					/>
 				</div>

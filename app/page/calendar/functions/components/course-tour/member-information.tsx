@@ -56,11 +56,12 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 			slot: form.batch.join(","),
 			name: form.info_group.group_name,
 			purpose_of_visit: form?.info_group.purpose_visit,
-			city: form.info_group.city,
+			province: form.info_group.city,
 			vehicles: form.info_vehicle.map((item) => ({
 				vehicle_plate_number: item.vehicle_plat,
 				vehicle_type: item.vehicle_type,
 			})),
+			allow_marketing: form.allow_marketing || false,
 			// vehicle_type: form.info_vehicle.vehicle_type,
 			// vehicle_plate_number: form.info_vehicle.vehicle_plat,
 			attachments: form.info_group.purpose_letter
@@ -79,6 +80,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 				email: form.info_group.email,
 				phone_number: form.info_group.phone_number,
 				is_special_need: form.info_group.isDifabel === "true",
+				is_participant: form.info_group.isParticipant === "true",
 			},
 			participants: form.group_member.map((item) => ({
 				name: item.name,
@@ -184,8 +186,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 			<div className="w-full border-[1px] rounded-sm mb-3 flex flex-col items-center">
 				<div className=" self-center-500 w-[460px]">
 					<Typography className="text-[18px] font-medium text-center my-3 ">
-						Upload data secara masal sekaligus, Download format upload dibawah
-						ini
+						Upload data in bulk. Download the Template Below.
 					</Typography>
 				</div>
 				<div
@@ -193,7 +194,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 					onClick={() => onDownload()}
 				>
 					<Icon icon="vscode-icons:file-type-excel" width="46" height="46" />
-					<Typography>Download format upload masal</Typography>
+					<Typography>Download bulk upload format.</Typography>
 				</div>
 				<label
 					htmlFor="upload-file"
@@ -204,7 +205,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 						Upload data
 					</Typography>
 					<Typography className="mt-1 text-sm">
-						(Data yang sudah terisi sesuai format)
+						(Filled in According to the Format)
 					</Typography>
 					<input
 						id="upload-file"
@@ -226,9 +227,9 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 			<div className="flex items-center w-full my-4">
 				<div className="flex-grow border-t border-gray-300"></div>
 				<span className="px-3 text-[12px] text-gray-500 text-center">
-					Atau anda juga dapat memasukkan data secara manual
+					Or you can also enter the data manually
 					<br />
-					melalui formulir di bawah ini.
+					using the form below.
 				</span>
 				<div className="flex-grow border-t border-gray-300"></div>
 			</div>
@@ -305,7 +306,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 									<RHFSelect
 										className="space-y-0"
 										name={`group_member.${index}.isDifabel`}
-										label="Berkebutuhan Khusus ?"
+										label="Any special needs? (Disability)"
 										options={difabelOptions}
 										placeholder="Choose"
 										getOptionLabel={(user) => user.name}
@@ -370,7 +371,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 					}}
 					variant={"hmmiOutline"}
 				>
-					Previously
+					Previous
 				</Button>
 
 				<Button

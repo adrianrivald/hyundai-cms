@@ -1,3 +1,5 @@
+import { usePostDashboardTour, type DashboardTourType } from "@/api/dashboard";
+import { useGetFeedbackDashboard } from "@/api/feedback";
 import FormProvider from "@/components/RHForm/FormProvider";
 import RHFDatePicker from "@/components/RHForm/RHFDatePicker";
 import Container from "@/components/container";
@@ -12,10 +14,13 @@ import {
 	ChartLegendContent,
 	ChartLegend,
 } from "@/components/ui/chart";
-import { cn } from "@/lib/utils";
+import { useDebounce } from "@/hooks/use-debounce";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { endOfMonth, format, startOfMonth } from "date-fns";
+import { useEffect, useMemo, useState } from "react";
 
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import {
 	CartesianGrid,
 	XAxis,
@@ -23,10 +28,8 @@ import {
 	LineChart,
 	Legend,
 	YAxis,
-	Cell,
 	Pie,
 	PieChart,
-	Tooltip,
 	Bar,
 	BarChart,
 	LabelList,
@@ -43,6 +46,14 @@ const chartConfig = {
 	general_tour: {
 		label: "General Tour",
 		color: "#743F00",
+	},
+	vip: {
+		label: "VIP Tour",
+		color: "#93BCFF",
+	},
+	vip_tour: {
+		label: "VIP Tour",
+		color: "#93BCFF",
 	},
 
 	general_reception: {
@@ -67,42 +78,96 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function DashboardPage() {
+	const navigate = useNavigate();
+	const [dataTour, setDataTour] = useState({} as DashboardTourType);
 	const methods = useForm({
 		defaultValues: {
-			start_date: "",
-			end_date: "",
+			start_date: startOfMonth(new Date()),
+			end_date: endOfMonth(new Date()),
 		},
 	});
 
-	const chartData = [
-		//{ date: "", student_tour: "", general_tour: "" },
-		{ date: "24 Sep 2024", student_tour: 186, general_tour: 184 },
-		{ date: "25 Sep 2024", student_tour: 305, general_tour: 150 },
-		{ date: "26 Sep 2024", student_tour: 237, general_tour: 120 },
-		{ date: "27 Sep 2024", student_tour: 73, general_tour: 110 },
-		{ date: "28 Sep 2024", student_tour: 209, general_tour: 194 },
-		{ date: "29 Sep 2024", student_tour: 214, general_tour: 104 },
-	];
+	const startDate = methods.watch("start_date");
+	const endDate = methods.watch("end_date");
+
+	const debounceStartDate = useDebounce(startDate, 500);
+	const debounceEndDate = useDebounce(endDate, 500);
+
+	const start_date = useMemo(() => {
+		if (!debounceStartDate) return "";
+		try {
+			return format(debounceStartDate, "yyyy-MM-dd");
+		} catch {
+			return "";
+		}
+	}, [debounceStartDate]);
+
+	const end_date = useMemo(() => {
+		if (!debounceEndDate) return "";
+		try {
+			return format(debounceEndDate, "yyyy-MM-dd");
+		} catch {
+			return "";
+		}
+	}, [debounceEndDate]);
+
+	const { mutate } = usePostDashboardTour();
+	const { data, refetch } = useGetFeedbackDashboard(start_date, end_date, {
+		enabled: false,
+		queryKey: ["feedback-dashboard-get-all"],
+	});
+
+	useEffect(() => {
+		mutate(
+			{
+				start_date: start_date,
+				end_date: end_date,
+			},
+			{
+				onSuccess: (data) => {
+					setDataTour(data.data);
+				},
+			}
+		);
+		refetch();
+	}, [end_date, start_date]);
+
+	const chartData =
+		dataTour?.registration_by_date && dataTour?.registration_by_date?.length > 0
+			? dataTour?.registration_by_date?.map((item) => ({
+					date: format(new Date(item.date), "dd MMM yyyy"),
+					vip: item.count.vip,
+					["general-course"]: item.count["general-course"],
+					["student-course"]: item.count["student-course"],
+				}))
+			: [];
 
 	const dataPie = [
 		{
 			name: "general_tour",
-			value: 75,
+			value: dataTour?.visitor_by_package_type?.["general-course"],
 			fill: "var(--color-general-tour)",
 		},
 		{
 			name: "student_tour",
-			value: 25,
+			value: dataTour?.visitor_by_package_type?.["student-course"],
 			fill: "var(--color-student-tour)",
+		},
+		{
+			name: "vip",
+			value: dataTour?.visitor_by_package_type?.vip,
+			fill: "var(--color-press-shop)",
 		},
 	];
 
-	const dataBar = [
-		{ city: "Bekasi", total: 186 },
-		{ city: "Tambun", total: 305 },
-		{ city: "Cibitung", total: 237 },
-		{ city: "Cikarang", total: 214 },
-	];
+	//const dataPie = dataTour && dataTour?.tour_by_package_type?.
+
+	const dataBar = dataTour?.tour_by_province
+		? Object.entries(dataTour?.tour_by_province).map(([city, total]) => ({
+				city: city.replace(/([a-z])([A-Z])/g, "$1 $2"),
+				total,
+			}))
+		: [];
 
 	const baseHeight = 300; // for 4 items
 	const extraHeightPerBar = 50;
@@ -111,28 +176,7 @@ export default function DashboardPage() {
 			? baseHeight
 			: baseHeight + (dataBar.length - 4) * extraHeightPerBar;
 
-	const dataFavoritePie = [
-		{
-			name: "general_reception",
-			value: 25,
-			fill: "var(--color-general-tour)",
-		},
-		{
-			name: "press_shop",
-			value: 25,
-			fill: "var(--color-press-shop)",
-		},
-		{
-			name: "body_shop",
-			value: 25,
-			fill: "var(--color-body-shop)",
-		},
-		{
-			name: "assembly_shop",
-			value: 25,
-			fill: "var(--color-assembly-shop)",
-		},
-	];
+	const maxCount = Math.max(...Object.values(data?.data?.rating_count || 0));
 
 	return (
 		<Container>
@@ -175,7 +219,7 @@ export default function DashboardPage() {
 							<Icon icon="simple-line-icons:magnifier" width="16" height="16" />
 						}
 					>
-						Cari Data
+						Search Data
 					</Button>
 				</div>
 				<Grid container>
@@ -185,11 +229,12 @@ export default function DashboardPage() {
 							className="h-[350px] w-full mt-5"
 						>
 							<LineChart
-								accessibilityLayer
+								//accessibilityLayer
 								data={chartData}
 								margin={{
 									left: 10,
 									right: 55,
+									bottom: 0,
 								}}
 							>
 								<CartesianGrid vertical={false} />
@@ -201,26 +246,34 @@ export default function DashboardPage() {
 									tickMargin={8}
 									tickFormatter={(value) => value}
 								/>
-								<YAxis />
+								<YAxis domain={[1, (dataMax: any) => dataMax + 5]} />
 								<ChartTooltip
 									cursor={false}
 									content={<ChartTooltipContent hideLabel />}
 								/>
 								<Line
-									dataKey="student_tour"
-									type="natural"
+									dataKey="student-course"
+									type="linear"
 									stroke="var(--color-student-tour)"
 									strokeWidth={2}
 									dot={true}
 									name={chartConfig.student_tour.label}
 								/>
 								<Line
-									dataKey="general_tour"
-									type="natural"
+									dataKey="general-course"
+									type="linear"
 									stroke="var(--color-general-tour)"
 									strokeWidth={2}
 									dot={true}
 									name={chartConfig.general_tour.label}
+								/>
+								<Line
+									dataKey="vip"
+									type="linear"
+									stroke="var(--color-press-shop)"
+									strokeWidth={2}
+									dot={true}
+									name={chartConfig.vip_tour.label}
 								/>
 								<Legend
 									margin={{ top: 20 }}
@@ -261,7 +314,7 @@ export default function DashboardPage() {
 												dominantBaseline={props.dominantBaseline}
 												fill="hsla(var(--foreground))"
 											>
-												{payload.value} %
+												{payload.value}
 											</text>
 										);
 									}}
@@ -276,19 +329,19 @@ export default function DashboardPage() {
 					<Grid item xs={6} className="">
 						<div className="relative bg-white rounded-sm py-5 px-5">
 							<Typography className="font-bold text-[18px]">
-								Jenis Gender Pengunjung
+								Visitor Gender Type
 							</Typography>
 							<div className="mt-5 flex flex-row">
 								<div className="flex-1">
-									<Typography className="text-[#8E8E93]">Laki Laki</Typography>
+									<Typography className="text-[#8E8E93]">Male</Typography>
 									<Typography className="font-medium text-[18px]">
-										2,690
+										{dataTour?.gender?.male || 0}
 									</Typography>
 								</div>
 								<div className="flex-1">
-									<Typography className="text-[#8E8E93]">Perempuan</Typography>
+									<Typography className="text-[#8E8E93]">Female</Typography>
 									<Typography className="font-medium text-[18px]">
-										1,780
+										{dataTour?.gender?.female || 0}
 									</Typography>
 								</div>
 							</div>
@@ -297,7 +350,7 @@ export default function DashboardPage() {
 
 					<Grid item xs={12} className="bg-white rounded-sm pt-5">
 						<Typography className="text-center mb-5 text-[18px] font-bold">
-							Kota Asal
+							Province of Origin
 						</Typography>
 						<ChartContainer
 							config={chartConfig}
@@ -359,7 +412,7 @@ export default function DashboardPage() {
 						</ChartContainer>
 					</Grid>
 
-					<Grid item xs={6}>
+					{/* <Grid item xs={6}>
 						<div className="bg-white rounded-sm pt-5">
 							<Typography className="text-center font-bold">
 								Area Favorit
@@ -401,99 +454,115 @@ export default function DashboardPage() {
 								</PieChart>
 							</ChartContainer>
 						</div>
-					</Grid>
-					<Grid item xs={6}>
+					</Grid> */}
+					<Grid item xs={12}>
 						<div className="bg-white rounded-sm pt-5 px-3 pb-3">
 							<Typography className="font-bold ">Rating & Feedback</Typography>
 							<div className="mt-5">
 								<div className="flex items-start gap-4 w-full">
 									<div className="flex flex-col items-center mt-5 px-5">
-										<span className="text-4xl font-bold">4,5</span>
+										<span className="text-4xl font-bold">
+											{data?.data?.rating_average}
+										</span>
 										<div className="flex mt-1">
-											{[1, 2, 3, 4].map((i) => (
+											{[1, 2, 3, 4, 5].map((i) => (
 												<Icon
 													key={i}
-													icon="mdi:star"
+													icon={
+														i <= (data?.data?.rating_average || 0)
+															? "mdi:star"
+															: "mdi:star-outline"
+													}
 													className="text-yellow-400 w-6 h-6"
 												/>
 											))}
-											<Icon
-												icon="mdi:star-outline"
-												className="text-yellow-400 w-6 h-6"
-											/>
 										</div>
 									</div>
 
 									{/* Right Side: Progress bars */}
-									<div className="flex flex-col gap-1 w-full">
-										{[5, 4, 3, 2, 1].map((star) => (
-											<div key={star} className="flex items-center gap-2">
-												<span className="w-4 text-sm">{star}</span>
-												<div className="flex-1 h-3 bg-gray-200 rounded">
-													<div
-														className={`h-3 rounded bg-orange-500`}
-														style={{
-															width:
-																star === 5
-																	? "80%"
-																	: star === 4
-																		? "65%"
-																		: star === 3
-																			? "45%"
-																			: star === 2
-																				? "20%"
-																				: "15%",
-														}}
-													/>
+									<div className="flex flex-col gap-2 w-full">
+										{[5, 4, 3, 2, 1].map((star) => {
+											//@ts-ignore
+											const count = data?.data?.rating_count?.[star];
+											const widthPercent =
+												maxCount === 0 ? 0 : (count / maxCount) * 100;
+
+											return (
+												<div
+													key={star}
+													className="flex items-center gap-2 w-full"
+												>
+													{/* Star number */}
+													<span className="w-4 text-sm font-semibold text-gray-800 text-right">
+														{star}
+													</span>
+
+													{/* Bar container */}
+													<div className="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
+														<div
+															className="h-4 bg-orange-500 rounded-full transition-all duration-300"
+															style={{ width: `${widthPercent}%` }}
+														/>
+													</div>
+
+													{/* Count number */}
+													<span className="w-4 text-sm font-semibold text-gray-600 text-right">
+														{count}
+													</span>
 												</div>
-											</div>
-										))}
+											);
+										})}
 									</div>
 								</div>
 							</div>
 							{/* FEEDBACK */}
 							<div className="mt-5">
-								{[1, 2].map((item) => {
+								{data?.data?.feedbacks?.map((item, index) => {
 									return (
 										<div
 											className="p-3 bg-[#F7F7F7] rounded-sm mb-3"
-											key={item}
+											key={index}
 										>
 											<div className="flex flex-row gap-3 items-center">
-												<img
-													src="/images/example-image.webp"
-													className="w-[50px] h-[50px] object-cover rounded-sm"
+												<Icon
+													icon="fluent:person-32-filled"
+													width="50"
+													height="50"
+													className="border-[1px] border-black rounded-sm"
 												/>
 												<div>
 													<Typography className="text-xs font-bold">
-														Gilang Aditya R
+														{item?.participant?.name}
 													</Typography>
 													<Typography className="text-xs">
-														SMK Adijaya
+														{item?.tour?.name}
 													</Typography>
 												</div>
 											</div>
 
 											<div className="flex flex-row mt-1">
-												{[1, 2, 3, 4].map((i) => (
+												{[1, 2, 3, 4, 5].map((i) => (
 													<Icon
 														key={i}
-														icon="mdi:star"
+														icon={
+															i <=
+															Number(
+																item?.responses?.[0]?.form_type === "rating"
+																	? item?.responses?.[0]?.value
+																	: 0
+															)
+																? "mdi:star"
+																: "mdi:star-outline"
+														}
 														className="text-yellow-400 w-4 h-4"
 													/>
 												))}
-												<Icon
-													icon="mdi:star-outline"
-													className="text-yellow-400 w-4 h-4"
-												/>
 											</div>
 
 											<Typography className="text-xs text-[#383B46] mt-2">
-												Pengalaman mengikuti course tour di Hyundai HMMI sangat
-												bermanfaat bagi tim teknis kami. Kami belajar banyak
-												tentang penerapan teknologi, keselamatan kerja, serta
-												standar kualitas yang bisa diadaptasi di perusahaan
-												kami.
+												{item.responses?.[1].form_type === "free_text"
+													? item?.responses?.[1]?.value
+													: "-"}
 											</Typography>
 										</div>
 									);
@@ -502,8 +571,11 @@ export default function DashboardPage() {
 								<Button
 									className="w-full cursor-pointer"
 									variant={"hmmiOutline"}
+									onClick={() => {
+										navigate("/feedback");
+									}}
 								>
-									Selengkapnya
+									More Details
 								</Button>
 							</div>
 						</div>

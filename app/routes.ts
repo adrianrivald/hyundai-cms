@@ -11,6 +11,10 @@ export default [
   layout("./routes/__layout/__auth.layout.tsx", [
     index("./routes/guard-route/dashboard/index.tsx"),
     route("calendar", "./routes/guard-route/calendar/index.tsx"),
+    route(
+      "calendar/reschedule",
+      "./routes/guard-route/calendar/reschedule.tsx"
+    ),
     route("feedback", "./routes/guard-route/feedback/index.tsx"),
 
     ...prefix("user-management", [
@@ -29,6 +33,14 @@ export default [
       route(
         "visitor-report",
         "./routes/guard-route/report/report-visitor/index.tsx"
+      ),
+      route(
+        "visitor-report/detail/:id",
+        "./routes/guard-route/report/report-visitor/detail.tsx"
+      ),
+      route(
+        "registration-report/detail/:id",
+        "./routes/guard-route/report/report-registration/detail.tsx"
       ),
     ]),
 
