@@ -19,8 +19,8 @@ const DialogApproval = ({
 			onOpenChange={() => {
 				onClose();
 			}}
-			title={`Apakah anda yakin untuk ${approval} ini ?`}
-			subtitle="Keputusan ini bersifat permanen, sehingga tidak dapat dikembalikan lagi."
+			title={`Are you sure to ${approval} this ?`}
+			subtitle="This decision is permanent, so it cannot be reversed"
 			contentProps="w-[350px]"
 			onClickLeft={() => {
 				onSubmit();

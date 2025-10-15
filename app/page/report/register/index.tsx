@@ -78,7 +78,7 @@ const RegistrationReportPage = () => {
 					<div className="flex flex-row gap-3">
 						<RHFTextField
 							name="search"
-							placeholder="Search by name or phone"
+							placeholder="Search by group name"
 							className="w-[230px]"
 							endIcon={
 								<Icon
