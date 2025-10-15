@@ -19,8 +19,8 @@ const DialogDelete = ({ open, onClose, onSubmit }: DialogDeleteProps) => {
 			onClickLeft={() => {
 				onSubmit();
 			}}
-			leftButtonTitle="Ya"
-			rightButtonTitle="Tidak"
+			leftButtonTitle="Yes"
+			rightButtonTitle="No"
 			onClickRight={() => {
 				onClose();
 			}}

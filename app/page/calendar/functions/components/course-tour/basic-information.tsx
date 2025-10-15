@@ -362,7 +362,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						<Grid item xs={6} md={3}>
 							<RHFSelect
 								name="info_group.isDifabel"
-								label="Special Need"
+								label="Any special needs? (Disability)"
 								options={[
 									{ id: "true", name: "Yes" },
 									{ id: "false", name: "No" },
