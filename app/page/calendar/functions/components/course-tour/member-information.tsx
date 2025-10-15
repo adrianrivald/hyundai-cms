@@ -186,8 +186,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 			<div className="w-full border-[1px] rounded-sm mb-3 flex flex-col items-center">
 				<div className=" self-center-500 w-[460px]">
 					<Typography className="text-[18px] font-medium text-center my-3 ">
-						Upload data secara masal sekaligus, Download format upload dibawah
-						ini
+						Upload data in bulk. Download the Template Below.
 					</Typography>
 				</div>
 				<div
@@ -195,7 +194,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 					onClick={() => onDownload()}
 				>
 					<Icon icon="vscode-icons:file-type-excel" width="46" height="46" />
-					<Typography>Download format upload masal</Typography>
+					<Typography>Download bulk upload format.</Typography>
 				</div>
 				<label
 					htmlFor="upload-file"
@@ -206,7 +205,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 						Upload data
 					</Typography>
 					<Typography className="mt-1 text-sm">
-						(Data yang sudah terisi sesuai format)
+						(Filled in According to the Format)
 					</Typography>
 					<input
 						id="upload-file"
@@ -228,9 +227,9 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 			<div className="flex items-center w-full my-4">
 				<div className="flex-grow border-t border-gray-300"></div>
 				<span className="px-3 text-[12px] text-gray-500 text-center">
-					Atau anda juga dapat memasukkan data secara manual
+					Or you can also enter the data manually
 					<br />
-					melalui formulir di bawah ini.
+					using the form below.
 				</span>
 				<div className="flex-grow border-t border-gray-300"></div>
 			</div>
@@ -307,7 +306,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 									<RHFSelect
 										className="space-y-0"
 										name={`group_member.${index}.isDifabel`}
-										label="Berkebutuhan Khusus ?"
+										label="Any special needs? (Disability)"
 										options={difabelOptions}
 										placeholder="Choose"
 										getOptionLabel={(user) => user.name}
@@ -372,7 +371,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 					}}
 					variant={"hmmiOutline"}
 				>
-					Previously
+					Previous
 				</Button>
 
 				<Button

@@ -25,8 +25,8 @@ const DialogPublish = ({
 			onClickLeft={() => {
 				onSubmit();
 			}}
-			leftButtonTitle="Ya"
-			rightButtonTitle="Tidak"
+			leftButtonTitle="Yes"
+			rightButtonTitle="No"
 			onClickRight={() => {
 				onClose();
 			}}
