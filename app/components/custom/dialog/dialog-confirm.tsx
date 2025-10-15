@@ -14,8 +14,8 @@ const DialogConfirm = ({ open, onClose, onSubmit }: DialogDeleteProps) => {
 			onOpenChange={() => {
 				onClose();
 			}}
-			title="Apakah anda yakin untuk keluar dari halaman ini ?"
-			subtitle="Keputusan ini akan menghapus daftar yang sudah di isi, sehingga tidak dapat dikembalikan lagi."
+			title="Are you sure you want to leave this page?"
+			subtitle="This action will delete the filled list and cannot be undone."
 			contentProps="w-[350px]"
 			onClickLeft={() => {
 				onSubmit();

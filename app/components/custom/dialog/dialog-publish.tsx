@@ -19,8 +19,8 @@ const DialogPublish = ({
 			onOpenChange={() => {
 				onClose();
 			}}
-			title={`Apakah anda yakin untuk ${isPublish ? "menerbitkan" : "menarik"} review ini`}
-			subtitle={`Keputusan ini akan ${isPublish ? "menampilkan" : "menarik"} ulasan berikut pada microsite.`}
+			title={`Are you sure you want to ${isPublish ? "publish" : "unpublish"} this review?`}
+			subtitle={`This action will ${isPublish ? "display" : "remove"} the following review on the microsite.`}
 			contentProps="w-[350px]"
 			onClickLeft={() => {
 				onSubmit();
