@@ -88,7 +88,7 @@ const DialogDetailArticle = ({
 							}}
 							variant={"hmmiOutline"}
 						>
-							Tutup
+							Close
 						</Button>
 					</div>
 				</div>
