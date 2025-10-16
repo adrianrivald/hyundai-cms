@@ -183,7 +183,7 @@ const DialogRescheduleDetail = ({
 						</div>
 					</FormProvider>
 					<DialogApproval
-						approval={approval.approve ? "Menyetujui" : "Menolak"}
+						approval={approval.approve ? "Approve" : "Reject"}
 						open={approval.isOpen}
 						onClose={() => {
 							setApproval({ isOpen: false, approve: null });

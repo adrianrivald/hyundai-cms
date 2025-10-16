@@ -4,7 +4,7 @@ interface DialogDeleteProps {
 	open: boolean;
 	onClose: () => void;
 	onSubmit: () => void;
-	approval?: "Menyetujui" | "Menolak";
+	approval?: "Approve" | "Reject";
 }
 
 const DialogApproval = ({

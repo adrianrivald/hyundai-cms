@@ -155,7 +155,7 @@ export const dataWhistleblower: ColumnDef<AlbumTypes>[] = [
 		cell: ({ row }) => (
 			<div className="flex gap-2">
 				<Typography className="text-blue-500 underline cursor-pointer">
-					Lihat Detail
+					View Details
 				</Typography>
 			</div>
 		),

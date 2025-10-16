@@ -53,11 +53,11 @@ const Form = () => {
 		}
 	}, [dataArticle, id]);
 
-	useEffect(() => {
-		if (!id) {
-			methods.setValue("author", user.name);
-		}
-	}, [id]);
+	// useEffect(() => {
+	// 	if (!id) {
+	// 		methods.setValue("author", user.name);
+	// 	}
+	// }, [id]);
 
 	const onSubmit = (status: string) => {
 		const form = methods.watch();

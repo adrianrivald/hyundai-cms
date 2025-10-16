@@ -467,7 +467,9 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 							}}
 							disabled={
 								methods.watch("info_vehicle")?.[0].vehicle_type ===
-									"tour-bus" || methods.watch("info_vehicle")?.length === 6
+									"tour-bus" ||
+								methods.watch("info_vehicle")?.length === 7 ||
+								!methods.watch("info_vehicle")?.[0]?.vehicle_type
 							}
 						>
 							Add Vehicle
