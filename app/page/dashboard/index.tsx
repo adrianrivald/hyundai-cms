@@ -60,6 +60,15 @@ const chartConfig = {
 		color: "#93BCFF",
 	},
 
+	male: {
+		label: "Male",
+		color: "#6277DF",
+	},
+	female: {
+		label: "Female",
+		color: "#E62D2D",
+	},
+
 	general_reception: {
 		label: "General Reception",
 	},
@@ -251,6 +260,19 @@ export default function DashboardPage() {
 		}
 	};
 
+	const dataGender = [
+		{
+			name: "male",
+			value: dataTour?.gender?.male,
+			fill: "var(--color-male)",
+		},
+		{
+			name: "female",
+			value: dataTour?.gender?.female,
+			fill: "var(--color-female)",
+		},
+	];
+
 	return (
 		<Container>
 			{loading && <LoadingIndicator text="export PDF" />}
@@ -409,10 +431,46 @@ export default function DashboardPage() {
 					</Grid>
 					<Grid item xs={6} className="">
 						<div className="relative bg-white rounded-sm py-5 px-5">
-							<Typography className="font-bold text-[18px]">
+							<Typography className="font-bold text-center text-[18px]">
 								Visitor Gender Type
 							</Typography>
-							<div className="mt-5 flex flex-row">
+							<ChartContainer
+								config={chartConfig}
+								className="mx-auto aspect-square max-h-[280px]"
+							>
+								<PieChart>
+									<ChartTooltip
+										cursor={false}
+										content={<ChartTooltipContent hideLabel />}
+									/>
+									<Pie
+										data={dataGender}
+										dataKey="value"
+										nameKey="name"
+										innerRadius={1}
+										label={({ payload, ...props }) => {
+											return (
+												<text
+													cx={props.cx}
+													cy={props.cy}
+													x={props.x}
+													y={props.y}
+													textAnchor={props.textAnchor}
+													dominantBaseline={props.dominantBaseline}
+													fill="hsla(var(--foreground))"
+												>
+													{payload.value}
+												</text>
+											);
+										}}
+									/>
+									<ChartLegend
+										content={<ChartLegendContent nameKey="name" />}
+										className="-translate-y-2 flex-wrap gap-2 *:justify-center "
+									/>
+								</PieChart>
+							</ChartContainer>
+							{/* <div className="mt-5 flex flex-row">
 								<div className="flex-1">
 									<Typography className="text-[#8E8E93]">Male</Typography>
 									<Typography className="font-medium text-[18px]">
@@ -425,7 +483,7 @@ export default function DashboardPage() {
 										{dataTour?.gender?.female || 0}
 									</Typography>
 								</div>
-							</div>
+							</div> */}
 						</div>
 					</Grid>
 					<Grid item xs={12} className="bg-white rounded-sm pt-5">

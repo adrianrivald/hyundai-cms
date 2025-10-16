@@ -155,6 +155,7 @@ const DialogDetailFeedback = ({
 							</Grid>
 						</Grid>
 					</FormProvider>
+					<div className="mb-3" />
 					<TextFieldDisabled
 						title="Member Name"
 						value={dataDetail?.participant_name || "-"}
