@@ -13,7 +13,7 @@ export default function QRScan() {
   const attended = data?.data.total?.attended ?? 0;
   const participants = data?.data.total?.participants ?? 0;
 
-  const percentage = participants === 0 ? 0 : (attended / participants) * 100;
+  const percentage = data?.data?.total?.attended_pct;
 
   return (
     <div className="flex justify-center min-h-screen bg-black">
@@ -51,49 +51,6 @@ export default function QRScan() {
                   <Typography className="text-lg text-white/70">
                     /{data?.data.total.participants}
                   </Typography>
-                </div>
-              </div>
-
-              {/* Visitor Information Section */}
-              <div className="mb-6">
-                <div className="bg-black rounded-t-lg px-4 py-3 mb-0">
-                  <Typography className="text-sm font-medium">
-                    Informasi kunjungan hari ini
-                  </Typography>
-                </div>
-                <div className="bg-black/20 rounded-b-lg p-4 space-y-3">
-                  <div className="flex justify-between">
-                    <Typography className="text-sm text-white/80">
-                      Nama Instansi
-                    </Typography>
-                    <Typography className="text-sm font-medium">
-                      {data?.data?.events[0]?.holiday_name}
-                    </Typography>
-                  </div>
-                  <div className="flex justify-between">
-                    <Typography className="text-sm text-white/80">
-                      Asal
-                    </Typography>
-                    <Typography className="text-sm font-medium">
-                      {data?.data?.events[0]?.description}
-                    </Typography>
-                  </div>
-                  <div className="flex justify-between">
-                    <Typography className="text-sm text-white/80">
-                      Nama ketua group
-                    </Typography>
-                    <Typography className="text-sm font-medium">
-                      {/* TODO: Integrate leader name */}
-                    </Typography>
-                  </div>
-                  <div className="flex justify-between">
-                    <Typography className="text-sm text-white/80">
-                      Nomor ketua group
-                    </Typography>
-                    <Typography className="text-sm font-medium">
-                      {/* TODO: Integrate leader phone number */}
-                    </Typography>
-                  </div>
                 </div>
               </div>
 

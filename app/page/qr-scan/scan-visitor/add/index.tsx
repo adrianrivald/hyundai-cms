@@ -77,16 +77,16 @@ export default function AddVisitor() {
         <div className="flex-1 overflow-y-auto px-6 pb-6 space-y-5 mt-8">
           <div>
             <Typography className="text-sm text-white mb-2">
-              Pilih Tour Number
+              Pilih Tour
             </Typography>
             <select
               value={formData.tour_number}
               onChange={(e) => handleChange("tour_number", e.target.value)}
               className="w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
-              <option value="">Pilih tour number</option>
+              <option value="">Pilih tour</option>
               {data?.data?.map((d: any) => (
-                <option value={d?.tour_number}>{d?.tour_number}</option>
+                <option value={d?.tour_number}>{d?.name}</option>
               ))}
             </select>
           </div>
