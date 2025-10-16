@@ -17,7 +17,7 @@ import {
 import { useDebounce } from "@/hooks/use-debounce";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { endOfMonth, format, startOfMonth } from "date-fns";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
@@ -34,6 +34,10 @@ import {
 	BarChart,
 	LabelList,
 } from "recharts";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { parse, formatRgb } from "culori";
+import { LoadingIndicator } from "@/components/loading-indicator";
 
 const chartConfig = {
 	tour: {
@@ -80,12 +84,17 @@ const chartConfig = {
 export default function DashboardPage() {
 	const navigate = useNavigate();
 	const [dataTour, setDataTour] = useState({} as DashboardTourType);
+	const [loading, setLoading] = useState(false);
 	const methods = useForm({
 		defaultValues: {
 			start_date: startOfMonth(new Date()),
 			end_date: endOfMonth(new Date()),
 		},
 	});
+
+	const lineChartRef = useRef<HTMLDivElement>(null);
+	const pieChartRef = useRef<HTMLDivElement>(null);
+	const barChartRef = useRef<HTMLDivElement>(null);
 
 	const startDate = methods.watch("start_date");
 	const endDate = methods.watch("end_date");
@@ -178,8 +187,73 @@ export default function DashboardPage() {
 
 	const maxCount = Math.max(...Object.values(data?.data?.rating_count || 0));
 
+	const handleExportChartsPDF = async () => {
+		setLoading(true);
+		const charts = [lineChartRef, pieChartRef, barChartRef];
+		const pdf = new jsPDF("p", "pt", "a4");
+
+		const pageWidth = pdf.internal.pageSize.getWidth();
+		const pageHeight = pdf.internal.pageSize.getHeight();
+		let currentY = 20;
+
+		// --- Convert OKLCH colors to RGB temporarily ---
+		const root = document.documentElement;
+		const styles = getComputedStyle(root);
+		const changedVars: Record<string, string> = {};
+
+		for (const prop of styles) {
+			const val = styles.getPropertyValue(prop);
+			if (val.includes("oklch(")) {
+				try {
+					const rgb = formatRgb(parse(val));
+					if (rgb) {
+						changedVars[prop] = val; // store original
+						root.style.setProperty(prop, rgb); // apply fallback
+					}
+				} catch {
+					/* ignore */
+				}
+			}
+		}
+
+		try {
+			for (let i = 0; i < charts.length; i++) {
+				const chartRef = charts[i];
+				if (!chartRef.current) continue;
+
+				// Capture chart as image
+				const canvas = await html2canvas(chartRef.current, {
+					scale: 1.5,
+					useCORS: true,
+					backgroundColor: "#ffffff",
+				});
+				const imgData = canvas.toDataURL("image/jpeg");
+
+				const imgWidth = pageWidth - 40;
+				const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+				// Add page if needed
+				if (currentY + imgHeight > pageHeight - 20) {
+					pdf.addPage();
+					currentY = 20;
+				}
+
+				pdf.addImage(imgData, "PNG", 20, currentY, imgWidth, imgHeight);
+				currentY += imgHeight + 20;
+			}
+			setLoading(false);
+			pdf.save(`dashboard_charts_${new Date().toISOString().slice(0, 10)}.pdf`);
+		} finally {
+			// --- Revert back to OKLCH colors after export ---
+			for (const [prop, originalVal] of Object.entries(changedVars)) {
+				root.style.setProperty(prop, originalVal);
+			}
+		}
+	};
+
 	return (
 		<Container>
+			{loading && <LoadingIndicator text="export PDF" />}
 			<FormProvider methods={methods}>
 				<div className="flex flex-row gap-5 bg-white p-5  items-end rounded-sm">
 					<RHFDatePicker
@@ -221,8 +295,15 @@ export default function DashboardPage() {
 					>
 						Search Data
 					</Button>
+					<Button
+						onClick={() => {
+							handleExportChartsPDF();
+						}}
+					>
+						Export PDF
+					</Button>
 				</div>
-				<Grid container>
+				<Grid container ref={lineChartRef}>
 					<Grid item xs={12} className="bg-white mt-5 rounded-sm p-5">
 						<ChartContainer
 							config={chartConfig}
@@ -284,7 +365,7 @@ export default function DashboardPage() {
 					</Grid>
 				</Grid>
 
-				<Grid container spacing={3} className="mt-5 mb-10">
+				<Grid container spacing={3} className="mt-5 mb-10" ref={pieChartRef}>
 					<Grid item xs={6} className="bg-white rounded-sm pt-5">
 						<Typography className="text-center font-bold">
 							Total Visitor
@@ -567,20 +648,19 @@ export default function DashboardPage() {
 										</div>
 									);
 								})}
-
-								<Button
-									className="w-full cursor-pointer"
-									variant={"hmmiOutline"}
-									onClick={() => {
-										navigate("/feedback");
-									}}
-								>
-									More Details
-								</Button>
 							</div>
 						</div>
 					</Grid>
 				</Grid>
+				<Button
+					className="w-full cursor-pointer"
+					variant={"hmmiOutline"}
+					onClick={() => {
+						navigate("/feedback");
+					}}
+				>
+					More Details
+				</Button>
 			</FormProvider>
 		</Container>
 	);
