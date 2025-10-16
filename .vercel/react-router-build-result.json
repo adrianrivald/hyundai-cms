@@ -29,6 +29,18 @@
         "file": "./routes/guard-route/calendar/index.tsx",
         "path": "calendar"
       },
+      "routes/guard-route/calendar/reschedule": {
+        "id": "routes/guard-route/calendar/reschedule",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/calendar/reschedule.tsx",
+        "path": "calendar/reschedule"
+      },
+      "routes/guard-route/feedback/index": {
+        "id": "routes/guard-route/feedback/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/feedback/index.tsx",
+        "path": "feedback"
+      },
       "routes/guard-route/user-management/index": {
         "id": "routes/guard-route/user-management/index",
         "parentId": "routes/__layout/__auth.layout",
@@ -59,6 +71,18 @@
         "parentId": "routes/__layout/__auth.layout",
         "file": "./routes/guard-route/report/report-visitor/index.tsx",
         "path": "report/visitor-report"
+      },
+      "routes/guard-route/report/report-visitor/detail": {
+        "id": "routes/guard-route/report/report-visitor/detail",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/report/report-visitor/detail.tsx",
+        "path": "report/visitor-report/detail/:id"
+      },
+      "routes/guard-route/report/report-registration/detail": {
+        "id": "routes/guard-route/report/report-registration/detail",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/report/report-registration/detail.tsx",
+        "path": "report/registration-report/detail/:id"
       },
       "routes/guard-route/content-editor/homepage": {
         "id": "routes/guard-route/content-editor/homepage",
@@ -120,11 +144,35 @@
         "file": "./routes/guard-route/content-editor/legal.tsx",
         "path": "content-editor/legal"
       },
+      "routes/guard-route/content-editor/feedback": {
+        "id": "routes/guard-route/content-editor/feedback",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/feedback.tsx",
+        "path": "content-editor/feedback"
+      },
       "routes/guard-route/content-editor/registration-guide": {
         "id": "routes/guard-route/content-editor/registration-guide",
         "parentId": "routes/__layout/__auth.layout",
         "file": "./routes/guard-route/content-editor/registration-guide.tsx",
         "path": "content-editor/registration-guide"
+      },
+      "routes/guard-route/content-editor/top-menu/index": {
+        "id": "routes/guard-route/content-editor/top-menu/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/top-menu/index.tsx",
+        "path": "content-editor/top-menu/"
+      },
+      "routes/guard-route/content-editor/top-menu/create": {
+        "id": "routes/guard-route/content-editor/top-menu/create",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/top-menu/create.tsx",
+        "path": "content-editor/top-menu/create"
+      },
+      "routes/guard-route/content-editor/top-menu/update.$id": {
+        "id": "routes/guard-route/content-editor/top-menu/update.$id",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/top-menu/update.$id.tsx",
+        "path": "content-editor/top-menu/update/:id"
       },
       "routes/guard-route/whistleblower/index": {
         "id": "routes/guard-route/whistleblower/index",
@@ -138,6 +186,30 @@
         "file": "./routes/guard-route/qr-scan/index.tsx",
         "path": "qr-scan",
         "index": true
+      },
+      "routes/guard-route/qr-scan/visitor-list/index": {
+        "id": "routes/guard-route/qr-scan/visitor-list/index",
+        "parentId": "root",
+        "file": "./routes/guard-route/qr-scan/visitor-list/index.tsx",
+        "path": "qr-scan/visitor-list"
+      },
+      "routes/guard-route/qr-scan/scan-visitor/index": {
+        "id": "routes/guard-route/qr-scan/scan-visitor/index",
+        "parentId": "root",
+        "file": "./routes/guard-route/qr-scan/scan-visitor/index.tsx",
+        "path": "qr-scan/scan-visitor"
+      },
+      "routes/guard-route/qr-scan/scan-visitor/add/index": {
+        "id": "routes/guard-route/qr-scan/scan-visitor/add/index",
+        "parentId": "root",
+        "file": "./routes/guard-route/qr-scan/scan-visitor/add/index.tsx",
+        "path": "qr-scan/scan-visitor/add"
+      },
+      "routes/guard-route/qr-scan/settings/index": {
+        "id": "routes/guard-route/qr-scan/settings/index",
+        "parentId": "root",
+        "file": "./routes/guard-route/qr-scan/settings/index.tsx",
+        "path": "qr-scan/settings"
       },
       "routes/dev": {
         "id": "routes/dev",
@@ -193,6 +265,18 @@
         "file": "./routes/guard-route/calendar/index.tsx",
         "path": "calendar"
       },
+      "routes/guard-route/calendar/reschedule": {
+        "id": "routes/guard-route/calendar/reschedule",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/calendar/reschedule.tsx",
+        "path": "calendar/reschedule"
+      },
+      "routes/guard-route/feedback/index": {
+        "id": "routes/guard-route/feedback/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/feedback/index.tsx",
+        "path": "feedback"
+      },
       "routes/guard-route/user-management/index": {
         "id": "routes/guard-route/user-management/index",
         "parentId": "routes/__layout/__auth.layout",
@@ -223,6 +307,18 @@
         "parentId": "routes/__layout/__auth.layout",
         "file": "./routes/guard-route/report/report-visitor/index.tsx",
         "path": "report/visitor-report"
+      },
+      "routes/guard-route/report/report-visitor/detail": {
+        "id": "routes/guard-route/report/report-visitor/detail",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/report/report-visitor/detail.tsx",
+        "path": "report/visitor-report/detail/:id"
+      },
+      "routes/guard-route/report/report-registration/detail": {
+        "id": "routes/guard-route/report/report-registration/detail",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/report/report-registration/detail.tsx",
+        "path": "report/registration-report/detail/:id"
       },
       "routes/guard-route/content-editor/homepage": {
         "id": "routes/guard-route/content-editor/homepage",
@@ -284,11 +380,35 @@
         "file": "./routes/guard-route/content-editor/legal.tsx",
         "path": "content-editor/legal"
       },
+      "routes/guard-route/content-editor/feedback": {
+        "id": "routes/guard-route/content-editor/feedback",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/feedback.tsx",
+        "path": "content-editor/feedback"
+      },
       "routes/guard-route/content-editor/registration-guide": {
         "id": "routes/guard-route/content-editor/registration-guide",
         "parentId": "routes/__layout/__auth.layout",
         "file": "./routes/guard-route/content-editor/registration-guide.tsx",
         "path": "content-editor/registration-guide"
+      },
+      "routes/guard-route/content-editor/top-menu/index": {
+        "id": "routes/guard-route/content-editor/top-menu/index",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/top-menu/index.tsx",
+        "path": "content-editor/top-menu/"
+      },
+      "routes/guard-route/content-editor/top-menu/create": {
+        "id": "routes/guard-route/content-editor/top-menu/create",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/top-menu/create.tsx",
+        "path": "content-editor/top-menu/create"
+      },
+      "routes/guard-route/content-editor/top-menu/update.$id": {
+        "id": "routes/guard-route/content-editor/top-menu/update.$id",
+        "parentId": "routes/__layout/__auth.layout",
+        "file": "./routes/guard-route/content-editor/top-menu/update.$id.tsx",
+        "path": "content-editor/top-menu/update/:id"
       },
       "routes/guard-route/whistleblower/index": {
         "id": "routes/guard-route/whistleblower/index",
@@ -302,6 +422,30 @@
         "file": "./routes/guard-route/qr-scan/index.tsx",
         "path": "qr-scan",
         "index": true
+      },
+      "routes/guard-route/qr-scan/visitor-list/index": {
+        "id": "routes/guard-route/qr-scan/visitor-list/index",
+        "parentId": "root",
+        "file": "./routes/guard-route/qr-scan/visitor-list/index.tsx",
+        "path": "qr-scan/visitor-list"
+      },
+      "routes/guard-route/qr-scan/scan-visitor/index": {
+        "id": "routes/guard-route/qr-scan/scan-visitor/index",
+        "parentId": "root",
+        "file": "./routes/guard-route/qr-scan/scan-visitor/index.tsx",
+        "path": "qr-scan/scan-visitor"
+      },
+      "routes/guard-route/qr-scan/scan-visitor/add/index": {
+        "id": "routes/guard-route/qr-scan/scan-visitor/add/index",
+        "parentId": "root",
+        "file": "./routes/guard-route/qr-scan/scan-visitor/add/index.tsx",
+        "path": "qr-scan/scan-visitor/add"
+      },
+      "routes/guard-route/qr-scan/settings/index": {
+        "id": "routes/guard-route/qr-scan/settings/index",
+        "parentId": "root",
+        "file": "./routes/guard-route/qr-scan/settings/index.tsx",
+        "path": "qr-scan/settings"
       },
       "routes/dev": {
         "id": "routes/dev",
