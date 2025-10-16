@@ -13,7 +13,7 @@ export default function QRScan() {
   const attended = data?.data.total?.attended ?? 0;
   const participants = data?.data.total?.participants ?? 0;
 
-  const percentage = participants === 0 ? 0 : (attended / participants) * 100;
+  const percentage = data?.data?.total?.attended_pct;
 
   return (
     <div className="flex justify-center min-h-screen bg-black">
