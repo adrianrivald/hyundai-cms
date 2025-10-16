@@ -194,7 +194,7 @@ export default function DashboardPage() {
 
 		const pageWidth = pdf.internal.pageSize.getWidth();
 		const pageHeight = pdf.internal.pageSize.getHeight();
-		let currentY = 20;
+		let currentY = 15;
 
 		// --- Convert OKLCH colors to RGB temporarily ---
 		const root = document.documentElement;
@@ -372,7 +372,7 @@ export default function DashboardPage() {
 						</Typography>
 						<ChartContainer
 							config={chartConfig}
-							className="mx-auto aspect-square max-h-[250px]"
+							className="mx-auto aspect-square max-h-[280px]"
 						>
 							<PieChart>
 								<ChartTooltip
@@ -428,7 +428,6 @@ export default function DashboardPage() {
 							</div>
 						</div>
 					</Grid>
-
 					<Grid item xs={12} className="bg-white rounded-sm pt-5">
 						<Typography className="text-center mb-5 text-[18px] font-bold">
 							Province of Origin
@@ -492,50 +491,6 @@ export default function DashboardPage() {
 							</BarChart>
 						</ChartContainer>
 					</Grid>
-
-					{/* <Grid item xs={6}>
-						<div className="bg-white rounded-sm pt-5">
-							<Typography className="text-center font-bold">
-								Area Favorit
-							</Typography>
-							<ChartContainer
-								config={chartConfig}
-								className="mx-auto aspect-square max-h-[250px]"
-							>
-								<PieChart>
-									<ChartTooltip
-										cursor={false}
-										content={<ChartTooltipContent hideLabel />}
-									/>
-									<Pie
-										data={dataFavoritePie}
-										dataKey="value"
-										nameKey="name"
-										innerRadius={60}
-										label={({ payload, ...props }) => {
-											return (
-												<text
-													cx={props.cx}
-													cy={props.cy}
-													x={props.x}
-													y={props.y}
-													textAnchor={props.textAnchor}
-													dominantBaseline={props.dominantBaseline}
-													fill="hsla(var(--foreground))"
-												>
-													{payload.value} %
-												</text>
-											);
-										}}
-									/>
-									<ChartLegend
-										content={<ChartLegendContent nameKey="name" />}
-										className="-translate-y-2 flex-wrap gap-2 *:justify-center "
-									/>
-								</PieChart>
-							</ChartContainer>
-						</div>
-					</Grid> */}
 					<Grid item xs={12}>
 						<div className="bg-white rounded-sm pt-5 px-3 pb-3">
 							<Typography className="font-bold ">Rating & Feedback</Typography>

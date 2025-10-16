@@ -288,7 +288,6 @@ const DialogDetailFeedback = ({
 									message: `Image is required. Please upload an image.`,
 								});
 							} else {
-								console.log("dataa");
 								mutate(
 									{
 										id: String(id) || "",
