@@ -4,8 +4,9 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import StickyFooter from "@/components/layout/sticky-footer";
 import StickyHeader from "@/components/layout/sticky-header";
 import { useState, useEffect } from "react";
-import { useGetParticipantsByDate } from "@/api/qr-scan";
+import { attendQr, useGetParticipantsByDate } from "@/api/qr-scan";
 import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
 
 export default function VisitorList() {
   const today = format(new Date(), "yyyy-MM-dd");
@@ -21,7 +22,7 @@ export default function VisitorList() {
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
-  const { data } = useGetParticipantsByDate({
+  const { data, refetch } = useGetParticipantsByDate({
     date: today,
     search_query: debouncedSearch,
     paginate,
@@ -33,6 +34,16 @@ export default function VisitorList() {
     visitor.name.toLowerCase().includes(debouncedSearch.toLowerCase())
   );
 
+  const handleBypass = async (visitorCode: string, attendedAt: string) => {
+    if (attendedAt === null) {
+      await attendQr({ code: visitorCode }).then((response) => {
+        if (response.status === 200) {
+          refetch();
+        }
+      });
+    }
+  };
+
   return (
     <div className="flex justify-center min-h-screen bg-black">
       <div
@@ -41,8 +52,6 @@ export default function VisitorList() {
           background: "linear-gradient(to bottom, #153263, #00102B)",
         }}
       >
-        <StickyHeader />
-
         <div className="flex-1 overflow-auto">
           <ScrollArea className="h-full">
             <div className="p-6 text-white space-y-6">
@@ -72,17 +81,21 @@ export default function VisitorList() {
               {/* Date Display */}
               <div className="flex items-center gap-2">
                 <Icon icon="mdi:calendar" width="20" height="20" />
-                <Typography className="text-sm">29 February 2024</Typography>
+                <Typography className="text-sm">
+                  {" "}
+                  {format(new Date(), "dd/MM/yyyy")}
+                </Typography>
               </div>
 
               <div className="bg-black rounded-t-lg px-4 py-3 mb-0">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   <Typography className="text-sm font-bold">
-                    Nama Peserta
+                    Nama Peserta (Nama Group)
                   </Typography>
                   <Typography className="text-sm font-bold">
                     Nomor HP
                   </Typography>
+                  <Typography className="text-sm font-bold">Action</Typography>
                 </div>
               </div>
 
@@ -96,13 +109,24 @@ export default function VisitorList() {
                         : ""
                     }`}
                   >
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                       <Typography className="text-sm">
-                        {visitor.name}
+                        {visitor.name} {`(${visitor.tour?.name})`}
                       </Typography>
                       <Typography className="text-sm">
                         {visitor.phone_number}
                       </Typography>
+                      <Button
+                        onClick={() =>
+                          handleBypass(
+                            visitor.verification_code,
+                            visitor.attended_at
+                          )
+                        }
+                        className={`${visitor.attended_at !== null ? "cursor-not-allowed" : "cursor-pointer"}`}
+                      >
+                        {visitor.attended_at !== null ? "Attended" : "Bypass"}
+                      </Button>
                     </div>
                   </div>
                 ))}

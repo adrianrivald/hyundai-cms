@@ -7,6 +7,7 @@ import type {
   Participant,
   CalendarDaily,
   ParticipantsList,
+  AddVisitor,
 } from "@/page/qr-scan/scan-visitor/_functions/models/scan-visitor";
 
 import {
@@ -120,6 +121,48 @@ export const useGetParticipantsByDate = (
       return response;
     },
     placeholderData: (prev) => prev,
+    ...options,
+  });
+};
+
+export async function getToursByDate(date: string): Promise<any> {
+  const response = await apiConfig.get(`admin/tours-by-date?date=${date}`);
+
+  return response.data;
+}
+
+export const useGetToursByDate = (
+  date: string,
+  options?: QueryObserverOptions<any>
+) => {
+  return useQuery<any>({
+    queryKey: ["tours-by-date", date],
+    queryFn: async () => {
+      const response = await getToursByDate(date);
+      return response;
+    },
+    placeholderData: (prev: any) => prev,
+    ...options,
+  });
+};
+
+export async function addVisitor(
+  data: AddVisitor
+): Promise<AxiosResponse<AddVisitor, AxiosError>> {
+  const { tour_number, ...payload } = data;
+  return await apiConfig.post(`admin/participants/${tour_number}`, payload);
+}
+
+export const useAddVisitor = (
+  options?: MutationObserverOptions<AddVisitor, Error, AddVisitor>
+) => {
+  return useMutation<AddVisitor, Error, AddVisitor>({
+    mutationKey: ["add-visitor"],
+    mutationFn: async (data: AddVisitor) => {
+      const response = await addVisitor(data);
+
+      return response.data;
+    },
     ...options,
   });
 };
