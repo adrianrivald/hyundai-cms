@@ -155,6 +155,7 @@ const DialogDetailFeedback = ({
 							</Grid>
 						</Grid>
 					</FormProvider>
+					<div className="mb-3" />
 					<TextFieldDisabled
 						title="Member Name"
 						value={dataDetail?.participant_name || "-"}
@@ -288,7 +289,6 @@ const DialogDetailFeedback = ({
 									message: `Image is required. Please upload an image.`,
 								});
 							} else {
-								console.log("dataa");
 								mutate(
 									{
 										id: String(id) || "",

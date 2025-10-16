@@ -8,10 +8,10 @@ import { useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import DialogDelete from "@/components/custom/dialog/dialog-delete";
 import { enqueueSnackbar } from "notistack";
-import DialogDetailsVisitor from "../components/dialog-details-visitor";
-import DialogFormVisitor from "../components/dialog-form-visitor";
+import DialogDetailsVisitor from "@/page/calendar/functions/components/dialog-details-visitor";
+import { Typography } from "@/components/typography";
 
-export const dataParticipantsColumn: ColumnDef<ParticipantsType>[] = [
+export const VisitorRegistrationColumn: ColumnDef<ParticipantsType>[] = [
 	{
 		accessorKey: "no",
 		header: "No",
@@ -108,7 +108,27 @@ export const dataParticipantsColumn: ColumnDef<ParticipantsType>[] = [
 		accessorKey: "ACTION_BUTTON",
 		header: "Action",
 
-		cell: ({ row, table }) => <ActionCell row={row} table={table} />,
+		cell: ({ row }) => {
+			const [open, setOpen] = useState(false);
+			return (
+				<div className="flex gap-2">
+					<Typography
+						className="text-blue-500 underline cursor-pointer"
+						onClick={() => {
+							setOpen(true);
+						}}
+					>
+						View Details
+					</Typography>
+
+					<DialogDetailsVisitor
+						open={open}
+						onClose={() => setOpen(false)}
+						data={row.original}
+					/>
+				</div>
+			);
+		},
 
 		meta: {
 			headerCellProps: {
@@ -120,94 +140,3 @@ export const dataParticipantsColumn: ColumnDef<ParticipantsType>[] = [
 		},
 	},
 ];
-
-const ActionCell = ({
-	row,
-	table,
-}: {
-	row: Row<ParticipantsType>;
-	table: Table<ParticipantsType>;
-}) => {
-	const [openDelete, setOpenDelete] = useState(false);
-	const [openUpdate, setOpenUpdate] = useState(false);
-	const { mutate: mutateDelete } = useDeleteParticipantTourGroup();
-
-	const onDelete = () => {
-		mutateDelete(
-			{ id: String(row.original.id) || "" },
-			{
-				onSuccess: () => {
-					setOpenDelete(false);
-					enqueueSnackbar("Data has been deleted", {
-						variant: "success",
-					});
-					table.resetPageIndex();
-				},
-				onError: (err: any) => {
-					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
-						variant: "error",
-					});
-					table.resetPageIndex();
-				},
-			}
-		);
-	};
-
-	return (
-		<div className="flex gap-2">
-			<div
-				className="cursor-pointer"
-				onClick={() => {
-					setOpenUpdate(true);
-				}}
-			>
-				<Icon
-					icon="basil:edit-outline"
-					width="24"
-					height="24"
-					color="#153263"
-				/>
-			</div>
-			<div className="cursor-pointer" onClick={() => setOpenDelete(true)}>
-				<Icon icon="mage:trash" width="24" height="24" color="#FF3B30" />
-			</div>
-
-			<DialogDelete
-				open={openDelete}
-				onClose={() => {
-					setOpenDelete(false);
-				}}
-				onSubmit={() => {
-					onDelete();
-				}}
-			/>
-			{/* <DialogDetailsVisitor
-				open={openUpdate}
-				onClose={() => {
-					setOpenUpdate(false);
-				}}
-				data={row.original}
-				// isDisabled={}
-			/> */}
-
-			<DialogFormVisitor
-				open={openUpdate}
-				onClose={() => {
-					setOpenUpdate(false);
-				}}
-				refetch={() => {
-					table.resetPageIndex();
-				}}
-				data={row.original}
-			/>
-			{/* <DialogBanner
-				open={openUpdate}
-				onClose={() => setOpenUpdate(false)}
-				refetch={() => {
-					table.resetPageIndex();
-				}}
-				data={row.original}
-			/> */}
-		</div>
-	);
-};

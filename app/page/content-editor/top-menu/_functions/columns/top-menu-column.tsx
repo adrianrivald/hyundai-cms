@@ -110,7 +110,7 @@ export const dataTopMenuList: ColumnDef<TopMenuTypePost>[] = [
 		accessorKey: "ACTION_BUTTON",
 		header: ({ table }) => {
 			const navigate = useNavigate();
-			console.log("taaa", table.getRowCount());
+
 			return (
 				<Button
 					onClick={() => {

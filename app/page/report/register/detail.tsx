@@ -14,7 +14,7 @@ import { useTableState } from "@/hooks/use-table-state";
 import FormProvider from "@/components/RHForm/FormProvider";
 import RHFTextField from "@/components/RHForm/RHFTextField";
 import { SearchIcon } from "lucide-react";
-import { dataParticipantsColumn } from "@/page/calendar/functions/column/columns-detail-participants";
+import { VisitorRegistrationColumn } from "./functions/columns/visitor-registration-column";
 
 const DetailRegistrationReportPage = () => {
 	const { id } = useParams();
@@ -55,7 +55,7 @@ const DetailRegistrationReportPage = () => {
 				const regex = new RegExp(search, "i"); // "i" = case-insensitive
 				return regex.test(item.name);
 			}) || [],
-		columns: dataParticipantsColumn as any,
+		columns: VisitorRegistrationColumn as any,
 		tableState,
 	});
 
