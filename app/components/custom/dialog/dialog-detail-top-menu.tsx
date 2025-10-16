@@ -72,7 +72,7 @@ const DialogDetailTopMenu = ({
 							}}
 							variant={"hmmiOutline"}
 						>
-							Tutup
+							Close
 						</Button>
 					</div>
 				</div>

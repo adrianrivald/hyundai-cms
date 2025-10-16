@@ -92,6 +92,8 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 			onOpenChange={() => {
 				if (methods.watch("step") !== "done") {
 					setDialogConfirm(true);
+				} else {
+					onClose();
 				}
 			}}
 			headerTitle={
@@ -102,8 +104,12 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 						height="14"
 						className="cursor-pointer"
 						onClick={() => {
-							onClose();
-							methods.reset();
+							if (methods.watch("step") !== "done") {
+								setDialogConfirm(true);
+							} else {
+								onClose();
+								methods.reset();
+							}
 						}}
 					/>
 					<Typography className="font-bold">Register Tour</Typography>
@@ -116,9 +122,9 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 						steps={steps}
 						value={methods.watch("step")}
 						onChange={(key) => {
-							//if (methods.formState.isValid) {
-							methods.setValue("step", key);
-							//}
+							if (methods.formState.isValid) {
+								methods.setValue("step", key);
+							}
 						}}
 						activeColor="#153263"
 						inactiveColor="#A8C5F7"
