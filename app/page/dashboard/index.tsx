@@ -62,11 +62,11 @@ const chartConfig = {
 
 	male: {
 		label: "Male",
-		color: "#6277DF",
+		color: "#153263",
 	},
 	female: {
 		label: "Female",
-		color: "#E62D2D",
+		color: "#FF8B00",
 	},
 
 	general_reception: {
@@ -104,6 +104,7 @@ export default function DashboardPage() {
 	const lineChartRef = useRef<HTMLDivElement>(null);
 	const pieChartRef = useRef<HTMLDivElement>(null);
 	const barChartRef = useRef<HTMLDivElement>(null);
+	const feedbackRef = useRef<HTMLDivElement>(null);
 
 	const startDate = methods.watch("start_date");
 	const endDate = methods.watch("end_date");
@@ -198,12 +199,18 @@ export default function DashboardPage() {
 
 	const handleExportChartsPDF = async () => {
 		setLoading(true);
-		const charts = [lineChartRef, pieChartRef, barChartRef];
+		const charts = [lineChartRef, pieChartRef, barChartRef, feedbackRef];
 		const pdf = new jsPDF("p", "pt", "a4");
 
 		const pageWidth = pdf.internal.pageSize.getWidth();
 		const pageHeight = pdf.internal.pageSize.getHeight();
 		let currentY = 15;
+
+		const headerImage = "/images/logo-report.png"; // <- replace with your logo URL or Base64
+		const title = "Dashboard Report";
+		const titleFontSize = 18;
+		const subtitle = `${format(methods.watch("start_date"), "dd/MM/yyyy")} - ${format(methods.watch("end_date"), "dd/MM/yyyy")}`;
+		const subtitleFontSize = 10;
 
 		// --- Convert OKLCH colors to RGB temporarily ---
 		const root = document.documentElement;
@@ -226,15 +233,47 @@ export default function DashboardPage() {
 		}
 
 		try {
+			// --- Draw header before any charts ---
+			const headerImgWidth = 85; // px
+			const headerImgHeight = 50; // px
+			const imgX = 20;
+			const imgY = 20;
+
+			// Add image to the left
+			pdf.addImage(
+				headerImage,
+				"PNG",
+				imgX,
+				imgY,
+				headerImgWidth,
+				headerImgHeight
+			);
+
+			// Add title (centered)
+			pdf.setFontSize(titleFontSize);
+			pdf.setFont("helvetica", "bold");
+			const textWidth = pdf.getTextWidth(title);
+			const titleY = imgY + headerImgHeight / 2 + 5;
+			pdf.text(title, (pageWidth - textWidth) / 2, titleY);
+
+			// Add subtitle (below title)
+			pdf.setFontSize(subtitleFontSize);
+
+			const subtitleWidth = pdf.getTextWidth(subtitle);
+			pdf.text(subtitle, (pageWidth - subtitleWidth) / 2, titleY + 18);
+
+			currentY = imgY + headerImgHeight + 20;
+
 			for (let i = 0; i < charts.length; i++) {
 				const chartRef = charts[i];
 				if (!chartRef.current) continue;
 
 				// Capture chart as image
 				const canvas = await html2canvas(chartRef.current, {
-					scale: 1.5,
+					scale: 1.8,
 					useCORS: true,
 					backgroundColor: "#ffffff",
+					ignoreElements: (el) => el.classList.contains("no-export"),
 				});
 				const imgData = canvas.toDataURL("image/jpeg");
 
@@ -326,10 +365,17 @@ export default function DashboardPage() {
 					</Button>
 				</div>
 				<Grid container ref={lineChartRef}>
-					<Grid item xs={12} className="bg-white mt-5 rounded-sm p-5">
+					<Grid
+						item
+						xs={12}
+						className="bg-white mt-5 rounded-sm p-5 border-[2px]"
+					>
+						<Typography className="font-bold text-center">
+							Total Group Tour
+						</Typography>
 						<ChartContainer
 							config={chartConfig}
-							className="h-[350px] w-full mt-5"
+							className="h-[370px] w-full mt-5"
 						>
 							<LineChart
 								//accessibilityLayer
@@ -387,8 +433,8 @@ export default function DashboardPage() {
 					</Grid>
 				</Grid>
 
-				<Grid container spacing={3} className="mt-5 mb-10" ref={pieChartRef}>
-					<Grid item xs={6} className="bg-white rounded-sm pt-5">
+				<Grid container spacing={3} className="mt-5" ref={pieChartRef}>
+					<Grid item xs={6} className="bg-white rounded-sm pt-5 border-[2px]">
 						<Typography className="text-center font-bold">
 							Total Visitor
 						</Typography>
@@ -429,7 +475,7 @@ export default function DashboardPage() {
 							</PieChart>
 						</ChartContainer>
 					</Grid>
-					<Grid item xs={6} className="">
+					<Grid item xs={6} className="border-[2px]">
 						<div className="relative bg-white rounded-sm py-5 px-5">
 							<Typography className="font-bold text-center text-[18px]">
 								Visitor Gender Type
@@ -486,7 +532,10 @@ export default function DashboardPage() {
 							</div> */}
 						</div>
 					</Grid>
-					<Grid item xs={12} className="bg-white rounded-sm pt-5">
+				</Grid>
+
+				<Grid container spacing={3} className="mt-5" ref={barChartRef}>
+					<Grid item xs={6} className="bg-white rounded-sm pt-5 border-[2px]">
 						<Typography className="text-center mb-5 text-[18px] font-bold">
 							Province of Origin
 						</Typography>
@@ -549,9 +598,12 @@ export default function DashboardPage() {
 							</BarChart>
 						</ChartContainer>
 					</Grid>
-					<Grid item xs={12}>
-						<div className="bg-white rounded-sm pt-5 px-3 pb-3">
-							<Typography className="font-bold ">Rating & Feedback</Typography>
+
+					<Grid item xs={6} className="bg-white rounded-sm pt-5 border-[2px]">
+						<div className="bg-white rounded-sm pt-2 px-3 pb-3">
+							<Typography className="font-bold  text-center">
+								Rating & Feedback
+							</Typography>
 							<div className="mt-5">
 								<div className="flex items-start gap-4 w-full">
 									<div className="flex flex-col items-center mt-5 px-5">
@@ -663,17 +715,20 @@ export default function DashboardPage() {
 								})}
 							</div>
 						</div>
+
+						<div className="px-3 bg-white pb-5 rounded-b-sm">
+							<Button
+								className="w-full cursor-pointer"
+								variant={"hmmiOutline"}
+								onClick={() => {
+									navigate("/feedback");
+								}}
+							>
+								More Details
+							</Button>
+						</div>
 					</Grid>
 				</Grid>
-				<Button
-					className="w-full cursor-pointer"
-					variant={"hmmiOutline"}
-					onClick={() => {
-						navigate("/feedback");
-					}}
-				>
-					More Details
-				</Button>
 			</FormProvider>
 		</Container>
 	);

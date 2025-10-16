@@ -3,11 +3,13 @@ import DialogModal from "@/components/custom/dialog/dialog-modal";
 import { Grid } from "@/components/grid";
 import { Typography } from "@/components/typography";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useForm } from "react-hook-form";
 
 interface DialogDetailsVisitorProps {
 	open: boolean;
 	onClose: () => void;
 	data: ParticipantsType;
+	isDisabled?: boolean;
 }
 
 const DialogDetailsVisitor = ({

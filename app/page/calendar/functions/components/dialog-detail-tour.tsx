@@ -17,6 +17,7 @@ import RHFTextField from "@/components/RHForm/RHFTextField";
 import { SearchIcon } from "lucide-react";
 import { dataVehicleColumn } from "../column/column-vehicle";
 import DialogReschedule from "./dialog-reschedule";
+import DialogFormVisitor from "./dialog-form-visitor";
 
 interface DialogDetailTourProps {
 	open: boolean;
@@ -38,10 +39,9 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 			search: "",
 		},
 	});
-	// const [openReschedule, setOpenReschedule] = useState({
-	// 	isOpen: false,
-	// 	code: "",
-	// });
+	const [openAddParticipants, setOpenAddParticipants] = useState({
+		isOpen: false,
+	});
 
 	const TextFieldDisabled = ({
 		title,
@@ -98,6 +98,9 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 							}}
 						/>
 						<Typography className="font-bold">Visit Information</Typography>
+						{dataDetail?.participants.every((item) => item.verified_at) && (
+							<Icon icon="gg:check-o" width="16" height="16" color="green" />
+						)}
 					</div>
 					<div className="flex flex-row gap-3 mr-5">
 						<Button
@@ -106,7 +109,7 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 								setOpenVip({ isOpen: true, id: data?.id || 0 });
 							}}
 						>
-							Ubah Jadwal
+							Change Schedule
 						</Button>
 						{dataDetail?.tour_package?.tour_packages_type !== "vip" && (
 							<Button
@@ -118,7 +121,7 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 									})
 								}
 							>
-								Ganti VIP
+								Change to VIP
 							</Button>
 						)}
 					</div>
@@ -185,15 +188,24 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 						<Typography className="font-bold mt-5 mb-2 text-[18px]">
 							List of Participants
 						</Typography>
-						<div className=" mb-5 w-[300px]">
+						<div className=" mb-5 flex flex-row gap-3 items-end">
 							<FormProvider methods={methods}>
 								<RHFTextField
 									name="search"
 									label="Find Participants"
 									placeholder="Find participants name"
+									className="w-[300px]"
 									endIcon={<SearchIcon className="mr-2" />}
 								/>
 							</FormProvider>
+							<Button
+								onClick={() => {
+									setOpenAddParticipants({ isOpen: true });
+								}}
+								className="bg-amber-500 hover:bg-amber-600 cursor-pointer"
+							>
+								Add New Participants
+							</Button>
 						</div>
 
 						<div className="max-h-[280px] overflow-y-scroll mb-5">
@@ -217,6 +229,17 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 						open={openVip.isOpen}
 						onClose={() => {
 							setOpenVip({ isOpen: false, id: 0 });
+						}}
+					/>
+
+					<DialogFormVisitor
+						open={openAddParticipants.isOpen}
+						onClose={() => {
+							setOpenAddParticipants({ isOpen: false });
+						}}
+						tour_id={dataDetail?.tour_number}
+						refetch={() => {
+							refetch();
 						}}
 					/>
 
