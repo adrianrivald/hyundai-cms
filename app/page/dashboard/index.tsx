@@ -313,8 +313,9 @@ export default function DashboardPage() {
 	];
 
 	return (
-		<Container>
+		<Container className="min-w-[1200px] overflow-x-auto">
 			{loading && <LoadingIndicator text="export PDF" />}
+
 			<FormProvider methods={methods}>
 				<div className="flex flex-row gap-5 bg-white p-5  items-end rounded-sm">
 					<RHFDatePicker
