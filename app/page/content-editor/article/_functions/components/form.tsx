@@ -19,6 +19,7 @@ import {
 } from "@/api/article";
 import { enqueueSnackbar } from "notistack";
 import DialogDetailArticle from "@/components/custom/dialog/dialog-detail-article";
+import { Typography } from "@/components/typography";
 
 const Form = () => {
 	const { id } = useParams();
@@ -28,9 +29,11 @@ const Form = () => {
 	const methods = useForm({
 		defaultValues: {
 			title: "",
+			title_en: "",
 			author: "",
 			image: "",
 			content: "",
+			content_en: "",
 		},
 		resolver: yupResolver(ArticleContentSchema),
 	});
@@ -46,7 +49,9 @@ const Form = () => {
 		if (id) {
 			methods.reset({
 				title: dataArticle?.name || "",
+				title_en: dataArticle?.name_en || "",
 				content: dataArticle?.content || "",
+				content_en: dataArticle?.content_en || "",
 				image: dataArticle?.image_path || "",
 				author: dataArticle?.author || "",
 			});
@@ -64,6 +69,8 @@ const Form = () => {
 		const postArticle: PostArticleType = {
 			author_name: form.author,
 			name: form.title,
+			name_en: form.title_en,
+			content_en: form.content_en,
 			content: form.content,
 			image_path: form.image,
 			status: status,
@@ -154,7 +161,15 @@ const Form = () => {
 						<Grid item xs={12} md={6}>
 							<RHFTextField
 								name="title"
-								label="Title"
+								label="Title ID"
+								placeholder="Input title article"
+								required
+								maxLength={200}
+							/>
+							<div className="mt-3" />
+							<RHFTextField
+								name="title_en"
+								label="Title EN"
 								placeholder="Input title article"
 								required
 								maxLength={200}
@@ -176,8 +191,26 @@ const Form = () => {
 				<div className="mt-5 p-3 bg-white">
 					<Grid container spacing={4}>
 						<Grid item xs={12}>
+							<Typography className="font-bold text-xs mb-2">
+								Content ID <span className="text-red-500">*</span>
+							</Typography>
 							<QuillEditor
 								name="content"
+								control={methods.control}
+								placeholder={"Input content"}
+								maxWords={1000}
+							/>
+						</Grid>
+					</Grid>
+				</div>
+				<div className="mt-5 p-3 bg-white">
+					<Grid container spacing={4}>
+						<Grid item xs={12}>
+							<Typography className="font-bold text-xs mb-2">
+								Content EN <span className="text-red-500">*</span>
+							</Typography>
+							<QuillEditor
+								name="content_en"
 								control={methods.control}
 								placeholder={"Input content"}
 								maxWords={1000}
@@ -197,6 +230,9 @@ const Form = () => {
 					content: methods.watch("content") || "",
 					blurb: methods.watch("content") || "",
 					image_path: methods.watch("image"),
+					name_en: methods.watch("title"),
+					content_en: methods.watch("content_en"),
+					blurb_en: methods.watch("content_en"),
 				}}
 				isPreview
 			/>
