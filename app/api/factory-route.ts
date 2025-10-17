@@ -1,7 +1,9 @@
 export type FactoryRouteType = {
 	id?: string;
 	name: string;
+	name_en: string;
 	description: string;
+	description_en: string;
 	image_path: string;
 	factory_id?: string;
 };

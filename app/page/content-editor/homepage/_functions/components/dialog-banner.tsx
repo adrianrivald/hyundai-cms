@@ -27,7 +27,9 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 		defaultValues: {
 			image: "",
 			title: "",
+			title_en: "",
 			description: "",
+			description_en: "",
 			date: "",
 			link: "",
 		},
@@ -49,6 +51,8 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 			link_url: form.link || "",
 			is_active: false,
 			published_at: format(new Date(form.date), "yyyy/MM/dd"),
+			name_en: form.title_en || "-",
+			description_en: form.description_en || "-",
 		};
 		if (data?.id) {
 			mutateEdit(dataForm, {
@@ -95,6 +99,8 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 				link: data?.link_url,
 				date: data?.published_at,
 				description: data?.description,
+				title_en: data?.name_en || "",
+				description_en: data?.description_en || "",
 			});
 		}
 	}, [data, open]);
@@ -117,20 +123,41 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 								<RHFUploadFile name="image" slug="banner" required />
 							</Grid>
 							<Grid item xs={12}>
-								<RHFTextField
-									name="title"
-									label="Title Banner"
-									placeholder="Input title banner"
-									autoFocus={false}
-								/>
+								<div className="flex flex-row gap-4 w-full">
+									<RHFTextField
+										name="title"
+										label="Title Banner ID"
+										placeholder="Input title banner"
+										autoFocus={false}
+										className="w-full"
+									/>
+									<RHFTextField
+										name="title_en"
+										label="Title Banner EN"
+										placeholder="Input title banner"
+										autoFocus={false}
+										className="w-full"
+									/>
+								</div>
 							</Grid>
 							<Grid item xs={12}>
-								<RHFTextArea
-									name="description"
-									label="Description"
-									placeholder="Input Description"
-									rows={5}
-								/>
+								<div className="flex flex-row gap-4">
+									<RHFTextArea
+										name="description"
+										label="Description ID"
+										placeholder="Input Description"
+										rows={5}
+										className="w-full"
+									/>
+
+									<RHFTextArea
+										name="description_en"
+										label="Description EN"
+										placeholder="Input Description"
+										rows={5}
+										className="w-full"
+									/>
+								</div>
 							</Grid>
 							<Grid item xs={7}>
 								<RHFDatePicker

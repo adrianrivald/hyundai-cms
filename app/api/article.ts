@@ -14,9 +14,12 @@ export type ArticleType = {
 	id: number;
 	author: string;
 	name: string;
+	name_en: string;
 	blurb: string;
+	blurb_en: string;
 	image_path: string;
 	content?: string;
+	content_en?: string;
 	status?: string;
 	published_at?: string;
 	is_active?: number;
@@ -27,7 +30,9 @@ export type PostArticleType = {
 	id?: number;
 	author_name: string;
 	name: string;
+	name_en: string;
 	content: string;
+	content_en: string;
 	image_path: string;
 	status: string;
 };

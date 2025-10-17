@@ -42,7 +42,11 @@ const DialogFactory = ({
 		{ key: "reg_factory", label: "Factory Detail" },
 		{ key: "reg_route", label: "Add Route" },
 	];
-	const [deleteRoute, setDeleteRoute] = useState({ isOpen: false, id: "" });
+	const [deleteRoute, setDeleteRoute] = useState({
+		isOpen: false,
+		id: "",
+		index: 0,
+	});
 	const methods = useForm({
 		defaultValues: {
 			id: "",
@@ -58,7 +62,16 @@ const DialogFactory = ({
 
 	const methodRoutes = useForm({
 		defaultValues: {
-			route: [{ route_name: "", description: "", image: "", id: "" }],
+			route: [
+				{
+					route_name: "",
+					description: "",
+					route_name_en: "",
+					description_en: "",
+					image: "",
+					id: "",
+				},
+			],
 		},
 		shouldFocusError: false,
 		mode: "onChange",
@@ -82,6 +95,8 @@ const DialogFactory = ({
 			image_path: form.image,
 			name: form.factory_name,
 			description: form.description,
+			name_en: form.factory_name_en,
+			description_en: form.description_en,
 		};
 		if (data?.id) {
 			mutateEdit(dataForm, {
@@ -126,7 +141,9 @@ const DialogFactory = ({
 				...item,
 				factory_id: methods.watch("id"),
 				name: item.route_name,
+				name_en: item.route_name_en,
 				description: item.description,
+				description_en: item.description_en,
 				image_path: item.image,
 			})) || [];
 
@@ -151,9 +168,11 @@ const DialogFactory = ({
 		if (open && data) {
 			methods.reset({
 				factory_name: data?.name,
+				factory_name_en: data?.name_en,
 				id: data?.id,
 				image: data?.image_path,
 				description: data?.description,
+				description_en: data?.description_en,
 				step: "reg_factory",
 			});
 		}
@@ -174,7 +193,9 @@ const DialogFactory = ({
 					dataRoute?.data?.map((item) => ({
 						...item,
 						route_name: item.name,
+						route_name_en: item.name_en,
 						description: item.description,
+						description_en: item.description_en,
 						image: item.image_path,
 					})) || [],
 			});
@@ -182,20 +203,30 @@ const DialogFactory = ({
 	}, [methods.watch("step"), dataRoute]);
 
 	const onDelete = () => {
-		mutateDelete(
-			{ id: deleteRoute.id },
-			{
-				onSuccess: () => {
-					let dataRoutes = methodRoutes.watch("route");
-					let dataRoutesFilter = dataRoutes?.filter((item) => {
-						if (!item.id) return true;
-						return item.id !== deleteRoute.id;
-					});
-					methodRoutes.setValue("route", dataRoutesFilter);
-					setDeleteRoute({ isOpen: false, id: "" });
-				},
-			}
-		);
+		if (!data?.id && !deleteRoute.id) {
+			let dataRoutes = methodRoutes.watch("route") || [];
+			let dataRoutesFilter = dataRoutes.filter(
+				(_, index) => index !== deleteRoute.index
+			);
+
+			methodRoutes.setValue("route", dataRoutesFilter);
+			setDeleteRoute({ isOpen: false, id: "", index: 0 });
+		} else {
+			mutateDelete(
+				{ id: deleteRoute.id },
+				{
+					onSuccess: () => {
+						let dataRoutes = methodRoutes.watch("route");
+						let dataRoutesFilter = dataRoutes?.filter((item) => {
+							if (!item.id) return true;
+							return item.id !== deleteRoute.id;
+						});
+						methodRoutes.setValue("route", dataRoutesFilter);
+						setDeleteRoute({ isOpen: false, id: "", index: 0 });
+					},
+				}
+			);
+		}
 	};
 
 	return (
@@ -219,6 +250,7 @@ const DialogFactory = ({
 							steps={steps}
 							value={methods.watch("step") || ""}
 							onChange={(key) => {
+								methods.setValue("step", key);
 								if (key === "reg_route") {
 									if (data?.id || methods.watch("id")) {
 										methods.setValue("step", key);
@@ -242,23 +274,46 @@ const DialogFactory = ({
 									/>
 								</Grid>
 								<Grid item xs={12}>
-									<RHFTextField
-										name="factory_name"
-										label="Factory Name"
-										placeholder="Input factory name"
-										autoFocus={false}
-										required={!isDisabled}
-										disabled={isDisabled}
-									/>
+									<div className="flex flex-row gap-4">
+										<RHFTextField
+											name="factory_name"
+											label="Factory Name ID"
+											placeholder="Input factory name"
+											autoFocus={false}
+											required={!isDisabled}
+											disabled={isDisabled}
+											className="w-full"
+										/>
+										<RHFTextField
+											name="factory_name_en"
+											label="Factory Name EN"
+											placeholder="Input factory name"
+											autoFocus={false}
+											required={!isDisabled}
+											disabled={isDisabled}
+											className="w-full"
+										/>
+									</div>
 								</Grid>
 								<Grid item xs={12}>
-									<RHFTextArea
-										name="description"
-										label="Description"
-										placeholder="Input description"
-										rows={4}
-										disabled={isDisabled}
-									/>
+									<div className="flex flex-row gap-4">
+										<RHFTextArea
+											name="description"
+											label="Description ID"
+											placeholder="Input description"
+											rows={4}
+											disabled={isDisabled}
+											className="w-full"
+										/>
+										<RHFTextArea
+											name="description_en"
+											label="Description EN"
+											placeholder="Input description"
+											rows={4}
+											disabled={isDisabled}
+											className="w-full"
+										/>
+									</div>
 								</Grid>
 								{!isDisabled && (
 									<Grid item xs={12} className="flex justify-end">
@@ -306,6 +361,7 @@ const DialogFactory = ({
 																setDeleteRoute({
 																	isOpen: true,
 																	id: item.id || "",
+																	index: index,
 																});
 															}}
 														>
@@ -327,23 +383,46 @@ const DialogFactory = ({
 												/>
 											</Grid>
 											<Grid item xs={12}>
-												<RHFTextField
-													name={`route.${index}.route_name`}
-													label="Route Name"
-													placeholder="Input route name"
-													autoFocus={false}
-													required={!isDisabled}
-													disabled={isDisabled}
-												/>
+												<div className="flex flex-row gap-4">
+													<RHFTextField
+														name={`route.${index}.route_name`}
+														label="Route Name ID"
+														placeholder="Input route name"
+														autoFocus={false}
+														required={!isDisabled}
+														disabled={isDisabled}
+														className="w-full"
+													/>
+													<RHFTextField
+														name={`route.${index}.route_name_en`}
+														label="Route Name EN"
+														placeholder="Input route name"
+														autoFocus={false}
+														required={!isDisabled}
+														disabled={isDisabled}
+														className="w-full"
+													/>
+												</div>
 											</Grid>
 											<Grid item xs={12}>
-												<RHFTextArea
-													name={`route.${index}.description`}
-													label="Description"
-													placeholder="Input description"
-													rows={4}
-													disabled={isDisabled}
-												/>
+												<div className="flex flex-row gap-4">
+													<RHFTextArea
+														name={`route.${index}.description`}
+														label="Description ID"
+														placeholder="Input description"
+														rows={4}
+														disabled={isDisabled}
+														className="w-full"
+													/>
+													<RHFTextArea
+														name={`route.${index}.description_en`}
+														label="Description EN"
+														placeholder="Input description"
+														rows={4}
+														disabled={isDisabled}
+														className="w-full"
+													/>
+												</div>
 											</Grid>
 										</Grid>
 									))}
@@ -356,7 +435,14 @@ const DialogFactory = ({
 											let data = methodRoutes.watch("route");
 											methodRoutes.setValue("route", [
 												...(data || []),
-												{ route_name: "", description: "", image: "", id: "" },
+												{
+													route_name: "",
+													route_name_en: "",
+													description: "",
+													description_en: "",
+													image: "",
+													id: "",
+												},
 											]);
 										}}
 									>
@@ -388,7 +474,7 @@ const DialogFactory = ({
 					<DialogDelete
 						open={deleteRoute.isOpen}
 						onClose={() => {
-							setDeleteRoute({ isOpen: false, id: "" });
+							setDeleteRoute({ isOpen: false, id: "", index: 0 });
 						}}
 						onSubmit={() => {
 							onDelete();
