@@ -13,7 +13,7 @@ interface DialogDetailContentProps {
 }
 
 const DialogDetailContent = ({
-	type,
+	type = "Legal",
 	title,
 	content,
 	language,

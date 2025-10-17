@@ -134,7 +134,7 @@ export const dataAboutUsColumn: ColumnDef<LegalContentType>[] = [
 						title={row.original.title}
 						content={row.original.content}
 						language={row.original.language}
-						type={"Legal"}
+						type={"About Us"}
 					/>
 				</div>
 			);
