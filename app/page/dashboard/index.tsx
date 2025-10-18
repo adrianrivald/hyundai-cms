@@ -372,7 +372,7 @@ export default function DashboardPage() {
 						className="bg-white mt-5 rounded-sm p-5 border-[2px]"
 					>
 						<Typography className="font-bold text-center">
-							Total Group Tour
+							Factory Tour Program
 						</Typography>
 						<ChartContainer
 							config={chartConfig}
@@ -437,7 +437,7 @@ export default function DashboardPage() {
 				<Grid container spacing={3} className="mt-5" ref={pieChartRef}>
 					<Grid item xs={6} className="bg-white rounded-sm pt-5 border-[2px]">
 						<Typography className="text-center font-bold">
-							Total Visitor
+							Total Amount of Visits
 						</Typography>
 						<ChartContainer
 							config={chartConfig}
@@ -479,7 +479,7 @@ export default function DashboardPage() {
 					<Grid item xs={6} className="border-[2px]">
 						<div className="relative bg-white rounded-sm py-5 px-5">
 							<Typography className="font-bold text-center text-[18px]">
-								Visitor Gender Type
+								Demographics Data by Gender
 							</Typography>
 							<ChartContainer
 								config={chartConfig}

@@ -28,6 +28,7 @@ interface Props {
 	format?: string;
 	minDate?: Date;
 	maxDate?: Date;
+	disabledDateWeekend?: number[];
 }
 
 export default function RHFDatePicker({
@@ -41,6 +42,7 @@ export default function RHFDatePicker({
 	format: dateFormat = "PPP",
 	minDate,
 	maxDate,
+	disabledDateWeekend,
 }: Props) {
 	const { control } = useFormContext();
 
@@ -95,7 +97,11 @@ export default function RHFDatePicker({
 								}}
 								captionLayout="dropdown"
 								//@ts-ignore
-								disabled={{ before: minDate, after: maxDate }}
+								disabled={{
+									before: minDate,
+									after: maxDate,
+									dayOfWeek: disabledDateWeekend,
+								}}
 								className="w-full rounded-none"
 							/>
 						</PopoverContent>

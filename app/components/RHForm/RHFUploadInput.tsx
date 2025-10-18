@@ -26,7 +26,7 @@ export function RHFFileUpload({
 	accept,
 	className,
 }: RHFFileUploadProps) {
-	const { control, setError, getValues } = useFormContext();
+	const { control, setError } = useFormContext();
 	const [fileName, setFileName] = useState<string>("");
 	const [loading, setLoading] = useState(false);
 	const token = useToken();
@@ -65,7 +65,7 @@ export function RHFFileUpload({
 		} catch (err) {
 			setError(name, {
 				type: "manual",
-				message: "Failed to upload file",
+				message: "Failed to upload file. File more than 1 MB",
 			});
 		} finally {
 			setLoading(false);
@@ -75,10 +75,10 @@ export function RHFFileUpload({
 	const handleFileChange = useCallback(
 		(file: File | null, onChange: (value: string | null) => void) => {
 			if (file) {
-				if (file.size > 10 * 1024 * 1024) {
+				if (file.size > 1 * 1024 * 1024) {
 					setError(name, {
 						type: "manual",
-						message: "Maximum size for file is 10MB",
+						message: "Maximum size for file is 1 MB",
 					});
 					return;
 				}

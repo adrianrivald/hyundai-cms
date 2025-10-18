@@ -49,7 +49,7 @@ export const dataReportRegistration: ColumnDef<RegistrationType>[] = [
 	},
 	{
 		accessorKey: "participants_count",
-		header: "Participants Count",
+		header: "Participant Count",
 		cell: ({ row }) => {
 			return (
 				<CellText className="text-left font-light">

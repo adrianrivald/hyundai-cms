@@ -92,6 +92,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 										methods.clearErrors("date");
 									}
 								}}
+								disabledDateWeekend={[0, 6]}
 
 								//minDate={new Date()}
 							/>

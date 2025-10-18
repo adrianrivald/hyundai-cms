@@ -50,7 +50,7 @@ export const dataRescheduleApproval: ColumnDef<RescheduleApprovalType>[] = [
 	},
 	{
 		accessorKey: "old_schedule",
-		header: "Old Schedule",
+		header: "Previous Schedule",
 		cell: ({ row }) => {
 			return (
 				<CellText className="text-left font-light">
