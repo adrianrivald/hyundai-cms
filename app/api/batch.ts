@@ -22,6 +22,7 @@ export type PublicCalendarTypes = {
 	slot: {
 		time_range: string;
 		batch_time: string;
+		verdict: boolean;
 		tour: {
 			id: number;
 			tour_package_id: number;
