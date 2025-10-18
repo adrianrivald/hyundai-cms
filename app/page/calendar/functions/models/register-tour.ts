@@ -16,6 +16,7 @@ export const FormRegisterTourSchema = yup.object({
 		then: (schema) => schema.required("Type tour is required"),
 		otherwise: (schema) => schema.required("Type tour is required"),
 	}),
+
 	allow_marketing: yup.boolean().optional().default(false),
 	tour_type: yup.string().nullable().optional(),
 	min_participant: yup.string().nullable().optional(),
@@ -39,14 +40,25 @@ export const FormRegisterTourSchema = yup.object({
 	info_group: yup.object({
 		group_name: yup.string().when("..step", {
 			is: "info_dasar",
-			otherwise: (schema) => schema.optional().nullable(),
-			then: (schema) => schema.required("Group name is required"),
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) => schema.required("Group name is required"),
 		}),
-		group_type: yup.string().when(["..step"], {
-			is: (step: string) => step === "info_dasar",
-			then: (schema) => schema.required("Group type is required"),
-			otherwise: (schema) => schema.optional().nullable(),
-		}),
+		group_type: yup
+			.string()
+			.test("conditional-required", "Group type is required", function (value) {
+				const { step, tour_type } = this?.from?.[1]?.value || {}; // root context
+				const isInfoDasar = step === "info_dasar";
+				const isVip = tour_type === "vip";
+
+				if (isInfoDasar && isVip) {
+					// optional
+					return true;
+				}
+
+				// otherwise required
+				return !!value;
+			}),
+
 		group_leader: yup.string().when("..step", {
 			is: "info_dasar",
 			then: (schema) => schema.optional().nullable(),
@@ -80,9 +92,27 @@ export const FormRegisterTourSchema = yup.object({
 			then: (schema) => schema.optional().nullable(),
 			otherwise: (schema) => schema.required("Dob is required"),
 		}),
-		phone_number: yup.string().nullable().optional(),
-		isDifabel: yup.string().nullable().optional(),
-		purpose_letter: yup.string().optional().nullable(),
+		phone_number: yup.string().when("..step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) => schema.required("Phone Number is required"),
+		}),
+		isDifabel: yup.string().when("..step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) => schema.required("Difabel form is required"),
+		}),
+		isParticipant: yup.string().when("..step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) =>
+				schema.required("Leader Participant form is required"),
+		}),
+		purpose_letter: yup.string().when("..step", {
+			is: "info_dasar",
+			then: (schema) => schema.optional().nullable(),
+			otherwise: (schema) => schema.required("Visiting Letter is required"),
+		}),
 	}),
 
 	info_vehicle: yup
