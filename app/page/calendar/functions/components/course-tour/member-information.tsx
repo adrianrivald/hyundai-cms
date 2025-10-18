@@ -144,11 +144,11 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 						? genderOptions?.find((g) => g.id === "male")
 						: genderOptions?.find((g) => g.id === "female"),
 
-				birthdate: row["Year of Birth (date/month/year)"]
-					? typeof row["Year of Birth (date/month/year)"] === "number"
-						? excelSerialToDate(row["Year of Birth (date/month/year)"])
+				birthdate: row["Date of Birth (year-month-date)"]
+					? typeof row["Date of Birth (year-month-date)"] === "number"
+						? excelSerialToDate(row["Date of Birth (year-month-date)"])
 						: parse(
-								row["Year of Birth (date/month/year)"],
+								row["Date of Birth (year-month-date)"],
 								"dd/MM/yyyy",
 								new Date()
 							)

@@ -121,7 +121,7 @@ const SettingVisitPage = () => {
 			<Typography className="font-bold">Visit Setting</Typography>
 			<div className="mt-3 flex flex-row gap-3 mb-3">
 				<Typography className="text-sm mt-3">
-					Set daily visit slot limit
+					Set daily limit for visit slots
 				</Typography>
 			</div>
 			<FormProvider methods={methods}>
