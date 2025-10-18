@@ -90,6 +90,7 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 		<DialogModal
 			open={open}
 			onOpenChange={() => {
+				refetch && refetch();
 				if (methods.watch("step") !== "done") {
 					setDialogConfirm(true);
 				} else {
@@ -122,9 +123,9 @@ const DialogAddVip = ({ open, onClose, data, refetch }: DialogAddVipProps) => {
 						steps={steps}
 						value={methods.watch("step")}
 						onChange={(key) => {
-							//if (methods.formState.isValid) {
-							methods.setValue("step", key);
-							//}
+							if (methods.formState.isValid) {
+								methods.setValue("step", key);
+							}
 						}}
 						activeColor="#153263"
 						inactiveColor="#A8C5F7"

@@ -113,7 +113,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 											?.map((item) => ({
 												id: item.batch_time,
 												name: item.time_range,
-												disabled: item.tour !== null,
+												disabled: !item.verdict,
 											}))?.length === 0 ||
 										!methods.watch("date")
 									}
@@ -126,7 +126,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 											?.map((item) => ({
 												id: item.batch_time,
 												name: item.time_range,
-												disabled: item.tour !== null,
+												disabled: !item.verdict,
 											})) || []
 									}
 									placeholder={
@@ -162,7 +162,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 											?.map((item) => ({
 												id: item.batch_time,
 												name: item.time_range,
-												disabled: item.tour !== null,
+												disabled: !item.verdict,
 											})).length === 0 ||
 										!methods.watch("date")
 									}
@@ -175,7 +175,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 											?.map((item) => ({
 												id: item.batch_time,
 												name: item.time_range,
-												disabled: item.tour !== null,
+												disabled: !item.verdict,
 											})) || []
 									}
 									placeholder={
@@ -374,6 +374,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								className="space-y-0"
 							/>
 						</Grid>
+
 						<Grid item xs={6} md={3}>
 							<RHFFileUpload
 								name="info_group.purpose_letter"

@@ -94,8 +94,8 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 
 		mutatePost(data, {
 			onSuccess: () => {
-				refetch && refetch();
 				methods.setValue("step", "done");
+				//refetch && refetch();
 				enqueueSnackbar("Data has been added", {
 					variant: "success",
 				});

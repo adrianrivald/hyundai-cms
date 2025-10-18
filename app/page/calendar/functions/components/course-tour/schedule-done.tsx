@@ -35,8 +35,8 @@ const ScheduleDone = ({ methods, onClose, refetch }: ScheduleDoneProps) => {
 					className="mt-5 self-center cursor-pointer"
 					onClick={() => {
 						methods.reset();
-						onClose();
 						refetch && refetch();
+						onClose();
 					}}
 				>
 					Back to main menu

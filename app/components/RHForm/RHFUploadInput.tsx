@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -92,59 +92,67 @@ export function RHFFileUpload({
 		<FormField
 			name={name}
 			control={control}
-			render={({ field: { onChange }, fieldState: { error } }) => (
-				<FormItem className={cn("space-y-2", className)}>
-					{label && (
-						<FormLabel
-							className={cn(
-								required &&
-									"after:content-['*'] after:ml-0.5 after:text-red-500"
-							)}
-						>
-							{label}
-						</FormLabel>
-					)}
-
-					<FormControl>
-						<div className="flex w-full rounded-md overflow-hidden border border-input">
-							{/* Left side gray box */}
-							<div
+			render={({ field: { value, onChange }, fieldState: { error } }) => {
+				useEffect(() => {
+					if (value && !fileName) {
+						const extractedName = value.split("/").pop() || "Uploaded file";
+						setFileName(extractedName);
+					}
+				}, [value, fileName]);
+				return (
+					<FormItem className={cn("space-y-2", className)}>
+						{label && (
+							<FormLabel
 								className={cn(
-									"flex-1 flex items-center px-3 py-3 bg-muted text-muted-foreground text-sm cursor-pointer text-ellipsis",
-									fileName && "text-foreground"
+									required &&
+										"after:content-['*'] after:ml-0.5 after:text-red-500"
 								)}
-								onClick={triggerFileDialog}
 							>
-								{fileName || "Upload file"}
+								{label}
+							</FormLabel>
+						)}
+
+						<FormControl>
+							<div className="flex w-full rounded-md overflow-hidden border border-input">
+								{/* Left side gray box */}
+								<div
+									className={cn(
+										"flex-1 flex items-center px-3 py-3 bg-muted text-muted-foreground text-sm cursor-pointer text-ellipsis",
+										fileName && "text-foreground"
+									)}
+									onClick={triggerFileDialog}
+								>
+									{fileName || "Upload file"}
+								</div>
+
+								{/* Right side button */}
+								<Button
+									type="button"
+									onClick={triggerFileDialog}
+									className="rounded-l-none bg-[#102C5D] hover:bg-[#0d2349] text-white cursor-pointer h-11"
+								>
+									{loading ? "Uploading..." : "Upload File"}
+								</Button>
+
+								{/* Hidden input */}
+								<input
+									ref={inputRef}
+									type="file"
+									accept={accept}
+									className="hidden"
+									onChange={(e) => {
+										const file = e.target.files?.[0] ?? null;
+										handleFileChange(file, onChange);
+										e.target.value = "";
+									}}
+								/>
 							</div>
+						</FormControl>
 
-							{/* Right side button */}
-							<Button
-								type="button"
-								onClick={triggerFileDialog}
-								className="rounded-l-none bg-[#102C5D] hover:bg-[#0d2349] text-white cursor-pointer h-11"
-							>
-								{loading ? "Uploading..." : "Upload File"}
-							</Button>
-
-							{/* Hidden input */}
-							<input
-								ref={inputRef}
-								type="file"
-								accept={accept}
-								className="hidden"
-								onChange={(e) => {
-									const file = e.target.files?.[0] ?? null;
-									handleFileChange(file, onChange);
-									e.target.value = "";
-								}}
-							/>
-						</div>
-					</FormControl>
-
-					{error?.message && <FormMessage>{error.message}</FormMessage>}
-				</FormItem>
-			)}
+						{error?.message && <FormMessage>{error.message}</FormMessage>}
+					</FormItem>
+				);
+			}}
 		/>
 	);
 }

@@ -15,6 +15,7 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import { Check, ChevronsUpDown, Loader2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
@@ -188,6 +189,7 @@ export default function RHFSelectMultiple<T>({
 													<CommandItem
 														key={value}
 														value={value}
+														disabled={(option as any)?.disabled}
 														onSelect={() => {
 															const newValue = isSelected
 																? field.value.filter((v: string) => v !== value)
@@ -204,6 +206,15 @@ export default function RHFSelectMultiple<T>({
 															)}
 														/>
 														{label}
+														{(option as any)?.disabled && (
+															<Icon
+																className="self-end mb-[3px] ml-1"
+																icon="gg:close-o"
+																width="22"
+																height="22"
+																color="red"
+															/>
+														)}
 													</CommandItem>
 												);
 											})}
