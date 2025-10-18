@@ -371,8 +371,11 @@ export default function DashboardPage() {
 						xs={12}
 						className="bg-white mt-5 rounded-sm p-5 border-[2px]"
 					>
-						<Typography className="font-bold text-center">
+						<Typography className="font-bold text-center text-lg">
 							Factory Tour Program
+						</Typography>
+						<Typography className="font-bold text-center">
+							Total Amount of Visits
 						</Typography>
 						<ChartContainer
 							config={chartConfig}
@@ -437,11 +440,11 @@ export default function DashboardPage() {
 				<Grid container spacing={3} className="mt-5" ref={pieChartRef}>
 					<Grid item xs={6} className="bg-white rounded-sm pt-5 border-[2px]">
 						<Typography className="text-center font-bold">
-							Total Amount of Visits
+							Total Visitors
 						</Typography>
 						<ChartContainer
 							config={chartConfig}
-							className="mx-auto aspect-square max-h-[280px]"
+							className="mx-auto aspect-square max-h-[280px] mt-2"
 						>
 							<PieChart>
 								<ChartTooltip
@@ -600,8 +603,8 @@ export default function DashboardPage() {
 						</ChartContainer>
 					</Grid>
 
-					<Grid item xs={6} className="bg-white rounded-sm pt-5 border-[2px]">
-						<div className="bg-white rounded-sm pt-2 px-3 pb-3">
+					<Grid item xs={6} className=" rounded-sm pt-5 ">
+						<div className="bg-white rounded-sm pt-2 px-3 pb-3 border-[2px]">
 							<Typography className="font-bold  text-center">
 								Rating & Feedback
 							</Typography>
@@ -715,18 +718,18 @@ export default function DashboardPage() {
 									);
 								})}
 							</div>
-						</div>
 
-						<div className="px-3 bg-white pb-5 rounded-b-sm">
-							<Button
-								className="w-full cursor-pointer"
-								variant={"hmmiOutline"}
-								onClick={() => {
-									navigate("/feedback");
-								}}
-							>
-								More Details
-							</Button>
+							<div className="px-3 bg-white pb-5 rounded-b-sm mt-5">
+								<Button
+									className="w-full cursor-pointer"
+									variant={"hmmiOutline"}
+									onClick={() => {
+										navigate("/feedback");
+									}}
+								>
+									More Details
+								</Button>
+							</div>
 						</div>
 					</Grid>
 				</Grid>

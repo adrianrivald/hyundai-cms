@@ -67,6 +67,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 							"max_participant",
 							String(data?.maximum_participant)
 						);
+						methods.clearErrors();
 					}}
 				/>
 			</div>
