@@ -151,7 +151,7 @@ export const FormRegisterTourSchema = yup.object({
 							.matches(emailRegex, "Invalid email address"),
 						gender: yup.string().required("Gender is required"),
 						dob: yup.string().required("Date of birth is required"),
-						isDifabel: yup.string().nullable().optional(),
+						isDifabel: yup.string().required("Difabel form is required"),
 					})
 				)
 				.required("Group members are required")

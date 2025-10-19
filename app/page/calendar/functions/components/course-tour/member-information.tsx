@@ -309,6 +309,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 										label="Any special needs? (Disability)"
 										options={difabelOptions}
 										placeholder="Choose"
+										required
 										getOptionLabel={(user) => user.name}
 										getOptionValue={(user) => String(user.id)}
 									/>
