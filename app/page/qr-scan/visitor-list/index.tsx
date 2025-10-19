@@ -156,7 +156,7 @@ export default function VisitorList() {
                         : ""
                     }`}
                   >
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-4 gap-4 items-center">
                       <Typography className="text-sm">
                         {visitor.name} {`(${visitor.tour?.name})`}
                       </Typography>
