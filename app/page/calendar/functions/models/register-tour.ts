@@ -50,6 +50,10 @@ export const FormRegisterTourSchema = yup.object({
 				const isInfoDasar = step === "info_dasar";
 				const isVip = tour_type === "vip";
 
+				if (!isInfoDasar) {
+					return true;
+				}
+
 				if (isInfoDasar && isVip) {
 					// optional
 					return true;
