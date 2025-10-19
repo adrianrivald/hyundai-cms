@@ -332,7 +332,7 @@ export default function DashboardPage() {
 							}
 						}}
 						className="w-full"
-						//minDate={new Date()}
+						minDate={new Date()}
 					/>
 					<RHFDatePicker
 						name="end_date"
