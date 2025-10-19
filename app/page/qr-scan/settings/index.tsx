@@ -27,7 +27,7 @@ export default function Settings() {
           {/* Page Title */}
           <div className="px-6 py-6">
             <Typography className="text-xl font-bold text-center text-white">
-              Setting
+              Settings
             </Typography>
           </div>
 
@@ -53,7 +53,7 @@ export default function Settings() {
                 {/* Phone Number Field */}
                 <div className="space-y-2">
                   <Typography className="text-sm text-white">
-                    Nomor Handphone
+                    Telephone No.
                   </Typography>
                   <input
                     type="text"
@@ -67,7 +67,7 @@ export default function Settings() {
                 {/* Email Field */}
                 <div className="space-y-2">
                   <Typography className="text-sm text-white">
-                    Alamat email
+                    Email Address
                   </Typography>
                   <input
                     type="email"

@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { Typography } from "@/components/typography";
 import StickyFooter from "@/components/layout/sticky-footer";
 import { useNavigate } from "react-router";
-import { addVisitor, useGetToursByDate } from "@/api/qr-scan";
+import {
+  addVisitor,
+  getParticipant,
+  updateVisitor,
+  useGetParticipant,
+  useGetToursByDate,
+} from "@/api/qr-scan";
 import { format } from "date-fns";
+import type { AddVisitor } from "../_functions/models/scan-visitor";
 
 type VisitorForm = {
   name: string;
@@ -16,8 +23,13 @@ type VisitorForm = {
   tour_number: string;
 };
 
-export default function AddVisitor() {
+interface AddVisitorProps {
+  id?: string;
+}
+
+export default function AddVisitor({ id }: AddVisitorProps) {
   const navigate = useNavigate();
+  const [visitorId, setVisitorId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     dob: "",
@@ -27,6 +39,9 @@ export default function AddVisitor() {
     is_special_need: "",
     tour_number: "",
   });
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof VisitorForm, string>>
+  >({});
   const today = format(new Date(), "yyyy-MM-dd");
 
   const { data } = useGetToursByDate(today);
@@ -36,19 +51,64 @@ export default function AddVisitor() {
     value: VisitorForm[K]
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: "" }));
   };
 
+  const validateForm = () => {
+    const newErrors: Partial<Record<keyof VisitorForm, string>> = {};
+    Object.entries(formData).forEach(([key, value]) => {
+      if (!value)
+        newErrors[key as keyof VisitorForm] = "Field ini wajib diisi.";
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  useEffect(() => {
+    const fetchVisitorList = async () => {
+      await getParticipant(String(id)).then((res) => {
+        const data = res.data;
+        setVisitorId(data?.id);
+        setFormData({
+          name: data?.name,
+          dob: data?.dob,
+          phone_number: data?.phone_number,
+          email: data?.email,
+          sex: data?.sex,
+          is_special_need: data?.is_special_need ? "yes" : "no",
+          tour_number: data?.tour?.tour_number,
+        });
+      });
+    };
+    if (id) {
+      fetchVisitorList();
+    }
+  }, [id]);
+
   const onSubmit = async () => {
+    if (!validateForm()) return;
+
     const payload = {
       ...formData,
       is_special_need: formData?.is_special_need === "yes" ? true : false,
     };
 
-    const res = await addVisitor(payload);
+    try {
+      if (id) {
+        await updateVisitor({
+          ...payload,
+          id: Number(visitorId),
+        });
+      } else {
+        await addVisitor(payload);
+      }
 
-    setTimeout(() => {
-      navigate("/qr-scan/visitor-list");
-    }, 1000);
+      setTimeout(() => {
+        navigate("/qr-scan/visitor-list");
+      }, 1000);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -68,13 +128,14 @@ export default function AddVisitor() {
             <Icon icon="mdi:arrow-left" width={24} />
           </button>
           <Typography className="flex-1 text-center text-white text-lg font-semibold">
-            Tambah Visitor
+            {id ? "Simpan" : "Tambah Visitor"}
           </Typography>
           <div className="w-6" /> {/* spacer to balance layout */}
         </div>
 
         {/* Form */}
         <div className="flex-1 overflow-y-auto px-6 pb-6 space-y-5 mt-8">
+          {/* Pilih Tour */}
           <div>
             <Typography className="text-sm text-white mb-2">
               Pilih Tour
@@ -82,14 +143,22 @@ export default function AddVisitor() {
             <select
               value={formData.tour_number}
               onChange={(e) => handleChange("tour_number", e.target.value)}
-              className="w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className={`w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border ${
+                errors.tour_number ? "border-red-500" : "border-white/10"
+              } focus:outline-none focus:ring-2 focus:ring-blue-400`}
             >
               <option value="">Pilih tour</option>
               {data?.data?.map((d: any) => (
                 <option value={d?.tour_number}>{d?.name}</option>
               ))}
             </select>
+            {errors.tour_number && (
+              <Typography className="text-xs text-red-500 mt-1">
+                {errors.tour_number}
+              </Typography>
+            )}
           </div>
+
           {/* Nama Lengkap */}
           <div>
             <Typography className="text-sm text-white mb-2">
@@ -100,8 +169,15 @@ export default function AddVisitor() {
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
               placeholder="Masukan nama lengkap peserta"
-              className="w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className={`w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border ${
+                errors.name ? "border-red-500" : "border-white/10"
+              } focus:outline-none focus:ring-2 focus:ring-blue-400`}
             />
+            {errors.name && (
+              <Typography className="text-xs text-red-500 mt-1">
+                {errors.name}
+              </Typography>
+            )}
           </div>
 
           {/* Tanggal Lahir */}
@@ -120,11 +196,18 @@ export default function AddVisitor() {
                 value={formData.dob}
                 onChange={(e) => handleChange("dob", e.target.value)}
                 placeholder="mm/dd/yyyy"
-                className="w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 pl-10 pr-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className={`w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 pl-10 pr-4 py-3 rounded-lg border ${
+                  errors.dob ? "border-red-500" : "border-white/10"
+                } focus:outline-none focus:ring-2 focus:ring-blue-400`}
                 onFocus={(e) => (e.target.type = "date")}
                 onBlur={(e) => !e.target.value && (e.target.type = "text")}
               />
             </div>
+            {errors.dob && (
+              <Typography className="text-xs text-red-500 mt-1">
+                {errors.dob}
+              </Typography>
+            )}
           </div>
 
           {/* Nomor HP */}
@@ -137,8 +220,15 @@ export default function AddVisitor() {
               value={formData.phone_number}
               onChange={(e) => handleChange("phone_number", e.target.value)}
               placeholder="Masukan nomor HP"
-              className="w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className={`w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border ${
+                errors.phone_number ? "border-red-500" : "border-white/10"
+              } focus:outline-none focus:ring-2 focus:ring-blue-400`}
             />
+            {errors.phone_number && (
+              <Typography className="text-xs text-red-500 mt-1">
+                {errors.phone_number}
+              </Typography>
+            )}
           </div>
 
           {/* Email */}
@@ -151,8 +241,15 @@ export default function AddVisitor() {
               value={formData.email}
               onChange={(e) => handleChange("email", e.target.value)}
               placeholder="Masukan alamat email"
-              className="w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className={`w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border ${
+                errors.email ? "border-red-500" : "border-white/10"
+              } focus:outline-none focus:ring-2 focus:ring-blue-400`}
             />
+            {errors.email && (
+              <Typography className="text-xs text-red-500 mt-1">
+                {errors.email}
+              </Typography>
+            )}
           </div>
 
           {/* Jenis Kelamin */}
@@ -163,12 +260,19 @@ export default function AddVisitor() {
             <select
               value={formData.sex}
               onChange={(e) => handleChange("sex", e.target.value)}
-              className="w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className={`w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border ${
+                errors.sex ? "border-red-500" : "border-white/10"
+              } focus:outline-none focus:ring-2 focus:ring-blue-400`}
             >
               <option value="">Pilih jenis kelamin</option>
               <option value="male">Laki-laki</option>
               <option value="female">Perempuan</option>
             </select>
+            {errors.sex && (
+              <Typography className="text-xs text-red-500 mt-1">
+                {errors.sex}
+              </Typography>
+            )}
           </div>
 
           {/* Difabel */}
@@ -179,12 +283,19 @@ export default function AddVisitor() {
             <select
               value={formData.is_special_need}
               onChange={(e) => handleChange("is_special_need", e.target.value)}
-              className="w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className={`w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border ${
+                errors.is_special_need ? "border-red-500" : "border-white/10"
+              } focus:outline-none focus:ring-2 focus:ring-blue-400`}
             >
               <option value="">Pilih kebutuhan anda</option>
               <option value="yes">Ya</option>
               <option value="no">Tidak</option>
             </select>
+            {errors.is_special_need && (
+              <Typography className="text-xs text-red-500 mt-1">
+                {errors.is_special_need}
+              </Typography>
+            )}
           </div>
         </div>
 
@@ -198,7 +309,7 @@ export default function AddVisitor() {
           </button>
         </div>
 
-        {/* Sticky Footer (if needed globally) */}
+        {/* Sticky Footer */}
         <StickyFooter activeItem="Scan Visitor" />
       </div>
     </div>

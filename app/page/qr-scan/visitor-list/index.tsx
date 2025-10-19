@@ -7,8 +7,10 @@ import { useState, useEffect } from "react";
 import { attendQr, useGetParticipantsByDate } from "@/api/qr-scan";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router";
 
 export default function VisitorList() {
+  const navigate = useNavigate();
   const today = format(new Date(), "yyyy-MM-dd");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
@@ -56,7 +58,7 @@ export default function VisitorList() {
           <ScrollArea className="h-full">
             <div className="p-6 text-white space-y-6">
               <Typography className="text-xl font-bold text-center">
-                Daftar Visitor
+                Visitor List
               </Typography>
 
               {/* Search Bar */}
@@ -71,7 +73,7 @@ export default function VisitorList() {
                 </div>
                 <input
                   type="text"
-                  placeholder="Cari nama Peserta"
+                  placeholder="Search Visitor's Name"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full bg-[#1E3A5F] text-white placeholder-white/70 rounded-lg pl-10 pr-4 py-3 border-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -90,10 +92,10 @@ export default function VisitorList() {
               <div className="bg-black rounded-t-lg px-4 py-3 mb-0">
                 <div className="grid grid-cols-3 gap-4">
                   <Typography className="text-sm font-bold">
-                    Nama Peserta (Nama Group)
+                    Visitor Name (Group Name)
                   </Typography>
                   <Typography className="text-sm font-bold">
-                    Nomor HP
+                    Telephone Number
                   </Typography>
                   <Typography className="text-sm font-bold">Action</Typography>
                 </div>
@@ -102,6 +104,11 @@ export default function VisitorList() {
               <div className=" rounded-b-lg overflow-hidden">
                 {filteredVisitors.map((visitor, index) => (
                   <div
+                    onClick={() =>
+                      navigate(
+                        `/qr-scan/visitor-list/update/${visitor.verification_code}`
+                      )
+                    }
                     key={index}
                     className={`px-4 py-3 ${
                       index !== filteredVisitors.length - 1
