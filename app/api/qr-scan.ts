@@ -8,6 +8,7 @@ import type {
   CalendarDaily,
   ParticipantsList,
   AddVisitor,
+  UpdateVisitor,
 } from "@/page/qr-scan/scan-visitor/_functions/models/scan-visitor";
 
 import {
@@ -160,6 +161,27 @@ export const useAddVisitor = (
     mutationKey: ["add-visitor"],
     mutationFn: async (data: AddVisitor) => {
       const response = await addVisitor(data);
+
+      return response.data;
+    },
+    ...options,
+  });
+};
+
+export async function updateVisitor(
+  data: UpdateVisitor
+): Promise<AxiosResponse<UpdateVisitor, AxiosError>> {
+  const { id, ...payload } = data;
+  return await apiConfig.put(`admin/participants/${id}`, payload);
+}
+
+export const useUpdateVisitor = (
+  options?: MutationObserverOptions<UpdateVisitor, Error, UpdateVisitor>
+) => {
+  return useMutation<UpdateVisitor, Error, UpdateVisitor>({
+    mutationKey: ["update-visitor"],
+    mutationFn: async (data: UpdateVisitor) => {
+      const response = await updateVisitor(data);
 
       return response.data;
     },

@@ -42,7 +42,9 @@ export default function QRScan() {
               <div className="bg-[#091E41] rounded-lg p-6 mb-6">
                 <div className="flex justify-center items-center gap-3 mb-4">
                   <Icon icon="mdi:account-group" width="24" height="24" />
-                  <Typography className="text-md">Peserta Check in</Typography>
+                  <Typography className="text-md">
+                    Checked in Participant
+                  </Typography>
                 </div>
                 <div className="flex justify-center items-baseline gap-2">
                   <Typography className="text-[80px] font-bold text-white">
@@ -58,14 +60,14 @@ export default function QRScan() {
               <div className="mb-6">
                 <div className="bg-black px-4 py-3 mb-0">
                   <Typography className="text-sm font-medium">
-                    Total tour
+                    Total Factory Tour
                   </Typography>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mt-2">
                   <div className="bg-[#00235E] rounded-lg p-4">
                     <Typography className="text-xs text-white/80 mb-2">
-                      Jumlah Peserta Tour
+                      Total Visitor
                     </Typography>
                     <Typography className="text-2xl font-bold">
                       {data?.data.total?.participants}
@@ -73,7 +75,7 @@ export default function QRScan() {
                   </div>
                   <div className="bg-[#00235E] rounded-lg p-4">
                     <Typography className="text-xs text-white/80 mb-2">
-                      Presentage
+                      Percentage
                     </Typography>
                     <Typography className="text-2xl font-bold">
                       {percentage}%

@@ -12,6 +12,8 @@ export type AddVisitor = {
   tour_number: string;
 };
 
+export type UpdateVisitor = AddVisitor & { id: number };
+
 export type ParticipantsList = {
   data: {
     data: {
@@ -85,6 +87,7 @@ export type Participant = {
       allow_marketing: number;
       tour_date: string;
       slot: string;
+      tour_number: string;
       tour_package: {
         name: string;
       };
