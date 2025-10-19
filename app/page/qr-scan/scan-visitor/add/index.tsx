@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { Typography } from "@/components/typography";
 import StickyFooter from "@/components/layout/sticky-footer";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import {
   addVisitor,
   getParticipant,
@@ -29,6 +29,9 @@ interface AddVisitorProps {
 
 export default function AddVisitor({ id }: AddVisitorProps) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const pathname = location.pathname;
+  const isUpdatePage = pathname.includes("/qr-scan/visitor-list/update");
   const [visitorId, setVisitorId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -58,7 +61,7 @@ export default function AddVisitor({ id }: AddVisitorProps) {
     const newErrors: Partial<Record<keyof VisitorForm, string>> = {};
     Object.entries(formData).forEach(([key, value]) => {
       if (!value)
-        newErrors[key as keyof VisitorForm] = "Field ini wajib diisi.";
+        newErrors[key as keyof VisitorForm] = "This field is required.";
     });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -104,7 +107,7 @@ export default function AddVisitor({ id }: AddVisitorProps) {
       }
 
       setTimeout(() => {
-        navigate("/qr-scan/visitor-list");
+        navigate("/qr-scan/visitor-list", { state: { updated: true } });
       }, 1000);
     } catch (error) {
       console.error(error);
@@ -122,13 +125,17 @@ export default function AddVisitor({ id }: AddVisitorProps) {
         {/* Header */}
         <div className="flex items-center px-6 pt-6 pb-4">
           <button
-            onClick={() => navigate("/qr-scan/scan-visitor")}
+            onClick={() =>
+              navigate(
+                isUpdatePage ? "/qr-scan/visitor-list" : "/qr-scan/scan-visitor"
+              )
+            }
             className="cursor-pointer text-white"
           >
             <Icon icon="mdi:arrow-left" width={24} />
           </button>
           <Typography className="flex-1 text-center text-white text-lg font-semibold">
-            {id ? "Simpan" : "Tambah Visitor"}
+            {isUpdatePage ? "Detail Visitor" : "Add Visitor"}
           </Typography>
           <div className="w-6" /> {/* spacer to balance layout */}
         </div>
@@ -138,7 +145,7 @@ export default function AddVisitor({ id }: AddVisitorProps) {
           {/* Pilih Tour */}
           <div>
             <Typography className="text-sm text-white mb-2">
-              Pilih Tour
+              Group Name
             </Typography>
             <select
               value={formData.tour_number}
@@ -147,7 +154,7 @@ export default function AddVisitor({ id }: AddVisitorProps) {
                 errors.tour_number ? "border-red-500" : "border-white/10"
               } focus:outline-none focus:ring-2 focus:ring-blue-400`}
             >
-              <option value="">Pilih tour</option>
+              <option value="">Choose Group</option>
               {data?.data?.map((d: any) => (
                 <option value={d?.tour_number}>{d?.name}</option>
               ))}
@@ -162,13 +169,13 @@ export default function AddVisitor({ id }: AddVisitorProps) {
           {/* Nama Lengkap */}
           <div>
             <Typography className="text-sm text-white mb-2">
-              Nama Lengkap
+              Full Name
             </Typography>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
-              placeholder="Masukan nama lengkap peserta"
+              placeholder="Enter full name"
               className={`w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border ${
                 errors.name ? "border-red-500" : "border-white/10"
               } focus:outline-none focus:ring-2 focus:ring-blue-400`}
@@ -183,7 +190,7 @@ export default function AddVisitor({ id }: AddVisitorProps) {
           {/* Tanggal Lahir */}
           <div>
             <Typography className="text-sm text-white mb-2">
-              Masukan tanggal dan tahun lahir
+              Enter Date of Birth
             </Typography>
             <div className="relative">
               <Icon
@@ -213,13 +220,13 @@ export default function AddVisitor({ id }: AddVisitorProps) {
           {/* Nomor HP */}
           <div>
             <Typography className="text-sm text-white mb-2">
-              Nomor HP
+              Phone Number
             </Typography>
             <input
               type="tel"
               value={formData.phone_number}
               onChange={(e) => handleChange("phone_number", e.target.value)}
-              placeholder="Masukan nomor HP"
+              placeholder="Enter phone number"
               className={`w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border ${
                 errors.phone_number ? "border-red-500" : "border-white/10"
               } focus:outline-none focus:ring-2 focus:ring-blue-400`}
@@ -234,13 +241,13 @@ export default function AddVisitor({ id }: AddVisitorProps) {
           {/* Email */}
           <div>
             <Typography className="text-sm text-white mb-2">
-              Alamat Email
+              Email Address
             </Typography>
             <input
               type="email"
               value={formData.email}
               onChange={(e) => handleChange("email", e.target.value)}
-              placeholder="Masukan alamat email"
+              placeholder="Enter email address"
               className={`w-full bg-white text-[#9A9A9A] placeholder:text-gray-400 px-4 py-3 rounded-lg border ${
                 errors.email ? "border-red-500" : "border-white/10"
               } focus:outline-none focus:ring-2 focus:ring-blue-400`}
@@ -254,9 +261,7 @@ export default function AddVisitor({ id }: AddVisitorProps) {
 
           {/* Jenis Kelamin */}
           <div>
-            <Typography className="text-sm text-white mb-2">
-              Jenis Kelamin
-            </Typography>
+            <Typography className="text-sm text-white mb-2">Gender</Typography>
             <select
               value={formData.sex}
               onChange={(e) => handleChange("sex", e.target.value)}
@@ -264,9 +269,9 @@ export default function AddVisitor({ id }: AddVisitorProps) {
                 errors.sex ? "border-red-500" : "border-white/10"
               } focus:outline-none focus:ring-2 focus:ring-blue-400`}
             >
-              <option value="">Pilih jenis kelamin</option>
-              <option value="male">Laki-laki</option>
-              <option value="female">Perempuan</option>
+              <option value="">Choose gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
             </select>
             {errors.sex && (
               <Typography className="text-xs text-red-500 mt-1">
@@ -278,7 +283,7 @@ export default function AddVisitor({ id }: AddVisitorProps) {
           {/* Difabel */}
           <div>
             <Typography className="text-sm text-white mb-2">
-              Berkebutuhan khusus? (Difabel)
+              Special Needs
             </Typography>
             <select
               value={formData.is_special_need}
@@ -287,9 +292,9 @@ export default function AddVisitor({ id }: AddVisitorProps) {
                 errors.is_special_need ? "border-red-500" : "border-white/10"
               } focus:outline-none focus:ring-2 focus:ring-blue-400`}
             >
-              <option value="">Pilih kebutuhan anda</option>
-              <option value="yes">Ya</option>
-              <option value="no">Tidak</option>
+              <option value="">Choose special needs</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
             </select>
             {errors.is_special_need && (
               <Typography className="text-xs text-red-500 mt-1">
@@ -305,7 +310,7 @@ export default function AddVisitor({ id }: AddVisitorProps) {
             onClick={onSubmit}
             className="w-full bg-[#1E3A5F] hover:bg-[#274873] text-white text-base font-medium py-3 rounded-lg"
           >
-            Tambah Visitor
+            {isUpdatePage ? "Save" : "Add Visitor"}
           </button>
         </div>
 
