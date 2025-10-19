@@ -50,6 +50,10 @@ export const FormRegisterTourSchema = yup.object({
 				const isInfoDasar = step === "info_dasar";
 				const isVip = tour_type === "vip";
 
+				if (!isInfoDasar) {
+					return true;
+				}
+
 				if (isInfoDasar && isVip) {
 					// optional
 					return true;
@@ -147,7 +151,7 @@ export const FormRegisterTourSchema = yup.object({
 							.matches(emailRegex, "Invalid email address"),
 						gender: yup.string().required("Gender is required"),
 						dob: yup.string().required("Date of birth is required"),
-						isDifabel: yup.string().nullable().optional(),
+						isDifabel: yup.string().required("Difabel form is required"),
 					})
 				)
 				.required("Group members are required")

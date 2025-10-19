@@ -355,6 +355,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 									{ id: "true", name: "Yes" },
 									{ id: "false", name: "No" },
 								]}
+								required
 								placeholder="Choose"
 								getOptionLabel={(user) => user.name}
 								getOptionValue={(user) => String(user.id)}
@@ -363,6 +364,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						</Grid>
 						<Grid item xs={6} md={3}>
 							<RHFSelect
+								required
 								name="info_group.isDifabel"
 								label="Any special needs? (Disability)"
 								options={[
@@ -382,6 +384,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								label="Visiting Letter"
 								accept=".pdf,.word"
 								className="space-y-0"
+								required
 							/>
 						</Grid>
 					</Grid>
