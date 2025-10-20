@@ -205,7 +205,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 						Upload data
 					</Typography>
 					<Typography className="mt-1 text-sm">
-						(Filled in According to the Format)
+						(Please fill in according to the template format)
 					</Typography>
 					<input
 						id="upload-file"
@@ -227,7 +227,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 			<div className="flex items-center w-full my-4">
 				<div className="flex-grow border-t border-gray-300"></div>
 				<span className="px-3 text-[12px] text-gray-500 text-center">
-					Or you can also enter the data manually
+					Or, fill the form below to enter data manually
 					<br />
 					using the form below.
 				</span>
@@ -241,7 +241,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 							key={index}
 						>
 							<Typography className="font-medium">
-								Input Data Participant {index + 1}
+								Participant {index + 1}
 							</Typography>
 
 							<Grid container spacing={4} className="mt-3">
@@ -257,7 +257,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 								<Grid item xs={6} md={3}>
 									<RHFTextField
 										name={`group_member.${index}.phone`}
-										label="Phone Number"
+										label="Mobile Phone Number"
 										placeholder="Input Phone Number"
 										autoFocus={false}
 										required
@@ -306,7 +306,7 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 									<RHFSelect
 										className="space-y-0"
 										name={`group_member.${index}.isDifabel`}
-										label="Any special needs? (Disability)"
+										label="Special Needs"
 										options={difabelOptions}
 										placeholder="Choose"
 										required
