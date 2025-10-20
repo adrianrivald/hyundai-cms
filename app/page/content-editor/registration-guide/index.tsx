@@ -12,7 +12,7 @@ const RegistrationGuidePage = () => {
 		<Container>
 			<Tabs defaultValue="registration-guide">
 				<TabsList className="w-[calc(100%/3)]">
-					<TabsTrigger value="registration-guide">
+					<TabsTrigger className="cursor-default" value="registration-guide">
 						Registration Guide Content
 					</TabsTrigger>
 				</TabsList>
