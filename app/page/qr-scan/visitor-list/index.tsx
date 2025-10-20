@@ -7,12 +7,23 @@ import { useState, useEffect } from "react";
 import { attendQr, useGetParticipantsByDate } from "@/api/qr-scan";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { useLocation, useNavigate } from "react-router";
+import DialogDelete from "@/components/custom/dialog/dialog-delete";
+import { useDeleteParticipantTourGroup } from "@/api/tour";
+import { enqueueSnackbar } from "notistack";
 
 export default function VisitorList() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const today = format(new Date(), "yyyy-MM-dd");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
   const [paginate, setPaginate] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [selectedVisitorId, setSelectedVisitorId] = useState<number | null>(
+    null
+  );
+  const { mutate: mutateDelete } = useDeleteParticipantTourGroup();
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -34,6 +45,14 @@ export default function VisitorList() {
     visitor.name.toLowerCase().includes(debouncedSearch.toLowerCase())
   );
 
+  useEffect(() => {
+    if (location.state?.updated) {
+      refetch();
+      // clear the state so it doesn't refetch again if the user navigates back
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, refetch]);
+
   const handleBypass = async (visitorCode: string, attendedAt: string) => {
     if (attendedAt === null) {
       await attendQr({ code: visitorCode }).then((response) => {
@@ -42,6 +61,31 @@ export default function VisitorList() {
         }
       });
     }
+  };
+
+  const onOpenDelete = (visitorId: number) => {
+    setOpenDelete(true);
+    setSelectedVisitorId(visitorId);
+  };
+
+  const onDelete = () => {
+    mutateDelete(
+      { id: String(selectedVisitorId) || "" },
+      {
+        onSuccess: () => {
+          setOpenDelete(false);
+          enqueueSnackbar("Data has been deleted", {
+            variant: "success",
+          });
+          refetch();
+        },
+        onError: (err: any) => {
+          enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
+            variant: "error",
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -56,7 +100,7 @@ export default function VisitorList() {
           <ScrollArea className="h-full">
             <div className="p-6 text-white space-y-6">
               <Typography className="text-xl font-bold text-center">
-                Daftar Visitor
+                Visitor List
               </Typography>
 
               {/* Search Bar */}
@@ -71,7 +115,7 @@ export default function VisitorList() {
                 </div>
                 <input
                   type="text"
-                  placeholder="Cari nama Peserta"
+                  placeholder="Search Visitor's Name"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full bg-[#1E3A5F] text-white placeholder-white/70 rounded-lg pl-10 pr-4 py-3 border-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -88,12 +132,15 @@ export default function VisitorList() {
               </div>
 
               <div className="bg-black rounded-t-lg px-4 py-3 mb-0">
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-4 gap-4">
                   <Typography className="text-sm font-bold">
-                    Nama Peserta (Nama Group)
+                    Visitor Name (Group Name)
                   </Typography>
                   <Typography className="text-sm font-bold">
-                    Nomor HP
+                    Telephone Number
+                  </Typography>
+                  <Typography className="text-sm font-bold">
+                    Bypass Action
                   </Typography>
                   <Typography className="text-sm font-bold">Action</Typography>
                 </div>
@@ -109,7 +156,7 @@ export default function VisitorList() {
                         : ""
                     }`}
                   >
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-4 gap-4 items-center">
                       <Typography className="text-sm">
                         {visitor.name} {`(${visitor.tour?.name})`}
                       </Typography>
@@ -127,6 +174,34 @@ export default function VisitorList() {
                       >
                         {visitor.attended_at !== null ? "Attended" : "Bypass"}
                       </Button>
+                      <div className="flex gap-2">
+                        <div
+                          className="cursor-pointer"
+                          onClick={() =>
+                            navigate(
+                              `/qr-scan/visitor-list/update/${visitor.verification_code}`
+                            )
+                          }
+                        >
+                          <Icon
+                            icon="basil:edit-outline"
+                            width="24"
+                            height="24"
+                            color="#FFF"
+                          />
+                        </div>
+                        <div
+                          className="cursor-pointer"
+                          onClick={() => onOpenDelete(visitor?.id)}
+                        >
+                          <Icon
+                            icon="mage:trash"
+                            width="24"
+                            height="24"
+                            color="#FF3B30"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -134,7 +209,15 @@ export default function VisitorList() {
             </div>
           </ScrollArea>
         </div>
-
+        <DialogDelete
+          open={openDelete}
+          onClose={() => {
+            setOpenDelete(false);
+          }}
+          onSubmit={() => {
+            onDelete();
+          }}
+        />
         <StickyFooter activeItem="Visitor List" />
       </div>
     </div>

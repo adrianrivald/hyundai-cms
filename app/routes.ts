@@ -106,6 +106,10 @@ export default [
       "scan-visitor/add",
       "./routes/guard-route/qr-scan/scan-visitor/add/index.tsx"
     ),
+    route(
+      "visitor-list/update/:id",
+      "./routes/guard-route/qr-scan/visitor-list/update/index.tsx"
+    ),
     route("settings", "./routes/guard-route/qr-scan/settings/index.tsx"),
   ]),
   route("dev", "./routes/dev.tsx"),
