@@ -79,9 +79,9 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 							<RHFDatePicker
 								className=""
 								name="date"
-								label="Select Visit Date"
+								label="Choose Visit Date"
 								required
-								placeholder="Select Visit Date"
+								placeholder="Choose Visit Date"
 								format="dd/MM/yyyy"
 								minDate={new Date()}
 								onChange={(date) => {
@@ -103,7 +103,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								<RHFSelect
 									className="space-y-0"
 									name={`batch.${0}`}
-									label="Batch"
+									label="Time"
 									disabled={
 										isLoading ||
 										(dataCalendar?.data || [])
@@ -152,7 +152,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 								<RHFSelectMultiple
 									className="space-y-0 py-2"
 									name="batch"
-									label="Batch"
+									label="Time"
 									disabled={
 										isLoading ||
 										(dataCalendar?.data || [])
@@ -205,7 +205,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 			{methods.watch("batch") && methods.watch("date") && (
 				<div className="mt-5 border-[1px] rounded-sm p-3">
 					<Typography className="text-md font-bold">
-						Visiting Group Information
+						Group Information
 					</Typography>
 					<Grid container spacing={3} className="mt-3">
 						<Grid item xs={6} md={3}>
@@ -259,7 +259,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						<Grid item xs={6} md={3}>
 							<RHFTextField
 								name="info_group.group_leader"
-								label="Group Leader Name"
+								label="Group Leader's Name"
 								placeholder="Input group leader name"
 								autoFocus={false}
 								required
@@ -269,12 +269,12 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						<Grid item xs={6} md={3}>
 							<RHFSelect
 								name="info_group.purpose_visit"
-								label="Purpose Visit"
+								label="Purpose"
 								options={[
 									{ id: "industrial-visit", name: "Industrial Visit" },
 									{ id: "benchmarking", name: "Benchmarking" },
 								]}
-								placeholder="Choose purpose visit"
+								placeholder="Choose purpose"
 								getOptionLabel={(user) => user.name}
 								getOptionValue={(user) => String(user.id)}
 								required
@@ -309,7 +309,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						<Grid item xs={6} md={3}>
 							<RHFTextField
 								name="info_group.phone_number"
-								label="Phone Number"
+								label="Mobile Phone Number"
 								placeholder="Input Phone Number"
 								autoFocus={false}
 								required
@@ -335,7 +335,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						<Grid item xs={6} md={3}>
 							<RHFDatePicker
 								name={`info_group.age`}
-								label="Birth Date"
+								label="Date and Year of Birth"
 								required
 								placeholder="Select Birth Date"
 								format="dd/MM/yyyy"
@@ -350,13 +350,13 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						<Grid item xs={6} md={3}>
 							<RHFSelect
 								name="info_group.isParticipant"
-								label="Group Leader Participant"
+								label="Group leader will join Factory Tour Program"
 								options={[
 									{ id: "true", name: "Yes" },
 									{ id: "false", name: "No" },
 								]}
 								required
-								placeholder="Choose"
+								placeholder="Choose One"
 								getOptionLabel={(user) => user.name}
 								getOptionValue={(user) => String(user.id)}
 								className="space-y-0"
@@ -366,7 +366,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 							<RHFSelect
 								required
 								name="info_group.isDifabel"
-								label="Any special needs? (Disability)"
+								label="Special Needs"
 								options={[
 									{ id: "true", name: "Yes" },
 									{ id: "false", name: "No" },
@@ -381,7 +381,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						<Grid item xs={6} md={3}>
 							<RHFFileUpload
 								name="info_group.purpose_letter"
-								label="Visiting Letter"
+								label="Letter of Visit"
 								accept=".pdf,.word"
 								className="space-y-0"
 								required
@@ -433,7 +433,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 									<Grid item xs={6} md={3}>
 										<RHFTextField
 											name={`info_vehicle.${index}.vehicle_plat`}
-											label="Plate Number"
+											label="License Plate Number"
 											placeholder="Input Plate Number"
 											autoFocus={false}
 											required
@@ -455,7 +455,7 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 													});
 												}}
 											>
-												Hapus Kendaraan
+												Remove Vehicle
 											</Button>
 										</Grid>
 									)}
