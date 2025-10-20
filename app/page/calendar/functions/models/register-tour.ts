@@ -104,7 +104,7 @@ export const FormRegisterTourSchema = yup.object({
 		isDifabel: yup.string().when("..step", {
 			is: "info_dasar",
 			then: (schema) => schema.optional().nullable(),
-			otherwise: (schema) => schema.required("Difabel form is required"),
+			otherwise: (schema) => schema.required("Special need form is required"),
 		}),
 		isParticipant: yup.string().when("..step", {
 			is: "info_dasar",
@@ -151,7 +151,7 @@ export const FormRegisterTourSchema = yup.object({
 							.matches(emailRegex, "Invalid email address"),
 						gender: yup.string().required("Gender is required"),
 						dob: yup.string().required("Date of birth is required"),
-						isDifabel: yup.string().required("Difabel form is required"),
+						isDifabel: yup.string().required("Special need form is required"),
 					})
 				)
 				.required("Group members are required")

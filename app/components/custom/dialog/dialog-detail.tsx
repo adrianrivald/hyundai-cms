@@ -3,6 +3,9 @@ import { Typography } from "@/components/typography";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import "react-quill-new/dist/quill.snow.css";
+import "./dialog.css";
+
 interface DialogDetailContentProps {
 	type: string;
 	title: string;
@@ -128,10 +131,12 @@ const DialogDetailContent = ({
 						Title : {title} ({language.toUpperCase()})
 					</Typography>
 
-					{/* <div
+					<div
 						dangerouslySetInnerHTML={{ __html: normalizeLists(content) }}
-						className="mt-3 prose prose-sm max-w-none"
-					></div> */}
+						className="mt-3 prose prose-sm max-w-none ql-editor"
+					></div>
+
+					{/* <div className="mt-4" />
 					<ReactMarkdown
 						remarkPlugins={[remarkGfm]}
 						rehypePlugins={[rehypeRaw]}
@@ -139,15 +144,17 @@ const DialogDetailContent = ({
 							p: ({ node, ...props }) => (
 								<p className="my-1 leading-relaxed text-gray-800" {...props} />
 							),
-							h1: ({ node, ...props }) => (
-								<h1
-									className="mt-6 mb-4 text-3xl font-bold text-gray-900"
-									{...props}
-								/>
-							),
+
 							h2: ({ node, ...props }) => (
 								<h2
 									className="mt-6 mb-3 text-2xl font-semibold text-gray-800"
+									{...props}
+								/>
+							),
+
+							h1: ({ node, ...props }) => (
+								<h1
+									className="mt-6 mb-4 text-3xl font-bold text-gray-900"
 									{...props}
 								/>
 							),
@@ -166,7 +173,7 @@ const DialogDetailContent = ({
 						}}
 					>
 						{normalizeLists(content)}
-					</ReactMarkdown>
+					</ReactMarkdown> */}
 				</div>
 			}
 		/>

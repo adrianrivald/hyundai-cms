@@ -1,0 +1,27 @@
+.ql-toolbar:after {
+    clear: none !important;
+  }
+
+.ql-editor h1 { 
+  font-size: 30px;						
+  color: #101828
+}
+
+.ql-editor h2 { 
+  font-size: 24px;
+  color: #1e2939;
+}
+
+.ql-editor p { 
+  margin-block: 4px
+}
+
+.ql-editor ol { 
+  list-style-type: decimal;
+  list-style: inside;
+}
+
+.ql-editor ul { 
+  list-style-type: disc;
+  list-style: inside;
+}

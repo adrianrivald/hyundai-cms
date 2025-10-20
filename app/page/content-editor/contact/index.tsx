@@ -12,7 +12,9 @@ const ContactPage = () => {
 		<Container>
 			<Tabs defaultValue="contact">
 				<TabsList className="w-[calc(100%/3)]">
-					<TabsTrigger value="contact">Contact</TabsTrigger>
+					<TabsTrigger className="cursor-default" value="contact">
+						Contact
+					</TabsTrigger>
 				</TabsList>
 				<TabsContent value="contact">
 					<DataTable table={table} showPagination={false} />

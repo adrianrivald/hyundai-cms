@@ -12,7 +12,9 @@ const AboutUsPage = () => {
 		<Container>
 			<Tabs defaultValue="about-us">
 				<TabsList className="w-[calc(100%/3)]">
-					<TabsTrigger value="about-us">About Us Content</TabsTrigger>
+					<TabsTrigger className="cursor-default" value="about-us">
+						About Us Content
+					</TabsTrigger>
 				</TabsList>
 				<TabsContent value="about-us">
 					<DataTable table={table} showPagination={false} />

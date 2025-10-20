@@ -70,9 +70,14 @@ export const dataFeedbackColumn: ColumnDef<FeedbackColumnType>[] = [
 		header: ({ table }) => {
 			const [open, setOpen] = useState(false);
 
+			const hasVarValue = table
+				.getRowModel()
+				.rows.some((row) => !!row.original.id);
+
 			return (
 				<>
 					<Button
+						disabled={hasVarValue}
 						onClick={() => setOpen(true)}
 						className="bg-amber-500 hover:bg-amber-600 my-2 w-[120px]"
 						startIcon={<Icon icon="ic:sharp-plus" width="16" height="16" />}
