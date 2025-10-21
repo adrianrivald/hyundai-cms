@@ -117,7 +117,7 @@ export function RHFFileUpload({
 								{/* Left side gray box */}
 								<div
 									className={cn(
-										"flex-1 flex items-center px-3 py-3 bg-muted text-muted-foreground text-sm cursor-pointer text-ellipsis",
+										"flex-1 flex items-center px-3 py-3 bg-muted text-muted-foreground text-sm cursor-pointer truncate pr-2",
 										fileName && "text-foreground"
 									)}
 									onClick={triggerFileDialog}
@@ -129,7 +129,7 @@ export function RHFFileUpload({
 								<Button
 									type="button"
 									onClick={triggerFileDialog}
-									className="rounded-l-none bg-[#102C5D] hover:bg-[#0d2349] text-white cursor-pointer h-11"
+									className="rounded-l-none bg-[#102C5D] hover:bg-[#0d2349] text-white cursor-pointer min-h-11"
 								>
 									{loading ? "Uploading..." : "Upload File"}
 								</Button>
