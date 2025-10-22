@@ -62,11 +62,11 @@ const chartConfig = {
 
 	male: {
 		label: "Male",
-		color: "#153263",
+		color: "#0000ff",
 	},
 	female: {
 		label: "Female",
-		color: "#FF8B00",
+		color: "#e63312",
 	},
 
 	general_reception: {
@@ -175,7 +175,7 @@ export default function DashboardPage() {
 		{
 			name: "vip",
 			value: dataTour?.visitor_by_package_type?.vip,
-			fill: "var(--color-press-shop)",
+			fill: "var(--color-vip-tour)",
 		},
 	];
 
@@ -423,7 +423,7 @@ export default function DashboardPage() {
 								<Line
 									dataKey="vip"
 									type="linear"
-									stroke="var(--color-press-shop)"
+									stroke="var(--color-vip-tour)"
 									strokeWidth={2}
 									dot={true}
 									name={chartConfig.vip_tour.label}

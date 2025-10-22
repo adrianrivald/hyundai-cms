@@ -15,6 +15,7 @@ export type TourDetailsType = {
 	name: string;
 	purpose_of_visit: string;
 	city: string;
+	province: string;
 	tour_date: string;
 	slot: string;
 	reschedule_reason: string;

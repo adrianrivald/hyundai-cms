@@ -309,7 +309,7 @@ export default function CalendarPage() {
 					event: ({ event }: { event: any }) => {
 						return (
 							<div
-								className={` text-[11px] cursor-pointer ${event.type === "HOLIDAY" ? "text-hmmi-red-500" : event.type === "GENERAL-COURSE" ? "text-black" : "text-white"}  flex flex-row gap-1 items-center`}
+								className={` text-[11px] cursor-pointer ${event.type === "HOLIDAY" ? "text-hmmi-red-500" : event.type === "GENERAL-COURSE" ? "text-white" : "text-white"}  flex flex-row gap-1 items-center`}
 							>
 								{event.type !== "HOLIDAY" &&
 									format(event.start || new Date(), "HH:mm")}{" "}
@@ -333,7 +333,7 @@ export default function CalendarPage() {
 											setOpenTourDetail({ isOpen: true, event: event });
 										}
 									}}
-									className={` ${event.type === "HOLIDAY" ? "bg-white" : event.type === "GENERAL-COURSE" ? "bg-[#e4dcd3]" : event.type === "STUDENT-COURSE" ? "bg-[#002c5f]" : "bg-[#a36b4f]"} `}
+									className={` ${event.type === "HOLIDAY" ? "bg-white" : event.type === "GENERAL-COURSE" ? "bg-[#00aad2]" : event.type === "STUDENT-COURSE" ? "bg-[#002c5f]" : "bg-[#a36b4f]"} `}
 									style={{
 										borderRadius: 4,
 										overflow: "hidden",

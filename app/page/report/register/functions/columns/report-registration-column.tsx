@@ -139,7 +139,7 @@ export const dataReportRegistration: ColumnDef<RegistrationType>[] = [
 	},
 	{
 		accessorKey: "verified_status",
-		header: "Verified Status",
+		header: "Status",
 		cell: ({ row }) => {
 			return (
 				<CellText

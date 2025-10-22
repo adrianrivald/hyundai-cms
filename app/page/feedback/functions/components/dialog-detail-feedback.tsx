@@ -144,7 +144,7 @@ const DialogDetailFeedback = ({
 			onOpenChange={() => {
 				onClose();
 			}}
-			headerTitle={"Review dari User"}
+			headerTitle={"Visitor Review"}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
 				<div>
