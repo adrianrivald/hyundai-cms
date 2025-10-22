@@ -32,7 +32,7 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 	},
 	{
 		accessorKey: "name",
-		header: "Factory name",
+		header: "Factory Name",
 		cell: ({ row }) => <CellText className="">{row.original?.name}</CellText>,
 		meta: {
 			cellProps: {

@@ -163,7 +163,13 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 							/>
 						</Grid>
 						<Grid item xs={6} md={3}>
-							<TextFieldDisabled title="City" value={dataDetail?.city || "-"} />
+							<TextFieldDisabled
+								title="Province"
+								value={
+									dataDetail?.province.replace(/([a-z])([A-Z])/g, "$1 $2") ||
+									"-"
+								}
+							/>
 						</Grid>
 						{dataDetail?.tour_package?.tour_packages_type ===
 							"student-course" && (

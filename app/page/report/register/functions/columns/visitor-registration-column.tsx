@@ -90,7 +90,7 @@ export const VisitorRegistrationColumn: ColumnDef<ParticipantsType>[] = [
 	},
 	{
 		accessorKey: "difabel",
-		header: "Special Needs?",
+		header: "Special Needs",
 		cell: ({ row }) => (
 			<CellText className="text-left">
 				{row?.original?.is_special_need ? "Yes" : "No"}

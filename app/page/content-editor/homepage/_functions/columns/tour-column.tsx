@@ -84,7 +84,7 @@ export const dataTourColumn: ColumnDef<TourPackageType>[] = [
 	},
 	{
 		accessorKey: "factories",
-		header: "Factories",
+		header: "Factory",
 		cell: ({ row }) => (
 			<CellText className="text-left line-clamp-none">
 				{row.original.factories.map((item, index) => {
