@@ -78,7 +78,7 @@ const DialogRescheduleEmail = ({
 			content={
 				<div className="mt-5">
 					<Typography className="text-[25px] font-medium text-center">
-						Schedule Changes for VIP Guest Visit
+						Notify Leader to Reschedule
 					</Typography>
 					<Typography className="text-[#6D717F] text-center mt-3 mb-5">
 						Please be advised that the previously arranged schedule will be
@@ -106,7 +106,7 @@ const DialogRescheduleEmail = ({
 									});
 								}}
 							>
-								Send Confirmation Email
+								Send Email
 							</Button>
 						</div>
 					</FormProvider>
