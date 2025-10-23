@@ -199,7 +199,7 @@ export default function DashboardPage() {
 
 	const handleExportChartsPDF = async () => {
 		setLoading(true);
-		const charts = [lineChartRef, pieChartRef, barChartRef, feedbackRef];
+		const charts = [lineChartRef, pieChartRef, feedbackRef, barChartRef];
 		const pdf = new jsPDF("p", "pt", "a4");
 
 		const pageWidth = pdf.internal.pageSize.getWidth();
@@ -538,72 +538,8 @@ export default function DashboardPage() {
 					</Grid>
 				</Grid>
 
-				<Grid container spacing={3} className="mt-5" ref={barChartRef}>
-					<Grid item xs={6} className="bg-white rounded-sm pt-5 border-[2px]">
-						<Typography className="text-center mb-5 text-[18px] font-bold">
-							Province of Origin
-						</Typography>
-						<ChartContainer
-							config={chartConfig}
-							className="w-full"
-							style={{ height: `${chartHeight}px` }}
-						>
-							<BarChart
-								accessibilityLayer
-								data={dataBar}
-								layout="vertical"
-								barSize={50}
-								maxBarSize={50}
-								barGap={10}
-								barCategoryGap={0}
-								margin={{
-									left: 20,
-									right: 20,
-									bottom: 20,
-								}}
-							>
-								<CartesianGrid horizontal={false} />
-								<YAxis
-									dataKey="city"
-									type="category"
-									tickLine={false}
-									tickMargin={10}
-									axisLine={false}
-									tickFormatter={(value) => value.slice(0, 3)}
-									hide
-								/>
-								<XAxis
-									dataKey="total"
-									type="number"
-									tickLine={false}
-									axisLine={false}
-									tickMargin={10}
-									tickCount={5}
-								/>
-								<ChartTooltip
-									cursor={false}
-									content={<ChartTooltipContent indicator="line" />}
-								/>
-								<Bar
-									dataKey="total"
-									layout="vertical"
-									fill="var(--color-hmmi-bar-chart)"
-									radius={4}
-								>
-									<LabelList
-										dataKey="city"
-										position="insideLeft"
-										offset={8}
-										//className="fill-(--colo-chart-2)"
-										className="fill-[white]"
-										fontSize={12}
-									/>
-								</Bar>
-							</BarChart>
-						</ChartContainer>
-					</Grid>
-
-					<Grid item xs={6} className=" rounded-sm pt-5 ">
+				<Grid container spacing={3} className="mt-5" ref={feedbackRef}>
+					<Grid item xs={12} className=" rounded-sm pt-5 ">
 						<div className="bg-white rounded-sm pt-2 px-3 pb-3 border-[2px]">
 							<Typography className="font-bold  text-center">
 								Rating & Feedback
@@ -731,6 +667,72 @@ export default function DashboardPage() {
 								</Button>
 							</div>
 						</div>
+					</Grid>
+				</Grid>
+
+				<Grid container spacing={3} className="mt-5" ref={barChartRef}>
+					<Grid item xs={12} className="bg-white rounded-sm pt-5 border-[2px]">
+						<Typography className="text-center mb-5 text-[18px] font-bold">
+							Province of Origin
+						</Typography>
+						<ChartContainer
+							config={chartConfig}
+							className="w-full"
+							style={{ height: `${chartHeight}px`, maxHeight: "1024px" }}
+						>
+							<BarChart
+								accessibilityLayer
+								data={dataBar}
+								layout="vertical"
+								barSize={50}
+								maxBarSize={50}
+								barGap={10}
+								barCategoryGap={0}
+								margin={{
+									left: 20,
+									right: 20,
+									bottom: 20,
+								}}
+							>
+								<CartesianGrid horizontal={false} />
+								<YAxis
+									dataKey="city"
+									type="category"
+									tickLine={false}
+									tickMargin={10}
+									axisLine={false}
+									tickFormatter={(value) => value.slice(0, 3)}
+									hide
+								/>
+								<XAxis
+									dataKey="total"
+									type="number"
+									tickLine={false}
+									axisLine={false}
+									tickMargin={10}
+									tickCount={5}
+								/>
+								<ChartTooltip
+									cursor={false}
+									content={<ChartTooltipContent indicator="line" />}
+								/>
+								<Bar
+									dataKey="total"
+									layout="vertical"
+									fill="var(--color-hmmi-bar-chart)"
+									radius={4}
+								>
+									<LabelList
+										dataKey="city"
+										position="insideLeft"
+										offset={8}
+										//className="fill-(--colo-chart-2)"
+										className="fill-[white]"
+										fontSize={12}
+									/>
+								</Bar>
+							</BarChart>
+						</ChartContainer>
 					</Grid>
 				</Grid>
 			</FormProvider>
