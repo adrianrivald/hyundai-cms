@@ -34,7 +34,7 @@ import {
 	BarChart,
 	LabelList,
 } from "recharts";
-import html2canvas from "html2canvas";
+import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 import { parse, formatRgb } from "culori";
 import { LoadingIndicator } from "@/components/loading-indicator";
@@ -199,6 +199,7 @@ export default function DashboardPage() {
 
 	const handleExportChartsPDF = async () => {
 		setLoading(true);
+
 		const charts = [lineChartRef, pieChartRef, feedbackRef, barChartRef];
 		const pdf = new jsPDF("p", "pt", "a4");
 
@@ -206,10 +207,13 @@ export default function DashboardPage() {
 		const pageHeight = pdf.internal.pageSize.getHeight();
 		let currentY = 15;
 
-		const headerImage = "/images/logo-report.png"; // <- replace with your logo URL or Base64
+		const headerImage = "/images/logo-report.png";
 		const title = "Dashboard Report";
 		const titleFontSize = 18;
-		const subtitle = `${format(methods.watch("start_date"), "dd/MM/yyyy")} - ${format(methods.watch("end_date"), "dd/MM/yyyy")}`;
+		const subtitle = `${format(methods.watch("start_date"), "dd/MM/yyyy")} - ${format(
+			methods.watch("end_date"),
+			"dd/MM/yyyy"
+		)}`;
 		const subtitleFontSize = 10;
 
 		// --- Convert OKLCH colors to RGB temporarily ---
@@ -223,8 +227,8 @@ export default function DashboardPage() {
 				try {
 					const rgb = formatRgb(parse(val));
 					if (rgb) {
-						changedVars[prop] = val; // store original
-						root.style.setProperty(prop, rgb); // apply fallback
+						changedVars[prop] = val;
+						root.style.setProperty(prop, rgb);
 					}
 				} catch {
 					/* ignore */
@@ -233,13 +237,12 @@ export default function DashboardPage() {
 		}
 
 		try {
-			// --- Draw header before any charts ---
-			const headerImgWidth = 85; // px
-			const headerImgHeight = 50; // px
+			// --- Header ---
+			const headerImgWidth = 85;
+			const headerImgHeight = 50;
 			const imgX = 20;
 			const imgY = 20;
 
-			// Add image to the left
 			pdf.addImage(
 				headerImage,
 				"PNG",
@@ -249,50 +252,51 @@ export default function DashboardPage() {
 				headerImgHeight
 			);
 
-			// Add title (centered)
 			pdf.setFontSize(titleFontSize);
 			pdf.setFont("helvetica", "bold");
 			const textWidth = pdf.getTextWidth(title);
 			const titleY = imgY + headerImgHeight / 2 + 5;
 			pdf.text(title, (pageWidth - textWidth) / 2, titleY);
 
-			// Add subtitle (below title)
 			pdf.setFontSize(subtitleFontSize);
-
 			const subtitleWidth = pdf.getTextWidth(subtitle);
 			pdf.text(subtitle, (pageWidth - subtitleWidth) / 2, titleY + 18);
 
 			currentY = imgY + headerImgHeight + 20;
 
+			// --- Capture each chart ---
 			for (let i = 0; i < charts.length; i++) {
 				const chartRef = charts[i];
 				if (!chartRef.current) continue;
 
-				// Capture chart as image
+				// Capture chart with html2canvas-pro
 				const canvas = await html2canvas(chartRef.current, {
-					scale: 1.8,
+					scale: 1.8, // better quality than 1.8
 					useCORS: true,
 					backgroundColor: "#ffffff",
+					logging: false,
+					allowTaint: true,
+					scrollX: 0,
+					scrollY: 0,
 					ignoreElements: (el) => el.classList.contains("no-export"),
 				});
-				const imgData = canvas.toDataURL("image/jpeg");
 
+				const imgData = canvas.toDataURL("image/jpeg", 0.9);
 				const imgWidth = pageWidth - 40;
 				const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-				// Add page if needed
 				if (currentY + imgHeight > pageHeight - 20) {
 					pdf.addPage();
 					currentY = 20;
 				}
 
-				pdf.addImage(imgData, "PNG", 20, currentY, imgWidth, imgHeight);
+				pdf.addImage(imgData, "JPEG", 20, currentY, imgWidth, imgHeight);
 				currentY += imgHeight + 20;
 			}
-			setLoading(false);
+
 			pdf.save(`dashboard_charts_${new Date().toISOString().slice(0, 10)}.pdf`);
 		} finally {
-			// --- Revert back to OKLCH colors after export ---
+			setLoading(false);
 			for (const [prop, originalVal] of Object.entries(changedVars)) {
 				root.style.setProperty(prop, originalVal);
 			}
