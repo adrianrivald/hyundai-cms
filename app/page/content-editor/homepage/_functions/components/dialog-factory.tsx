@@ -250,7 +250,7 @@ const DialogFactory = ({
 							steps={steps}
 							value={methods.watch("step") || ""}
 							onChange={(key) => {
-								methods.setValue("step", key);
+								//methods.setValue("step", key);
 								if (key === "reg_route") {
 									if (data?.id || methods.watch("id")) {
 										methods.setValue("step", key);
@@ -273,47 +273,47 @@ const DialogFactory = ({
 										disabled={isDisabled}
 									/>
 								</Grid>
-								<Grid item xs={12}>
-									<div className="flex flex-row gap-4">
-										<RHFTextField
-											name="factory_name"
-											label="Factory Name ID"
-											placeholder="Input factory name"
-											autoFocus={false}
-											required={!isDisabled}
-											disabled={isDisabled}
-											className="w-full"
-										/>
-										<RHFTextField
-											name="factory_name_en"
-											label="Factory Name EN"
-											placeholder="Input factory name"
-											autoFocus={false}
-											required={!isDisabled}
-											disabled={isDisabled}
-											className="w-full"
-										/>
-									</div>
+								<Grid item xs={6}>
+									<RHFTextField
+										name="factory_name"
+										label="Factory Name ID"
+										placeholder="Input factory name"
+										autoFocus={false}
+										required={!isDisabled}
+										disabled={isDisabled}
+										className="w-full"
+									/>
 								</Grid>
-								<Grid item xs={12}>
-									<div className="flex flex-row gap-4">
-										<RHFTextArea
-											name="description"
-											label="Description ID"
-											placeholder="Input description"
-											rows={4}
-											disabled={isDisabled}
-											className="w-full"
-										/>
-										<RHFTextArea
-											name="description_en"
-											label="Description EN"
-											placeholder="Input description"
-											rows={4}
-											disabled={isDisabled}
-											className="w-full"
-										/>
-									</div>
+								<Grid item xs={6}>
+									<RHFTextField
+										name="factory_name_en"
+										label="Factory Name EN"
+										placeholder="Input factory name"
+										autoFocus={false}
+										required={!isDisabled}
+										disabled={isDisabled}
+										className="w-full"
+									/>
+								</Grid>
+								<Grid item xs={6}>
+									<RHFTextArea
+										name="description"
+										label="Description ID"
+										placeholder="Input description"
+										rows={4}
+										disabled={isDisabled}
+										className="w-full"
+									/>
+								</Grid>
+								<Grid item xs={6}>
+									<RHFTextArea
+										name="description_en"
+										label="Description EN"
+										placeholder="Input description"
+										rows={4}
+										disabled={isDisabled}
+										className="w-full"
+									/>
 								</Grid>
 								{!isDisabled && (
 									<Grid item xs={12} className="flex justify-end">
@@ -382,47 +382,47 @@ const DialogFactory = ({
 													disabled={isDisabled}
 												/>
 											</Grid>
-											<Grid item xs={12}>
-												<div className="flex flex-row gap-4">
-													<RHFTextField
-														name={`route.${index}.route_name`}
-														label="Route Name ID"
-														placeholder="Input route name"
-														autoFocus={false}
-														required={!isDisabled}
-														disabled={isDisabled}
-														className="w-full"
-													/>
-													<RHFTextField
-														name={`route.${index}.route_name_en`}
-														label="Route Name EN"
-														placeholder="Input route name"
-														autoFocus={false}
-														required={!isDisabled}
-														disabled={isDisabled}
-														className="w-full"
-													/>
-												</div>
+											<Grid item xs={6}>
+												<RHFTextField
+													name={`route.${index}.route_name`}
+													label="Route Name ID"
+													placeholder="Input route name"
+													autoFocus={false}
+													required={!isDisabled}
+													disabled={isDisabled}
+													className="w-full"
+												/>
 											</Grid>
-											<Grid item xs={12}>
-												<div className="flex flex-row gap-4">
-													<RHFTextArea
-														name={`route.${index}.description`}
-														label="Description ID"
-														placeholder="Input description"
-														rows={4}
-														disabled={isDisabled}
-														className="w-full"
-													/>
-													<RHFTextArea
-														name={`route.${index}.description_en`}
-														label="Description EN"
-														placeholder="Input description"
-														rows={4}
-														disabled={isDisabled}
-														className="w-full"
-													/>
-												</div>
+											<Grid item xs={6}>
+												<RHFTextField
+													name={`route.${index}.route_name_en`}
+													label="Route Name EN"
+													placeholder="Input route name"
+													autoFocus={false}
+													required={!isDisabled}
+													disabled={isDisabled}
+													className="w-full"
+												/>
+											</Grid>
+											<Grid item xs={6}>
+												<RHFTextArea
+													name={`route.${index}.description`}
+													label="Description ID"
+													placeholder="Input description"
+													rows={4}
+													disabled={isDisabled}
+													className="w-full"
+												/>
+											</Grid>
+											<Grid item xs={6}>
+												<RHFTextArea
+													name={`route.${index}.description_en`}
+													label="Description EN"
+													placeholder="Input description"
+													rows={4}
+													disabled={isDisabled}
+													className="w-full"
+												/>
 											</Grid>
 										</Grid>
 									))}

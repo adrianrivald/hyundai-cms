@@ -122,42 +122,41 @@ const DialogBanner = ({ open, onClose, data, refetch }: DialogBannerProps) => {
 							<Grid item xs={12}>
 								<RHFUploadFile name="image" slug="banner" required />
 							</Grid>
-							<Grid item xs={12}>
-								<div className="flex flex-row gap-4 w-full">
-									<RHFTextField
-										name="title"
-										label="Title Banner ID"
-										placeholder="Input title banner"
-										autoFocus={false}
-										className="w-full"
-									/>
-									<RHFTextField
-										name="title_en"
-										label="Title Banner EN"
-										placeholder="Input title banner"
-										autoFocus={false}
-										className="w-full"
-									/>
-								</div>
+							<Grid item xs={6}>
+								<RHFTextField
+									name="title"
+									label="Title Banner ID"
+									placeholder="Input title banner"
+									autoFocus={false}
+									className="w-full"
+								/>
 							</Grid>
-							<Grid item xs={12}>
-								<div className="flex flex-row gap-4">
-									<RHFTextArea
-										name="description"
-										label="Description ID"
-										placeholder="Input Description"
-										rows={5}
-										className="w-full"
-									/>
-
-									<RHFTextArea
-										name="description_en"
-										label="Description EN"
-										placeholder="Input Description"
-										rows={5}
-										className="w-full"
-									/>
-								</div>
+							<Grid item xs={6}>
+								<RHFTextField
+									name="title_en"
+									label="Title Banner EN"
+									placeholder="Input title banner"
+									autoFocus={false}
+									className="w-full"
+								/>
+							</Grid>
+							<Grid item xs={6}>
+								<RHFTextArea
+									name="description"
+									label="Description ID"
+									placeholder="Input Description"
+									rows={5}
+									className="w-full"
+								/>
+							</Grid>
+							<Grid item xs={6}>
+								<RHFTextArea
+									name="description_en"
+									label="Description EN"
+									placeholder="Input Description"
+									rows={5}
+									className="w-full"
+								/>
 							</Grid>
 							<Grid item xs={7}>
 								<RHFDatePicker
