@@ -407,26 +407,42 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 											name={`info_vehicle.${index}.vehicle_type`}
 											label="Vehicle Type"
 											options={
-												methods.watch("info_vehicle")?.[0]?.vehicle_type ===
-												"private-car"
-													? [{ id: "private-car", name: "Private Car" }]
+												index === 0
+													? [
+															{ id: "private-car", name: "Private Car" },
+															{ id: "tour-bus", name: "Tour Bus" },
+														]
 													: methods.watch("info_vehicle")?.[0]?.vehicle_type ===
-														  "tour-bus"
-														? [{ id: "tour-bus", name: "Tour Bus" }]
-														: [
-																{ id: "private-car", name: "Private Car" },
-																{ id: "tour-bus", name: "Tour Bus" },
-															]
+														  "private-car"
+														? [{ id: "private-car", name: "Private Car" }]
+														: methods.watch("info_vehicle")?.[0]
+																	?.vehicle_type === "tour-bus"
+															? [{ id: "tour-bus", name: "Tour Bus" }]
+															: [
+																	{ id: "private-car", name: "Private Car" },
+																	{ id: "tour-bus", name: "Tour Bus" },
+																]
 											}
 											placeholder="Choose Vehicle Type"
 											getOptionLabel={(user) => user.name}
 											getOptionValue={(user) => String(user.id)}
 											required
 											onChange={(text) => {
-												methods.setValue(
-													`info_vehicle.${index}.vehicle_type`,
-													text
-												);
+												if (index === 0) {
+													methods.setValue("info_vehicle", [
+														{
+															vehicle_type: text,
+															vehicle_plat: methods.watch(
+																`info_vehicle.${index}.vehicle_plat`
+															),
+														},
+													]);
+												} else {
+													methods.setValue(
+														`info_vehicle.${index}.vehicle_type`,
+														text
+													);
+												}
 											}}
 										/>
 									</Grid>
