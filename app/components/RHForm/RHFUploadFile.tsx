@@ -155,12 +155,14 @@ export default function RHFUploadFile({
 										? value.split("/").pop()
 										: "Image.jpeg"}
 								</Typography>
-								<label
-									htmlFor={name}
-									className="text-[12px] underline mt-2 text-center cursor-pointer"
-								>
-									{loading ? "Uploading..." : "Change image"}
-								</label>
+								{!other.disabled && (
+									<label
+										htmlFor={name}
+										className="text-[12px] underline mt-2 text-center cursor-pointer"
+									>
+										{loading ? "Uploading..." : "Change image"}
+									</label>
+								)}
 							</div>
 						) : (
 							<label

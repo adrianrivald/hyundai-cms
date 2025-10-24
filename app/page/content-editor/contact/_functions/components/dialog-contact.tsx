@@ -42,7 +42,7 @@ const DialogContact = ({
 		},
 		shouldFocusError: false,
 		mode: "onChange",
-		//resolver: yupResolver(ContactSchema),
+		resolver: yupResolver(ContactSchema),
 	});
 
 	const { mutate: mutatePost, isPending: pendingPost } =
