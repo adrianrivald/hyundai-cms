@@ -111,7 +111,7 @@ const LoginPage = () => {
 									<RHFTextField
 										name="password"
 										label="Password"
-										placeholder="Input assword"
+										placeholder="Input password"
 										type={showPassword ? "text" : "password"}
 										startIcon={
 											<Icon
