@@ -8,7 +8,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Reschedule() {
 	return (
-		<PageAuthorization role={["Super", "PIC", "CMS"]}>
+		<PageAuthorization role={["Super", "Tour"]}>
 			<ReschedulePage />
 		</PageAuthorization>
 	);

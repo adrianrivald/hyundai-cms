@@ -8,7 +8,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function ReportRegistrationDetail() {
 	return (
-		<PageAuthorization role={["Super", "CMS"]}>
+		<PageAuthorization role={["Super", "PIC"]}>
 			<DetailRegistrationReportPage />
 		</PageAuthorization>
 	);

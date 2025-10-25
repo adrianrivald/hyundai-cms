@@ -8,7 +8,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function ReportVisitor() {
 	return (
-		<PageAuthorization role={["Super", "CMS"]}>
+		<PageAuthorization role={["Super", "PIC"]}>
 			<ReportVisitorPage />
 		</PageAuthorization>
 	);

@@ -8,7 +8,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Calendar() {
 	return (
-		<PageAuthorization role={["Super", "PIC", "CMS"]}>
+		<PageAuthorization role={["Super", "Tour"]}>
 			<CalendarPage />
 		</PageAuthorization>
 	);

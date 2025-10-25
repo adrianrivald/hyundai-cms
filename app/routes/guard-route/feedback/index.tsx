@@ -8,7 +8,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Feedback() {
 	return (
-		<PageAuthorization role={["Super", "PIC", "CMS"]}>
+		<PageAuthorization role={["Super", "PIC"]}>
 			<FeedbackPage />
 		</PageAuthorization>
 	);
