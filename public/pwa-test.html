@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Installation Test</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#153263">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(to bottom, #153263, #00102B);
+            color: white;
+            min-height: 100vh;
+        }
+        .status {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .success { border-left: 4px solid #4CAF50; }
+        .error { border-left: 4px solid #f44336; }
+        .warning { border-left: 4px solid #ff9800; }
+        button {
+            background: #1E3A5F;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #274873; }
+        .install-button {
+            background: #4CAF50;
+            font-size: 16px;
+            padding: 15px 30px;
+        }
+        .install-button:hover { background: #45a049; }
+    </style>
+</head>
+<body>
+    <h1>Hyundai CMS PWA Installation Test</h1>
+    
+    <div id="status-container">
+        <div class="status" id="manifest-status">
+            <h3>Manifest Status</h3>
+            <p>Checking manifest.json...</p>
+        </div>
+        
+        <div class="status" id="sw-status">
+            <h3>Service Worker Status</h3>
+            <p>Checking service worker...</p>
+        </div>
+        
+        <div class="status" id="icons-status">
+            <h3>Icons Status</h3>
+            <p>Checking icons...</p>
+        </div>
+        
+        <div class="status" id="install-status">
+            <h3>Installation Status</h3>
+            <p>Checking installation criteria...</p>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0;">
+        <button class="install-button" id="install-button" style="display: none;">
+            Install Hyundai CMS PWA
+        </button>
+    </div>
+
+    <div class="status">
+        <h3>Debug Information</h3>
+        <div id="debug-info"></div>
+    </div>
+
+    <script>
+        let deferredPrompt;
+        const debugInfo = document.getElementById('debug-info');
+        
+        function addDebugInfo(message) {
+            debugInfo.innerHTML += '<p>' + message + '</p>';
+        }
+        
+        // Check manifest
+        async function checkManifest() {
+            try {
+                const response = await fetch('/manifest.json');
+                const manifest = await response.json();
+                
+                document.getElementById('manifest-status').innerHTML = `
+                    <h3>Manifest Status ✅</h3>
+                    <p>Manifest loaded successfully</p>
+                    <ul>
+                        <li>Name: ${manifest.name}</li>
+                        <li>Short Name: ${manifest.short_name}</li>
+                        <li>Start URL: ${manifest.start_url}</li>
+                        <li>Display: ${manifest.display}</li>
+                        <li>Icons: ${manifest.icons.length} icons</li>
+                    </ul>
+                `;
+                document.getElementById('manifest-status').className = 'status success';
+                
+                addDebugInfo('✅ Manifest loaded: ' + manifest.name);
+            } catch (error) {
+                document.getElementById('manifest-status').innerHTML = `
+                    <h3>Manifest Status ❌</h3>
+                    <p>Failed to load manifest: ${error.message}</p>
+                `;
+                document.getElementById('manifest-status').className = 'status error';
+                addDebugInfo('❌ Manifest error: ' + error.message);
+            }
+        }
+        
+        // Check service worker
+        async function checkServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.register('/sw.js');
+                    document.getElementById('sw-status').innerHTML = `
+                        <h3>Service Worker Status ✅</h3>
+                        <p>Service worker registered successfully</p>
+                        <p>Scope: ${registration.scope}</p>
+                    `;
+                    document.getElementById('sw-status').className = 'status success';
+                    addDebugInfo('✅ Service Worker registered');
+                } catch (error) {
+                    document.getElementById('sw-status').innerHTML = `
+                        <h3>Service Worker Status ❌</h3>
+                        <p>Failed to register service worker: ${error.message}</p>
+                    `;
+                    document.getElementById('sw-status').className = 'status error';
+                    addDebugInfo('❌ Service Worker error: ' + error.message);
+                }
+            } else {
+                document.getElementById('sw-status').innerHTML = `
+                    <h3>Service Worker Status ❌</h3>
+                    <p>Service Worker not supported in this browser</p>
+                `;
+                document.getElementById('sw-status').className = 'status error';
+                addDebugInfo('❌ Service Worker not supported');
+            }
+        }
+        
+        // Check icons
+        async function checkIcons() {
+            const iconSizes = [72, 96, 128, 144, 152, 192, 384, 512];
+            let loadedIcons = 0;
+            
+            for (const size of iconSizes) {
+                try {
+                    const response = await fetch(`/icons/icon-${size}x${size}.png`);
+                    if (response.ok) {
+                        loadedIcons++;
+                    }
+                } catch (error) {
+                    addDebugInfo(`❌ Icon ${size}x${size} not found`);
+                }
+            }
+            
+            if (loadedIcons === iconSizes.length) {
+                document.getElementById('icons-status').innerHTML = `
+                    <h3>Icons Status ✅</h3>
+                    <p>All ${loadedIcons} icons loaded successfully</p>
+                `;
+                document.getElementById('icons-status').className = 'status success';
+                addDebugInfo('✅ All icons loaded');
+            } else {
+                document.getElementById('icons-status').innerHTML = `
+                    <h3>Icons Status ⚠️</h3>
+                    <p>Only ${loadedIcons}/${iconSizes.length} icons loaded</p>
+                `;
+                document.getElementById('icons-status').className = 'status warning';
+                addDebugInfo(`⚠️ Only ${loadedIcons}/${iconSizes.length} icons loaded`);
+            }
+        }
+        
+        // Check installation criteria
+        function checkInstallationCriteria() {
+            const criteria = [
+                { name: 'HTTPS', check: () => location.protocol === 'https:' || location.hostname === 'localhost' },
+                { name: 'Manifest', check: () => document.querySelector('link[rel="manifest"]') !== null },
+                { name: 'Service Worker', check: () => 'serviceWorker' in navigator },
+                { name: 'Icons', check: () => true }, // Will be checked by icon test
+            ];
+            
+            let passedCriteria = 0;
+            criteria.forEach(criterion => {
+                if (criterion.check()) {
+                    passedCriteria++;
+                }
+            });
+            
+            document.getElementById('install-status').innerHTML = `
+                <h3>Installation Status ${passedCriteria === criteria.length ? '✅' : '⚠️'}</h3>
+                <p>${passedCriteria}/${criteria.length} installation criteria met</p>
+                <ul>
+                    <li>HTTPS: ${location.protocol === 'https:' || location.hostname === 'localhost' ? '✅' : '❌'}</li>
+                    <li>Manifest: ${document.querySelector('link[rel="manifest"]') !== null ? '✅' : '❌'}</li>
+                    <li>Service Worker: ${'serviceWorker' in navigator ? '✅' : '❌'}</li>
+                    <li>Icons: ${passedCriteria >= 3 ? '✅' : '❌'}</li>
+                </ul>
+            `;
+            
+            if (passedCriteria === criteria.length) {
+                document.getElementById('install-status').className = 'status success';
+                addDebugInfo('✅ All installation criteria met');
+            } else {
+                document.getElementById('install-status').className = 'status warning';
+                addDebugInfo(`⚠️ Only ${passedCriteria}/${criteria.length} criteria met`);
+            }
+        }
+        
+        // Handle install prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-button').style.display = 'block';
+            addDebugInfo('✅ Install prompt available');
+        });
+        
+        document.getElementById('install-button').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                addDebugInfo(`Install prompt outcome: ${outcome}`);
+                deferredPrompt = null;
+                document.getElementById('install-button').style.display = 'none';
+            }
+        });
+        
+        // Run all checks
+        async function runChecks() {
+            await checkManifest();
+            await checkServiceWorker();
+            await checkIcons();
+            checkInstallationCriteria();
+            
+            addDebugInfo('🔍 PWA check completed');
+            addDebugInfo('📍 Current URL: ' + location.href);
+            addDebugInfo('🌐 Protocol: ' + location.protocol);
+            addDebugInfo('🖥️ User Agent: ' + navigator.userAgent.substring(0, 100) + '...');
+        }
+        
+        // Start checks when page loads
+        runChecks();
+    </script>
+</body>
+</html>

@@ -63,6 +63,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="application-name" content="Hyundai QR" />
         <meta name="msapplication-TileColor" content="#153263" />
         <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="apple-mobile-web-app-orientations" content="portrait" />
         <Meta />
         <Links />
       </head>

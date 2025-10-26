@@ -1,5 +1,6 @@
 const CACHE_NAME = 'hyundai-qr-cache-v1';
 const OFFLINE_URLS = [
+  '/',
   '/qr-scan',
   '/qr-scan/scan-visitor',
   '/qr-scan/visitor-list',
@@ -53,42 +54,50 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Only handle requests for QR scan pages
-  if (OFFLINE_URLS.some(path => url.pathname.startsWith(path))) {
+  // Handle all navigation requests
+  if (request.mode === 'navigate') {
     event.respondWith(
-      caches.match(request)
-        .then((response) => {
-          // Return cached version or fetch from network
-          if (response) {
-            return response;
-          }
-
-          return fetch(request)
-            .then((response) => {
-              // Don't cache if not a valid response
-              if (!response || response.status !== 200 || response.type !== 'basic') {
-                return response;
-              }
-
-              // Clone the response
-              const responseToCache = response.clone();
-
-              caches.open(CACHE_NAME)
-                .then((cache) => {
-                  cache.put(request, responseToCache);
-                });
-
-              return response;
-            })
-            .catch(() => {
-              // If network fails and we're on a QR scan page, show offline page
-              if (request.destination === 'document') {
-                return caches.match('/qr-scan');
-              }
-            });
+      fetch(request)
+        .catch(() => {
+          // If network fails, serve the cached version
+          return caches.match('/') || caches.match('/qr-scan');
         })
     );
+    return;
   }
+
+  // Handle other requests (API calls, assets, etc.)
+  event.respondWith(
+    caches.match(request)
+      .then((response) => {
+        // Return cached version or fetch from network
+        if (response) {
+          return response;
+        }
+
+        return fetch(request)
+          .then((response) => {
+            // Don't cache if not a valid response
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // Clone the response
+            const responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(request, responseToCache);
+              });
+
+            return response;
+          })
+          .catch(() => {
+            // Return cached version if available
+            return caches.match(request);
+          });
+      })
+  );
 });
 
 // Handle background sync for offline data
