@@ -11,6 +11,8 @@ import { useLocation, useNavigate } from "react-router";
 import DialogDelete from "@/components/custom/dialog/dialog-delete";
 import { useDeleteParticipantTourGroup } from "@/api/tour";
 import { enqueueSnackbar } from "notistack";
+import { useOfflineMode } from "@/hooks/use-offline-mode";
+import { offlineStorage } from "@/lib/offline-storage";
 
 export default function VisitorList() {
   const location = useLocation();
@@ -23,7 +25,13 @@ export default function VisitorList() {
   const [selectedVisitorId, setSelectedVisitorId] = useState<number | null>(
     null
   );
+  const [offlineVisitors, setOfflineVisitors] = useState<any[]>([]);
   const { mutate: mutateDelete } = useDeleteParticipantTourGroup();
+  const {
+    isOnline,
+    offlineVisitors: storedOfflineVisitors,
+    deleteOfflineVisitor,
+  } = useOfflineMode();
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -39,7 +47,16 @@ export default function VisitorList() {
     paginate,
   });
 
-  const visitors = data?.data?.data ?? [];
+  // Use offline visitors when offline
+  useEffect(() => {
+    if (!isOnline) {
+      setOfflineVisitors(storedOfflineVisitors);
+    } else {
+      setOfflineVisitors([]);
+    }
+  }, [isOnline, storedOfflineVisitors]);
+
+  const visitors = isOnline ? (data?.data?.data ?? []) : offlineVisitors;
 
   const filteredVisitors = visitors.filter((visitor) =>
     visitor.name.toLowerCase().includes(debouncedSearch.toLowerCase())
@@ -55,11 +72,29 @@ export default function VisitorList() {
 
   const handleBypass = async (visitorCode: string, attendedAt: string) => {
     if (attendedAt === null) {
-      await attendQr({ code: visitorCode }).then((response) => {
-        if (response.status === 200) {
-          refetch();
+      if (isOnline) {
+        await attendQr({ code: visitorCode }).then((response) => {
+          if (response.status === 200) {
+            refetch();
+          }
+        });
+      } else {
+        // Offline mode - update visitor in offline storage
+        const offlineVisitor = storedOfflineVisitors.find(
+          (v) => v.verification_code === visitorCode
+        );
+        if (offlineVisitor) {
+          await offlineStorage.updateVisitor(offlineVisitor.id, {
+            attended_at: new Date().toISOString(),
+          });
+          // Refresh offline visitors
+          const updatedVisitors = await offlineStorage.getVisitors();
+          setOfflineVisitors(updatedVisitors);
+          enqueueSnackbar("Visitor marked as attended (offline)", {
+            variant: "success",
+          });
         }
-      });
+      }
     }
   };
 
@@ -69,23 +104,48 @@ export default function VisitorList() {
   };
 
   const onDelete = () => {
-    mutateDelete(
-      { id: String(selectedVisitorId) || "" },
-      {
-        onSuccess: () => {
-          setOpenDelete(false);
-          enqueueSnackbar("Data has been deleted", {
-            variant: "success",
+    if (isOnline) {
+      mutateDelete(
+        { id: String(selectedVisitorId) || "" },
+        {
+          onSuccess: () => {
+            setOpenDelete(false);
+            enqueueSnackbar("Data has been deleted", {
+              variant: "success",
+            });
+            refetch();
+          },
+          onError: (err: any) => {
+            enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
+              variant: "error",
+            });
+          },
+        }
+      );
+    } else {
+      // Offline mode - delete from offline storage
+      const offlineVisitor = storedOfflineVisitors.find(
+        (v) => v.id === String(selectedVisitorId)
+      );
+      if (offlineVisitor) {
+        deleteOfflineVisitor(offlineVisitor.id)
+          .then(() => {
+            setOpenDelete(false);
+            enqueueSnackbar("Data has been deleted (offline)", {
+              variant: "success",
+            });
+            // Refresh offline visitors
+            offlineStorage.getVisitors().then((updatedVisitors) => {
+              setOfflineVisitors(updatedVisitors);
+            });
+          })
+          .catch((err) => {
+            enqueueSnackbar(`Error: ${err.message}`, {
+              variant: "error",
+            });
           });
-          refetch();
-        },
-        onError: (err: any) => {
-          enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
-            variant: "error",
-          });
-        },
       }
-    );
+    }
   };
 
   return (
@@ -99,9 +159,24 @@ export default function VisitorList() {
         <div className="flex-1 overflow-auto">
           <ScrollArea className="h-full">
             <div className="p-6 text-white space-y-6">
-              <Typography className="text-xl font-bold text-center">
-                Visitor List
-              </Typography>
+              <div className="flex items-center justify-between">
+                <Typography className="text-xl font-bold text-center flex-1">
+                  Visitor List
+                </Typography>
+                {!isOnline && (
+                  <div className="flex items-center gap-2 bg-orange-500/20 px-2 py-1 rounded-full">
+                    <Icon
+                      icon="mdi:wifi-off"
+                      width="16"
+                      height="16"
+                      className="text-orange-500"
+                    />
+                    <Typography className="text-xs text-orange-500">
+                      Offline
+                    </Typography>
+                  </div>
+                )}
+              </div>
 
               {/* Search Bar */}
               <div className="relative">
