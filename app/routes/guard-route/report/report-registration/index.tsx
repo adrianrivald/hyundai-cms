@@ -3,7 +3,7 @@ import RegistrationReportPage from "@/page/report/register";
 import PageAuthorization from "@/components/page-authorization";
 
 export function meta({}: Route.MetaArgs) {
-	return [{ title: "Report Registration | Hyundai Factory Tour" }];
+	return [{ title: "Registration Report | Hyundai Factory Tour" }];
 }
 
 export default function ReportRegistration() {
