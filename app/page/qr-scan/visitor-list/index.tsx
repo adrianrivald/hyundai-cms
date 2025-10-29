@@ -13,6 +13,7 @@ import { useDeleteParticipantTourGroup } from "@/api/tour";
 import { enqueueSnackbar } from "notistack";
 import { useOfflineMode } from "@/hooks/use-offline-mode";
 import { offlineStorage } from "@/lib/offline-storage";
+import { OfflineIndicator } from "@/components/offline-indicator";
 
 export default function VisitorList() {
   const location = useLocation();
@@ -163,19 +164,7 @@ export default function VisitorList() {
                 <Typography className="text-xl font-bold text-center flex-1">
                   Visitor List
                 </Typography>
-                {!isOnline && (
-                  <div className="flex items-center gap-2 bg-orange-500/20 px-2 py-1 rounded-full">
-                    <Icon
-                      icon="mdi:wifi-off"
-                      width="16"
-                      height="16"
-                      className="text-orange-500"
-                    />
-                    <Typography className="text-xs text-orange-500">
-                      Offline
-                    </Typography>
-                  </div>
-                )}
+                {!isOnline && <OfflineIndicator />}
               </div>
 
               {/* Search Bar */}
