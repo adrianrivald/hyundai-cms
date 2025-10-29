@@ -6,6 +6,8 @@ import StickyHeader from "@/components/layout/sticky-header";
 import { useEffect, useState } from "react";
 import useUser from "@/hooks/use-user";
 import { enqueueSnackbar } from "notistack";
+import { OfflineIndicator } from "@/components/offline-indicator";
+import { useOfflineMode } from "@/hooks/use-offline-mode";
 import { putUser, useGetUser } from "@/api/user";
 
 export default function Settings() {
@@ -13,6 +15,7 @@ export default function Settings() {
   const { data } = useGetUser(String(user.id));
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const { isOnline } = useOfflineMode();
 
   useEffect(() => {
     if (data?.data) {
@@ -22,6 +25,12 @@ export default function Settings() {
   }, [data?.data]);
 
   const onSubmit = async () => {
+    if (!isOnline) {
+      enqueueSnackbar("You are offline. Please reconnect to save.", {
+        variant: "warning",
+      });
+      return;
+    }
     const payload = {
       id: user.id,
       name,
@@ -53,9 +62,15 @@ export default function Settings() {
         <div className="flex-1 flex flex-col">
           {/* Page Title */}
           <div className="px-6 py-6">
-            <Typography className="text-xl font-bold text-center text-white">
-              Settings
-            </Typography>
+            <div className="flex items-center justify-between">
+              <div className="w-1/3">{!isOnline && <OfflineIndicator />}</div>
+              <div className="w-1/3 flex justify-center">
+                <Typography className="text-xl font-bold text-center text-white">
+                  Settings
+                </Typography>
+              </div>
+              <div className="w-1/3" />
+            </div>
           </div>
 
           {/* Profile Section */}
@@ -110,7 +125,15 @@ export default function Settings() {
         <div className="px-6 pb-8 mt-12">
           <button
             onClick={onSubmit}
-            className="w-full bg-[#1E3A5F] hover:bg-[#274873] text-white text-base font-medium py-3 rounded-lg"
+            disabled={!isOnline}
+            className={`w-full text-white text-base font-medium py-3 rounded-lg ${
+              isOnline
+                ? "bg-[#1E3A5F] hover:bg-[#274873]"
+                : "bg-[#1E3A5F]/50 cursor-not-allowed"
+            }`}
+            title={
+              !isOnline ? "Offline: reconnect to enable saving" : undefined
+            }
           >
             Save
           </button>
