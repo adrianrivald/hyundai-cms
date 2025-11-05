@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import StickyFooter from "@/components/layout/sticky-footer";
 import StickyHeader from "@/components/layout/sticky-header";
 import { useState, useEffect } from "react";
-import { attendQr, useGetParticipantsByDate } from "@/api/qr-scan";
+import { attendQr, useGetParticipantsByDate, addVisitor } from "@/api/qr-scan";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useLocation, useNavigate } from "react-router";
@@ -27,6 +27,7 @@ export default function VisitorList() {
     null
   );
   const [offlineVisitors, setOfflineVisitors] = useState<any[]>([]);
+  const [lastFetchedVisitors, setLastFetchedVisitors] = useState<any[] | null>(null);
   const { mutate: mutateDelete } = useDeleteParticipantTourGroup();
   const {
     isOnline,
@@ -48,7 +49,29 @@ export default function VisitorList() {
     paginate,
   });
 
-  // Use offline visitors when offline
+  // Hydrate last fetched list from localStorage on mount
+  useEffect(() => {
+    try {
+      const cached = localStorage.getItem("lastFetchedVisitors");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed)) setLastFetchedVisitors(parsed);
+      }
+    } catch (_) {}
+  }, []);
+
+  // Cache last fetched online visitors list for offline display
+  useEffect(() => {
+    const onlineVisitors = data?.data?.data;
+    if (Array.isArray(onlineVisitors)) {
+      setLastFetchedVisitors(onlineVisitors);
+      try {
+        localStorage.setItem("lastFetchedVisitors", JSON.stringify(onlineVisitors));
+      } catch (_) {}
+    }
+  }, [data]);
+
+  // Maintain offline visitors list for offline mutations/storage, though display uses last fetched
   useEffect(() => {
     if (!isOnline) {
       setOfflineVisitors(storedOfflineVisitors);
@@ -57,7 +80,56 @@ export default function VisitorList() {
     }
   }, [isOnline, storedOfflineVisitors]);
 
-  const visitors = isOnline ? (data?.data?.data ?? []) : offlineVisitors;
+  // When offline, merge last fetched with any newly added offline visitors (avoid duplicates)
+  const offlineNewVisitors = offlineVisitors.filter(
+    (v) => String(v.verification_code || "").startsWith("offline_")
+  );
+  const mergeVisitors = (
+    base: any[],
+    extras: any[],
+  ) => {
+    const byCode = new Map<string, any>();
+    base.forEach((v) => byCode.set(String(v.verification_code ?? v.id ?? Math.random()), v));
+    extras.forEach((v) => {
+      const key = String(v.verification_code ?? v.id ?? Math.random());
+      if (!byCode.has(key)) byCode.set(key, v);
+    });
+    return Array.from(byCode.values());
+  };
+
+  const visitors = isOnline
+    ? (data?.data?.data ?? [])
+    : mergeVisitors(lastFetchedVisitors ?? [], offlineNewVisitors);
+
+  // When back online, sync offline-added visitors to server
+  useEffect(() => {
+    const syncOfflineAdds = async () => {
+      if (!isOnline) return;
+      const pendingAdds = offlineVisitors.filter((v) => String(v.verification_code || "").startsWith("offline_"));
+      if (pendingAdds.length === 0) return;
+      for (const v of pendingAdds) {
+        try {
+          await addVisitor({
+            name: v.name,
+            dob: v.dob,
+            phone_number: v.phone_number,
+            email: v.email,
+            sex: v.sex,
+            is_special_need: Boolean(v.is_special_need),
+            tour_number: v.tour_number,
+          });
+          await deleteOfflineVisitor(v.id);
+        } catch (err: any) {
+          enqueueSnackbar(`Failed to sync ${v.name}: ${err?.response?.data?.message || err.message || ""}`,
+            { variant: "error" });
+        }
+      }
+      enqueueSnackbar("Offline visitors synced", { variant: "success" });
+      refetch();
+    };
+    syncOfflineAdds();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOnline]);
 
   const filteredVisitors = visitors.filter((visitor) =>
     visitor.name.toLowerCase().includes(debouncedSearch.toLowerCase())

@@ -137,6 +137,27 @@ export default function AddVisitor({ id }: AddVisitorProps) {
             tour_number: payload.tour_number,
             verification_code: `offline_${Date.now()}`,
           });
+          // Also update cached last fetched visitors so visitor list shows merged data immediately
+          try {
+            const cached = localStorage.getItem("lastFetchedVisitors");
+            const current = cached ? JSON.parse(cached) : [];
+            const newItem = {
+              name: payload.name,
+              dob: payload.dob,
+              phone_number: payload.phone_number,
+              email: payload.email,
+              sex: payload.sex,
+              is_special_need: payload.is_special_need,
+              tour_number: payload.tour_number,
+              verification_code: `offline_${Date.now()}`,
+              tour: { tour_number: payload.tour_number },
+              attended_at: null,
+            };
+            const merged = Array.isArray(current)
+              ? [...current, newItem]
+              : [newItem];
+            localStorage.setItem("lastFetchedVisitors", JSON.stringify(merged));
+          } catch (_) {}
           enqueueSnackbar("Visitor added (offline)", { variant: "success" });
         }
       }
