@@ -159,6 +159,11 @@ const DetailRegistrationReportPage = () => {
 								label="Find Participants"
 								placeholder="Find participants name"
 								endIcon={<SearchIcon className="mr-2" />}
+								onKeyDown={(e) => {
+									if (e.key === "Enter") {
+										e.preventDefault();
+									}
+								}}
 							/>
 						</FormProvider>
 					</div>
