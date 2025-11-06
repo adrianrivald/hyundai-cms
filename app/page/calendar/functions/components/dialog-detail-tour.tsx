@@ -195,13 +195,18 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 							List of Participants
 						</Typography>
 						<div className=" mb-5 flex flex-row gap-3 items-end">
-							<FormProvider methods={methods}>
+							<FormProvider methods={methods} onSubmit={() => {}}>
 								<RHFTextField
 									name="search"
 									label="Find Participants"
 									placeholder="Find participants name"
 									className="w-[300px]"
 									endIcon={<SearchIcon className="mr-2" />}
+									onKeyDown={(e) => {
+										if (e.key === "Enter") {
+											e.preventDefault();
+										}
+									}}
 								/>
 							</FormProvider>
 							<Button
