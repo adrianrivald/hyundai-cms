@@ -16,6 +16,7 @@ export type TourDetailsType = {
 	purpose_of_visit: string;
 	city: string;
 	province: string;
+	country: string;
 	tour_date: string;
 	slot: string;
 	reschedule_reason: string;
@@ -85,6 +86,12 @@ export async function getProvinces(): Promise<{ data: string[] }> {
 	return response.data;
 }
 
+export async function getCountries(): Promise<{ data: string[] }> {
+	const response = await apiConfig.get(`public/countries`);
+
+	return response.data;
+}
+
 export async function postParticipantTourGroup(
 	tour_number: string,
 	data: ParticipantInputType
@@ -126,6 +133,20 @@ export const useGetProvinces = (
 		queryKey: ["provinces-all"],
 		queryFn: async () => {
 			const response = await getProvinces();
+			return response;
+		},
+		placeholderData: (prev) => prev,
+		...options,
+	});
+};
+
+export const useGetCoutnries = (
+	options?: QueryObserverOptions<{ data: string[] }>
+) => {
+	return useQuery<{ data: string[] }>({
+		queryKey: ["countries-all"],
+		queryFn: async () => {
+			const response = await getCountries();
 			return response;
 		},
 		placeholderData: (prev) => prev,

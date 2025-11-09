@@ -77,17 +77,33 @@ const ReportVisitorDetailPage = () => {
 					<Grid item md={3} xs={6}>
 						<TextFieldDisabled value={data?.data?.email || ""} title="Email" />
 					</Grid>
-					<Grid item md={3} xs={6}>
-						<TextFieldDisabled
-							value={
-								data?.data?.tour?.province.replace(
-									/([a-z])([A-Z])/g,
-									"$1 $2"
-								) || ""
-							}
-							title="Province"
-						/>
-					</Grid>
+					{data?.data?.tour?.country && (
+						<Grid item md={3} xs={6}>
+							<TextFieldDisabled
+								value={
+									data?.data?.tour?.country?.replace(
+										/([a-z])([A-Z])/g,
+										"$1 $2"
+									) || ""
+								}
+								title="Province"
+							/>
+						</Grid>
+					)}
+					{data?.data?.tour?.province && (
+						<Grid item md={3} xs={6}>
+							<TextFieldDisabled
+								value={
+									data?.data?.tour?.province.replace(
+										/([a-z])([A-Z])/g,
+										"$1 $2"
+									) || ""
+								}
+								title="Province"
+							/>
+						</Grid>
+					)}
+
 					<Grid item md={3} xs={6}>
 						<TextFieldDisabled value={data?.data?.sex || ""} title="Gender" />
 					</Grid>

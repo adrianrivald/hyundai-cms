@@ -73,11 +73,18 @@ export const FormRegisterTourSchema = yup.object({
 			then: (schema) => schema.optional().nullable(),
 			otherwise: (schema) => schema.required("Purpose of visit is required"),
 		}),
-		city: yup.string().when("..step", {
+		country: yup.string().when("..step", {
 			is: "info_dasar",
 			then: (schema) => schema.optional().nullable(),
-			otherwise: (schema) => schema.required("City is required"),
+			otherwise: (schema) => schema.required("Country is required"),
 		}),
+		city: yup.string().when(["..step", "country"], {
+			is: (step: string, country: string) =>
+				step !== "info_dasar" && country === "Indonesia",
+			then: (schema) => schema.required("City is required"),
+			otherwise: (schema) => schema.optional().nullable(),
+		}),
+
 		email: yup.string().when("..step", {
 			is: "info_dasar",
 			then: (schema) => schema.optional().nullable(),
@@ -175,6 +182,7 @@ export type FormRegisterTour = {
 		group_leader: string;
 		purpose_visit: string;
 		city: string;
+		country: string;
 		email: string;
 		gender: string;
 		age: string;

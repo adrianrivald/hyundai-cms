@@ -162,15 +162,30 @@ const DialogDetailTour = ({ open, onClose, data }: DialogDetailTourProps) => {
 								value={String(dataDetail?.participants_count) || "-"}
 							/>
 						</Grid>
-						<Grid item xs={6} md={3}>
-							<TextFieldDisabled
-								title="Province"
-								value={
-									dataDetail?.province.replace(/([a-z])([A-Z])/g, "$1 $2") ||
-									"-"
-								}
-							/>
-						</Grid>
+						{dataDetail?.country && (
+							<Grid item xs={6} md={3}>
+								<TextFieldDisabled
+									title="Country"
+									value={
+										dataDetail?.country?.replace(/([a-z])([A-Z])/g, "$1 $2") ||
+										"-"
+									}
+								/>
+							</Grid>
+						)}
+
+						{dataDetail?.province && (
+							<Grid item xs={6} md={3}>
+								<TextFieldDisabled
+									title="Province"
+									value={
+										dataDetail?.province?.replace(/([a-z])([A-Z])/g, "$1 $2") ||
+										"-"
+									}
+								/>
+							</Grid>
+						)}
+
 						{dataDetail?.tour_package?.tour_packages_type ===
 							"student-course" && (
 							<Grid item xs={6} md={3}>
