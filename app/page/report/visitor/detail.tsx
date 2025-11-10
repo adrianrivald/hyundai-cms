@@ -1,22 +1,22 @@
-import { useGetParticipant } from "@/api/qr-scan";
-import Container from "@/components/container";
-import { Grid } from "@/components/grid";
-import NotFound from "@/components/not-found";
-import { Typography } from "@/components/typography";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import { format } from "date-fns";
-import { useNavigate, useParams } from "react-router";
+import { useGetParticipant } from '@/api/qr-scan';
+import Container from '@/components/container';
+import { Grid } from '@/components/grid';
+import NotFound from '@/components/not-found';
+import { Typography } from '@/components/typography';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { format } from 'date-fns';
+import { useNavigate, useParams } from 'react-router';
 
 const ReportVisitorDetailPage = () => {
 	const { id } = useParams();
 	const navigation = useNavigate();
-	const { data, isFetched } = useGetParticipant(id || "");
+	const { data, isFetched } = useGetParticipant(id || '');
 
 	if (isFetched && !data) {
 		return (
 			<NotFound
 				onClick={() => {
-					navigation("/report/visitor-report");
+					navigation('/report/visitor-report');
 				}}
 				btnName="Back to Visitor Report"
 				message="The user you are looking for might have been removed, had their name changed, or is temporarily unavailable."
@@ -47,7 +47,7 @@ const ReportVisitorDetailPage = () => {
 				<div className="mt flex flex-row gap-4 items-center">
 					<div
 						onClick={() => {
-							navigation("/report/visitor-report");
+							navigation('/report/visitor-report');
 						}}
 						className="cursor-pointer"
 					>
@@ -64,52 +64,68 @@ const ReportVisitorDetailPage = () => {
 					</Grid>
 					<Grid item md={3} xs={6}>
 						<TextFieldDisabled
-							value={data?.data?.name || ""}
+							value={data?.data?.name || ''}
 							title="Full Name"
 						/>
 					</Grid>
 					<Grid item md={3} xs={6}>
 						<TextFieldDisabled
-							value={data?.data?.phone_number || ""}
+							value={data?.data?.phone_number || ''}
 							title="Phone Number"
 						/>
 					</Grid>
 					<Grid item md={3} xs={6}>
-						<TextFieldDisabled value={data?.data?.email || ""} title="Email" />
+						<TextFieldDisabled value={data?.data?.email || ''} title="Email" />
 					</Grid>
+					{data?.data?.tour?.country && (
+						<Grid item md={3} xs={6}>
+							<TextFieldDisabled
+								value={
+									data?.data?.tour?.country?.replace(
+										/([a-z])([A-Z])/g,
+										'$1 $2'
+									) || ''
+								}
+								title="Country"
+							/>
+						</Grid>
+					)}
+					{data?.data?.tour?.province && (
+						<Grid item md={3} xs={6}>
+							<TextFieldDisabled
+								value={
+									data?.data?.tour?.province.replace(
+										/([a-z])([A-Z])/g,
+										'$1 $2'
+									) || ''
+								}
+								title="Province"
+							/>
+						</Grid>
+					)}
+
 					<Grid item md={3} xs={6}>
-						<TextFieldDisabled
-							value={
-								data?.data?.tour?.province.replace(
-									/([a-z])([A-Z])/g,
-									"$1 $2"
-								) || ""
-							}
-							title="Province"
-						/>
-					</Grid>
-					<Grid item md={3} xs={6}>
-						<TextFieldDisabled value={data?.data?.sex || ""} title="Gender" />
+						<TextFieldDisabled value={data?.data?.sex || ''} title="Gender" />
 					</Grid>
 					<Grid item md={3} xs={6}>
 						<TextFieldDisabled
 							value={
 								data?.data?.dob
-									? format(new Date(data?.data?.dob || ""), "dd/MM/yyyy")
-									: ""
+									? format(new Date(data?.data?.dob || ''), 'dd/MM/yyyy')
+									: ''
 							}
 							title="Date of Birth"
 						/>
 					</Grid>
 					<Grid item md={3} xs={6}>
 						<TextFieldDisabled
-							value={data?.data?.tour?.name || ""}
+							value={data?.data?.tour?.name || ''}
 							title="Group Name"
 						/>
 					</Grid>
 					<Grid item md={3} xs={6}>
 						<TextFieldDisabled
-							value={(data?.data?.is_special_need ? "Iya" : "Tidak") || ""}
+							value={data?.data?.is_special_need ? 'Iya' : 'Tidak'}
 							title="Difabel"
 						/>
 					</Grid>
@@ -120,13 +136,13 @@ const ReportVisitorDetailPage = () => {
 					</Grid>
 					<Grid item md={3} xs={6}>
 						<TextFieldDisabled
-							value={data?.data?.tour?.tour_package?.name || ""}
+							value={data?.data?.tour?.tour_package?.name || ''}
 							title="Tour Type"
 						/>
 					</Grid>
 					<Grid item md={3} xs={6}>
 						<TextFieldDisabled
-							value={data?.data?.verification_code || ""}
+							value={data?.data?.verification_code || ''}
 							title="Visitor Code"
 						/>
 					</Grid>
@@ -135,24 +151,24 @@ const ReportVisitorDetailPage = () => {
 							value={
 								data?.data?.tour?.tour_date
 									? format(
-											new Date(data?.data?.tour?.tour_date || ""),
-											"dd/MM/yyyy"
+											new Date(data?.data?.tour?.tour_date || ''),
+											'dd/MM/yyyy'
 										)
-									: ""
+									: ''
 							}
-							title={"Visit Date"}
+							title={'Visit Date'}
 						/>
 					</Grid>
 					<Grid item md={3} xs={6}>
 						<TextFieldDisabled
-							value={data?.data?.tour?.group_type || "-"}
-							title={"Group Type"}
+							value={data?.data?.tour?.group_type || '-'}
+							title={'Group Type'}
 						/>
 					</Grid>
 					<Grid item md={3} xs={6}>
 						<TextFieldDisabled
-							value={data?.data?.tour?.slot + " WIB" || "-"}
-							title={"Visit Time"}
+							value={data?.data?.tour?.slot + ' WIB' || '-'}
+							title={'Visit Time'}
 						/>
 					</Grid>
 					<Grid item md={3} xs={6}>
@@ -160,19 +176,19 @@ const ReportVisitorDetailPage = () => {
 							value={
 								data?.data?.attended_at
 									? format(
-											new Date(data?.data?.attended_at || ""),
-											"dd/MM/yyyy | HH:mm"
+											new Date(data?.data?.attended_at || ''),
+											'dd/MM/yyyy | HH:mm'
 										)
-									: "-"
+									: '-'
 							}
-							title={"Last Check-in"}
+							title={'Last Check-in'}
 						/>
 					</Grid>
 					<Grid item xs={12} className="mt-5 py-3 px-5 border-2 rounded-md">
 						<Typography>
 							{data?.data?.tour?.allow_marketing === 1
-								? "This visitor data is allowed for marketing purposes"
-								: "This visitor data is not allowed for marketing purposes"}
+								? 'This visitor data is allowed for marketing purposes'
+								: 'This visitor data is not allowed for marketing purposes'}
 						</Typography>
 					</Grid>
 				</Grid>

@@ -52,7 +52,8 @@ export type TourRegisterType = {
 	name: string;
 	purpose_of_visit: string;
 	// city: string;
-	province: string;
+	country: string;
+	province?: string | null;
 	allow_marketing: boolean;
 	vehicles: {
 		vehicle_type: string;

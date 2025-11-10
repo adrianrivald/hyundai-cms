@@ -49,21 +49,24 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 	const { mutate: mutatePost, isPending: pendingPost } = usePostRegisterTour();
 	const onSubmit = () => {
 		const form = methods.watch();
+
 		const data: TourRegisterType = {
 			tour_package_id: Number(form.type),
 			group_type: form.info_group.group_type || "",
 			tour_date: format(new Date(form.date), "yyyy-MM-dd"),
 			slot: form.batch.join(","),
 			name: form.info_group.group_name,
-			purpose_of_visit: form?.info_group.purpose_visit,
-			province: form.info_group.city,
+			country: form.info_group.country,
+			purpose_of_visit: form.info_group.purpose_visit,
+			province:
+				form.info_group.country === "Indonesia"
+					? form.info_group.city
+					: undefined, // we'll remove it later if not Indonesia
 			vehicles: form.info_vehicle.map((item) => ({
 				vehicle_plate_number: item.vehicle_plat,
 				vehicle_type: item.vehicle_type,
 			})),
 			allow_marketing: form.allow_marketing || false,
-			// vehicle_type: form.info_vehicle.vehicle_type,
-			// vehicle_plate_number: form.info_vehicle.vehicle_plat,
 			attachments: form.info_group.purpose_letter
 				? [
 						{
@@ -92,13 +95,15 @@ const MemberInformation = ({ methods, refetch }: MemberInformationProps) => {
 			})),
 		};
 
+		// 🧹 Remove province if country is not Indonesia
+		if (form.info_group.country !== "Indonesia") {
+			delete (data as any).province;
+		}
+
 		mutatePost(data, {
 			onSuccess: () => {
 				methods.setValue("step", "done");
-				//refetch && refetch();
-				enqueueSnackbar("Data has been added", {
-					variant: "success",
-				});
+				enqueueSnackbar("Data has been added", { variant: "success" });
 			},
 			onError: (err: any) => {
 				enqueueSnackbar(`Error : ${err.response?.data?.message}`, {

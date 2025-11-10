@@ -13,7 +13,7 @@ import { useGetCalendars } from "@/api/batch";
 import { format, isSameDay, isValid } from "date-fns";
 import { RHFFileUpload } from "@/components/RHForm/RHFUploadInput";
 import RHFSelectMultiple from "@/components/RHForm/RHFSelectMultiple";
-import { useGetProvinces } from "@/api/tour";
+import { useGetCoutnries, useGetProvinces } from "@/api/tour";
 import RHFCheckbox from "@/components/RHForm/RHFCheckbox";
 
 interface BasicInformationProps {
@@ -23,6 +23,7 @@ interface BasicInformationProps {
 const BasicInformation = ({ methods }: BasicInformationProps) => {
 	const { data: dataTourPackages } = useGetTourPackages("");
 	const { data: provinces } = useGetProvinces();
+	const { data: countries } = useGetCoutnries();
 
 	const {
 		data: dataCalendar,
@@ -283,19 +284,39 @@ const BasicInformation = ({ methods }: BasicInformationProps) => {
 						</Grid>
 						<Grid item xs={6} md={3}>
 							<RHFSelect
-								name="info_group.city"
-								label="Province"
+								name="info_group.country"
+								label="Country"
 								options={
-									provinces?.data?.map((item) => ({ id: item, name: item })) ||
+									countries?.data?.map((item) => ({ id: item, name: item })) ||
 									[]
 								}
-								placeholder="Choose province"
+								placeholder="Choose Country"
 								getOptionLabel={(user) => user.name}
 								getOptionValue={(user) => String(user.id)}
 								required
 								className="space-y-0"
 							/>
 						</Grid>
+						{methods.watch("info_group.country") === "Indonesia" && (
+							<Grid item xs={6} md={3}>
+								<RHFSelect
+									name="info_group.city"
+									label="Province"
+									options={
+										provinces?.data?.map((item) => ({
+											id: item,
+											name: item,
+										})) || []
+									}
+									placeholder="Choose province"
+									getOptionLabel={(user) => user.name}
+									getOptionValue={(user) => String(user.id)}
+									required
+									className="space-y-0"
+								/>
+							</Grid>
+						)}
+
 						<Grid item xs={6} md={3}>
 							<RHFTextField
 								name="info_group.email"
