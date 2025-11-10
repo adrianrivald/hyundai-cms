@@ -1,30 +1,30 @@
-import Container from "@/components/container";
-import NotFound from "@/components/not-found";
-import { Typography } from "@/components/typography";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import { useNavigate, useParams } from "react-router";
-import { useGetTourDetails } from "@/api/tour";
-import { Grid } from "@/components/grid";
-import { format, isValid } from "date-fns";
-import { DataTable } from "@/components/layout/table/data-table";
-import { useTableConfig } from "@/hooks/use-table-config";
-import { useForm } from "react-hook-form";
-import { dataVehicleColumn } from "@/page/calendar/functions/column/column-vehicle";
-import { useTableState } from "@/hooks/use-table-state";
-import FormProvider from "@/components/RHForm/FormProvider";
-import RHFTextField from "@/components/RHForm/RHFTextField";
-import { SearchIcon } from "lucide-react";
-import { VisitorRegistrationColumn } from "./functions/columns/visitor-registration-column";
+import Container from '@/components/container';
+import NotFound from '@/components/not-found';
+import { Typography } from '@/components/typography';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { useNavigate, useParams } from 'react-router';
+import { useGetTourDetails } from '@/api/tour';
+import { Grid } from '@/components/grid';
+import { format, isValid } from 'date-fns';
+import { DataTable } from '@/components/layout/table/data-table';
+import { useTableConfig } from '@/hooks/use-table-config';
+import { useForm } from 'react-hook-form';
+import { dataVehicleColumn } from '@/page/calendar/functions/column/column-vehicle';
+import { useTableState } from '@/hooks/use-table-state';
+import FormProvider from '@/components/RHForm/FormProvider';
+import RHFTextField from '@/components/RHForm/RHFTextField';
+import { SearchIcon } from 'lucide-react';
+import { VisitorRegistrationColumn } from './functions/columns/visitor-registration-column';
 
 const DetailRegistrationReportPage = () => {
 	const { id } = useParams();
 	const navigation = useNavigate();
-	const { data: dataDetail, isFetched } = useGetTourDetails(id || "");
+	const { data: dataDetail, isFetched } = useGetTourDetails(id || '');
 	const tableState = useTableState({});
 
 	const methods = useForm({
 		defaultValues: {
-			search: "",
+			search: '',
 		},
 	});
 
@@ -32,7 +32,7 @@ const DetailRegistrationReportPage = () => {
 		return (
 			<NotFound
 				onClick={() => {
-					navigation("/report/visitor-report");
+					navigation('/report/visitor-report');
 				}}
 				btnName="Back to Registration Report"
 				message="The user you are looking for might have been removed, had their name changed, or is temporarily unavailable."
@@ -40,7 +40,7 @@ const DetailRegistrationReportPage = () => {
 		);
 	}
 
-	const search = methods.watch("search")?.trim() || "";
+	const search = methods.watch('search')?.trim() || '';
 
 	const tableVehicle = useTableConfig({
 		data: dataDetail?.vehicles || [],
@@ -52,7 +52,7 @@ const DetailRegistrationReportPage = () => {
 		data:
 			dataDetail?.participants.filter((item) => {
 				if (!search) return true; // no search → include all
-				const regex = new RegExp(search, "i"); // "i" = case-insensitive
+				const regex = new RegExp(search, 'i'); // "i" = case-insensitive
 				return regex.test(item.name);
 			}) || [],
 		columns: VisitorRegistrationColumn as any,
@@ -82,7 +82,7 @@ const DetailRegistrationReportPage = () => {
 				<div className="mt flex flex-row gap-4 items-center">
 					<div
 						onClick={() => {
-							navigation("/report/registration-report");
+							navigation('/report/registration-report');
 						}}
 						className="cursor-pointer"
 					>
@@ -102,8 +102,8 @@ const DetailRegistrationReportPage = () => {
 							value={
 								dataDetail?.tour_date &&
 								isValid(new Date(dataDetail?.tour_date))
-									? format(new Date(dataDetail?.tour_date), "dd/MM/yyyy")
-									: "-"
+									? format(new Date(dataDetail?.tour_date), 'dd/MM/yyyy')
+									: '-'
 							}
 						/>
 					</Grid>
@@ -111,34 +111,51 @@ const DetailRegistrationReportPage = () => {
 						<TextFieldDisabled
 							title="Tour Type"
 							value={
-								dataDetail?.tour_package?.tour_packages_type === "vip"
-									? "VIP"
+								dataDetail?.tour_package?.tour_packages_type === 'vip'
+									? 'VIP'
 									: dataDetail?.tour_package?.tour_packages_type ===
-										  "general-course"
-										? "General Tour"
-										: "Student Tour"
+										  'general-course'
+										? 'General Tour'
+										: 'Student Tour'
 							}
 						/>
 					</Grid>
 					<Grid item xs={6} md={3}>
 						<TextFieldDisabled
 							title="Number of Participants"
-							value={String(dataDetail?.participants_count) || "-"}
+							value={String(dataDetail?.participants_count) || '-'}
 						/>
 					</Grid>
-					<Grid item xs={6} md={3}>
-						<TextFieldDisabled title="City" value={dataDetail?.city || "-"} />
-					</Grid>
+					{dataDetail?.country && (
+						<Grid item md={3} xs={6}>
+							<TextFieldDisabled
+								value={
+									dataDetail?.country?.replace(/([a-z])([A-Z])/g, '$1 $2') || ''
+								}
+								title="Country"
+							/>
+						</Grid>
+					)}
+					{dataDetail?.province && (
+						<Grid item md={3} xs={6}>
+							<TextFieldDisabled
+								value={
+									dataDetail?.province.replace(/([a-z])([A-Z])/g, '$1 $2') || ''
+								}
+								title="Province"
+							/>
+						</Grid>
+					)}
 					{dataDetail?.tour_package?.tour_packages_type ===
-						"student-course" && (
+						'student-course' && (
 						<Grid item xs={6} md={3}>
-							<TextFieldDisabled title="Group Type" value={"-"} />
+							<TextFieldDisabled title="Group Type" value={'-'} />
 						</Grid>
 					)}
 					<Grid item xs={6} md={3}>
 						<TextFieldDisabled
 							title="Email Address"
-							value={dataDetail?.leader.email || "-"}
+							value={dataDetail?.leader.email || '-'}
 						/>
 					</Grid>
 				</Grid>
@@ -160,7 +177,7 @@ const DetailRegistrationReportPage = () => {
 								placeholder="Find participants name"
 								endIcon={<SearchIcon className="mr-2" />}
 								onKeyDown={(e) => {
-									if (e.key === "Enter") {
+									if (e.key === 'Enter') {
 										e.preventDefault();
 									}
 								}}
