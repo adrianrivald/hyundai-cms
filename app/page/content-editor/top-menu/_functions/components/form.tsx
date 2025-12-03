@@ -1,46 +1,46 @@
-import { DynamicBreadcrumb } from "@/components/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router";
-import { useEffect, useState } from "react";
-import { Grid } from "@/components/grid";
-import RHFTextField from "@/components/RHForm/RHFTextField";
-import FormProvider from "@/components/RHForm/FormProvider";
-import { QuillEditor } from "@/components/RHForm/RHFQuillEditor";
+import { DynamicBreadcrumb } from '@/components/breadcrumb';
+import { Button } from '@/components/ui/button';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router';
+import { useEffect, useState } from 'react';
+import { Grid } from '@/components/grid';
+import RHFTextField from '@/components/RHForm/RHFTextField';
+import FormProvider from '@/components/RHForm/FormProvider';
+import { QuillEditor } from '@/components/RHForm/RHFQuillEditor';
 
-import { enqueueSnackbar } from "notistack";
+import { enqueueSnackbar } from 'notistack';
 import {
 	usePostTopMenu,
 	usePutTopMenu,
 	type TopMenuTypePost,
 	useGetTopMenu,
-} from "@/api/top-menu";
-import { TopMenuSchema } from "../models/top-menu";
+} from '@/api/top-menu';
+import { TopMenuSchema } from '../models/top-menu';
 
 const Form = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const methods = useForm({
 		defaultValues: {
-			title: "",
-			content: "",
+			title: '',
+			content: '',
 		},
 		resolver: yupResolver(TopMenuSchema),
 	});
 
 	const { mutate: mutatePost, isPending: pendingPost } = usePostTopMenu();
 	const { mutate: mutateEdit, isPending: pendingEdit } = usePutTopMenu();
-	const { data: dataArticle } = useGetTopMenu(id || "", {
+	const { data: dataArticle } = useGetTopMenu(id || '', {
 		enabled: !!id,
-		queryKey: ["top-menu-get", id],
+		queryKey: ['top-menu-get', id],
 	});
 
 	useEffect(() => {
 		if (id) {
 			methods.reset({
-				title: dataArticle?.name || "",
-				content: dataArticle?.content || "",
+				title: dataArticle?.name || '',
+				content: dataArticle?.content || '',
 			});
 		}
 	}, [dataArticle, id]);
@@ -59,11 +59,13 @@ const Form = () => {
 				{
 					onSuccess: () => {
 						methods.reset();
-						navigate("/content-editor/top-menu");
-						enqueueSnackbar("Data has been changed", { variant: "success" });
+						navigate('/content-editor/top-menu');
+						enqueueSnackbar('Data has been changed', { variant: 'success' });
 					},
 					onError: () => {
-						enqueueSnackbar("Error: Ubah artikel gagal", { variant: "error" });
+						enqueueSnackbar('Error: Failed change top menu', {
+							variant: 'error',
+						});
 					},
 				}
 			);
@@ -71,12 +73,12 @@ const Form = () => {
 			mutatePost(postArticle, {
 				onSuccess: () => {
 					methods.reset();
-					navigate("/content-editor/top-menu");
-					enqueueSnackbar("Data has been added", { variant: "success" });
+					navigate('/content-editor/top-menu');
+					enqueueSnackbar('Data has been added', { variant: 'success' });
 				},
 				onError: (err: any) => {
 					enqueueSnackbar(`Error: ${err.response?.data?.message}`, {
-						variant: "error",
+						variant: 'error',
 					});
 				},
 			});
@@ -88,9 +90,9 @@ const Form = () => {
 			<div className="flex flex-row justify-between items-center">
 				<DynamicBreadcrumb
 					items={[
-						{ label: "Home", href: "/" },
-						{ label: "Top Menu", href: "/content-editor/top-menu" },
-						{ label: id ? "Edit Top Menu" : "Add Top Menu" },
+						{ label: 'Home', href: '/' },
+						{ label: 'Top Menu', href: '/content-editor/top-menu' },
+						{ label: id ? 'Edit Top Menu' : 'Add Top Menu' },
 					]}
 				/>
 				<div className="flex flex-row gap-2">
@@ -101,7 +103,7 @@ const Form = () => {
 						onClick={() => {
 							methods.trigger().then((isValid) => {
 								if (isValid) {
-									onSubmit("draft");
+									onSubmit('draft');
 								}
 							});
 						}}
@@ -115,7 +117,7 @@ const Form = () => {
 						onClick={() => {
 							methods.trigger().then((isValid) => {
 								if (isValid) {
-									onSubmit("published");
+									onSubmit('published');
 								}
 							});
 						}}
@@ -144,7 +146,7 @@ const Form = () => {
 							<QuillEditor
 								name="content"
 								control={methods.control}
-								placeholder={"Input content"}
+								placeholder={'Input content'}
 								maxWords={1000}
 							/>
 						</Grid>
