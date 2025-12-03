@@ -294,7 +294,9 @@ export default function DashboardPage() {
 				currentY += imgHeight + 20;
 			}
 
-			pdf.save(`dashboard_charts_${new Date().toISOString().slice(0, 10)}.pdf`);
+			pdf.save(
+				`dashboard_charts_${new Date(methods.watch('start_date')).toISOString().slice(0, 10)}-${new Date(methods.watch('end_date')).toISOString().slice(0, 10)}.pdf`
+			);
 		} finally {
 			setLoading(false);
 			for (const [prop, originalVal] of Object.entries(changedVars)) {

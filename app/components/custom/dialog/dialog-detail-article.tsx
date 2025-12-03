@@ -1,10 +1,10 @@
-import { useGetArticle, type ArticleType } from "@/api/article";
-import DialogModal from "@/components/custom/dialog/dialog-modal";
-import CellText from "@/components/layout/table/data-table-cell";
-import { Typography } from "@/components/typography";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { format, isValid } from "date-fns";
+import { useGetArticle, type ArticleType } from '@/api/article';
+import DialogModal from '@/components/custom/dialog/dialog-modal';
+import CellText from '@/components/layout/table/data-table-cell';
+import { Typography } from '@/components/typography';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { format, isValid } from 'date-fns';
 
 interface DialogDetailContentProps {
 	data: ArticleType;
@@ -19,9 +19,9 @@ const DialogDetailArticle = ({
 	onClose,
 	isPreview,
 }: DialogDetailContentProps) => {
-	const { data: dataArticle } = useGetArticle(String(data?.id) || "", {
+	const { data: dataArticle } = useGetArticle(String(data?.id) || '', {
 		enabled: !!data?.id && open,
-		queryKey: ["article-get", data?.id],
+		queryKey: ['article-get', data?.id],
 	});
 
 	return (
@@ -40,45 +40,57 @@ const DialogDetailArticle = ({
 								{dataArticle?.name || data?.name}
 							</Typography>
 							<Typography className="text-xs">
-								{dataArticle?.author || data?.author} |{" "}
+								{dataArticle?.author || data?.author} |{' '}
 								{dataArticle?.published_at &&
 								isValid(new Date(dataArticle?.published_at))
-									? format(dataArticle?.published_at, "dd MMMM yyyy")
-									: "-"}{" "}
+									? format(dataArticle?.published_at, 'dd MMMM yyyy')
+									: '-'}{' '}
 							</Typography>
 						</div>
 						<CellText
 							color={
-								(dataArticle?.status || data?.status) == "draft"
-									? "red-500"
-									: "white"
+								(dataArticle?.status || data?.status) == 'draft'
+									? 'red-500'
+									: 'white'
 							}
 							className={cn(
-								"text-center rounded-sm font-bold text-sm px-2 h-[35px] max-h-[35px] min-h-[35px] min-w-[100px]",
-								(dataArticle?.status || data?.status) == "draft" &&
-									"border-[1px] border-[#FF3B30] text-red-500",
-								(dataArticle?.status || data?.status) === "published" &&
-									"bg-[#00A30E]"
+								'text-center rounded-sm font-bold text-sm px-2 h-[35px] max-h-[35px] min-h-[35px] min-w-[100px]',
+								(dataArticle?.status || data?.status) == 'draft' &&
+									'border-[1px] border-[#FF3B30] text-red-500',
+								(dataArticle?.status || data?.status) === 'published' &&
+									'bg-[#00A30E]'
 							)}
 						>
-							{(dataArticle?.status || data?.status) === "draft"
-								? "Draft"
-								: "Published"}
+							{(dataArticle?.status || data?.status) === 'draft'
+								? 'Draft'
+								: 'Published'}
 						</CellText>
 					</div>
 					<div className="max-h-[500px] overflow-y-scroll my-3">
 						<div className="mt-3">
 							<img
-								src={dataArticle?.image_path || data?.image_path || "-"}
+								src={dataArticle?.image_path || data?.image_path || '-'}
 								className="h-[300px] w-full object-cover"
 							/>
 						</div>
-						<div
-							dangerouslySetInnerHTML={{
-								__html: dataArticle?.content || data?.content || "",
-							}}
-							className="mt-3 article-content"
-						/>
+						<div className="mt-5 border-[1px] p-3 rounded-sm">
+							<div className="text-lg font-bold">ID Content</div>
+							<div
+								dangerouslySetInnerHTML={{
+									__html: dataArticle?.content || data?.content || '',
+								}}
+								className="mt-3 article-content"
+							/>
+						</div>
+						<div className="mt-5 border-[1px] p-3 rounded-sm">
+							<div className="text-lg font-bold">EN Content</div>
+							<div
+								dangerouslySetInnerHTML={{
+									__html: dataArticle?.content_en || data?.content_en || '',
+								}}
+								className="mt-3 article-content"
+							/>
+						</div>
 					</div>
 
 					<div className="mt-3 flex flex-row justify-end">
@@ -86,7 +98,7 @@ const DialogDetailArticle = ({
 							onClick={() => {
 								onClose();
 							}}
-							variant={"hmmiOutline"}
+							variant={'hmmiOutline'}
 						>
 							Close
 						</Button>
