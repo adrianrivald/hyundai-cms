@@ -295,7 +295,10 @@ export default function DashboardPage() {
 			}
 
 			pdf.save(
-				`dashboard_charts_${new Date(methods.watch('start_date')).toISOString().slice(0, 10)}-${new Date(methods.watch('end_date')).toISOString().slice(0, 10)}.pdf`
+				`dashboard_charts_${format(methods.watch('start_date'), 'yyyy-MM-dd')}-${format(
+					methods.watch('end_date'),
+					'yyyy-MM-dd'
+				)}.pdf`
 			);
 		} finally {
 			setLoading(false);
