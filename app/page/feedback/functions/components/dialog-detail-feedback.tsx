@@ -1,19 +1,19 @@
 import {
 	useGetFeedbackReviewDetail,
 	usePostImageFeedbackPublish,
-} from "@/api/feedback";
-import FormProvider from "@/components/RHForm/FormProvider";
-import RHFUploadFile from "@/components/RHForm/RHFUploadFile";
-import DialogModal from "@/components/custom/dialog/dialog-modal";
-import DialogPublish from "@/components/custom/dialog/dialog-publish";
-import { Grid } from "@/components/grid";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import type { ClassValue } from "clsx";
-import { enqueueSnackbar } from "notistack";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+} from '@/api/feedback';
+import FormProvider from '@/components/RHForm/FormProvider';
+import RHFUploadFile from '@/components/RHForm/RHFUploadFile';
+import DialogModal from '@/components/custom/dialog/dialog-modal';
+import DialogPublish from '@/components/custom/dialog/dialog-publish';
+import { Grid } from '@/components/grid';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import type { ClassValue } from 'clsx';
+import { enqueueSnackbar } from 'notistack';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 interface DialogDetailFeedbackProps {
 	open: boolean;
@@ -23,9 +23,9 @@ interface DialogDetailFeedbackProps {
 }
 
 function splitImageUrl(url: string) {
-	const parts = url.split("/");
+	const parts = url.split('/');
 	const image = parts.pop() as string; // filename (last part)
-	const image_path = parts.join("/"); // the rest
+	const image_path = parts.join('/'); // the rest
 
 	return { image_path, image };
 }
@@ -38,18 +38,18 @@ const DialogDetailFeedback = ({
 }: DialogDetailFeedbackProps) => {
 	const [openPublish, setOpenPublish] = useState(false);
 	const { data: dataDetail, refetch: refetchDetail } =
-		useGetFeedbackReviewDetail(String(id) || "", {
-			queryKey: ["feedbacks-review-get", id],
+		useGetFeedbackReviewDetail(String(id) || '', {
+			queryKey: ['feedbacks-review-get', id],
 			enabled: !!id && open,
 		});
 	const { mutate } = usePostImageFeedbackPublish();
 
 	const methods = useForm({
 		defaultValues: {
-			image: "",
+			image: '',
 		},
 		shouldFocusError: false,
-		mode: "onChange",
+		mode: 'onChange',
 	});
 
 	const TextFieldDisabled = ({
@@ -66,7 +66,7 @@ const DialogDetailFeedback = ({
 				<div className="mb-1 font-medium">{title}</div>
 				<div
 					className={cn(
-						"bg-[#F9F9F9] py-2 px-3 rounded-sm text-ellipsis overflow-hidden",
+						'bg-[#F9F9F9] py-2 px-3 rounded-sm text-ellipsis overflow-hidden',
 						className
 					)}
 				>
@@ -133,7 +133,7 @@ const DialogDetailFeedback = ({
 	useEffect(() => {
 		if (dataDetail && open) {
 			methods.reset({
-				image: dataDetail?.image_path + "/" + dataDetail?.image,
+				image: dataDetail?.image_path + '/' + dataDetail?.image,
 			});
 		}
 	}, [dataDetail, open]);
@@ -144,7 +144,7 @@ const DialogDetailFeedback = ({
 			onOpenChange={() => {
 				onClose();
 			}}
-			headerTitle={"Visitor Review"}
+			headerTitle={'Visitor Review'}
 			contentProps="w-[700px] max-h-[750px] overflow-y-scroll"
 			content={
 				<div>
@@ -158,8 +158,8 @@ const DialogDetailFeedback = ({
 					<div className="mb-3" />
 					<TextFieldDisabled
 						title="Member Name"
-						value={dataDetail?.participant_name || "-"}
-						className={"mb-5"}
+						value={dataDetail?.participant_name || '-'}
+						className={'mb-5'}
 					/>
 
 					{grouped.map((item, index) => {
@@ -169,14 +169,14 @@ const DialogDetailFeedback = ({
 								<div className="flex flex-row gap-5">
 									{item.answers.map((answer, idx) => (
 										<div className="flex flex-row gap-4 items-center" key={idx}>
-											{item.form_type === "radio_button" ? (
+											{item.form_type === 'radio_button' ? (
 												<Icon
 													icon="ion:radio-button-on-outline"
 													width="20"
 													height="20"
 												/>
 											) : (
-												item.form_type === "checkbox" && (
+												item.form_type === 'checkbox' && (
 													<Icon
 														icon="octicon:checkbox-16"
 														width="20"
@@ -184,24 +184,24 @@ const DialogDetailFeedback = ({
 													/>
 												)
 											)}
-											{(item.form_type === "radio_button" ||
-												item.form_type === "checkbox") && (
+											{(item.form_type === 'radio_button' ||
+												item.form_type === 'checkbox') && (
 												<div key={idx}>{answer.answer_en}</div>
 											)}
 
-											{item.form_type === "free_text" && (
+											{item.form_type === 'free_text' && (
 												<TextFieldDisabled
-													value={answer?.value || ""}
-													className={"w-[300px] min-h-[80px]"}
+													value={answer?.value || ''}
+													className={'w-[300px] min-h-[80px]'}
 												/>
 											)}
 
-											{item.form_type === "rating" && (
+											{item.form_type === 'rating' && (
 												<div className="flex mt-1">
 													{Array.from({ length: 5 }, (_, i) => (
 														<Icon
 															key={i}
-															icon={i < 5 ? "mdi:star" : "mdi:star-outline"}
+															icon={i < 5 ? 'mdi:star' : 'mdi:star-outline'}
 															className="text-yellow-400 w-6 h-6"
 														/>
 													))}
@@ -217,14 +217,14 @@ const DialogDetailFeedback = ({
 								<div className="flex flex-row gap-5 w-full">
 									{item.answers.map((answer, idx) => (
 										<div className="flex flex-row gap-4 items-center" key={idx}>
-											{item.form_type === "radio_button" ? (
+											{item.form_type === 'radio_button' ? (
 												<Icon
 													icon="ion:radio-button-on-outline"
 													width="20"
 													height="20"
 												/>
 											) : (
-												item.form_type === "checkbox" && (
+												item.form_type === 'checkbox' && (
 													<Icon
 														icon="octicon:checkbox-16"
 														width="20"
@@ -232,24 +232,24 @@ const DialogDetailFeedback = ({
 													/>
 												)
 											)}
-											{(item.form_type === "radio_button" ||
-												item.form_type === "checkbox") && (
+											{(item.form_type === 'radio_button' ||
+												item.form_type === 'checkbox') && (
 												<div key={idx}>{answer.answer_id}</div>
 											)}
 
-											{item.form_type === "free_text" && (
+											{item.form_type === 'free_text' && (
 												<TextFieldDisabled
-													value={answer?.value || ""}
-													className={"w-[300px] min-h-[80px]"}
+													value={answer?.value || ''}
+													className={'w-[300px] min-h-[80px]'}
 												/>
 											)}
 
-											{item.form_type === "rating" && (
+											{item.form_type === 'rating' && (
 												<div className="flex mt-1">
 													{Array.from({ length: 5 }, (_, i) => (
 														<Icon
 															key={i}
-															icon={i < 5 ? "mdi:star" : "mdi:star-outline"}
+															icon={i < 5 ? 'mdi:star' : 'mdi:star-outline'}
 															className="text-yellow-400 w-6 h-6"
 														/>
 													))}
@@ -269,7 +269,7 @@ const DialogDetailFeedback = ({
 								setOpenPublish(true);
 							}}
 						>
-							{dataDetail?.is_publish === 0 ? "Publish" : "Unpublish"}
+							{dataDetail?.is_publish === 0 ? 'Publish' : 'Unpublish'}
 						</Button>
 					</div>
 
@@ -280,18 +280,18 @@ const DialogDetailFeedback = ({
 							setOpenPublish(false);
 						}}
 						onSubmit={() => {
-							const data = methods.watch("image");
+							const data = methods.watch('image');
 							let { image_path, image } = splitImageUrl(data);
 
 							if (!data) {
 								enqueueSnackbar({
-									variant: "error",
+									variant: 'error',
 									message: `Image is required. Please upload an image.`,
 								});
 							} else {
 								mutate(
 									{
-										id: String(id) || "",
+										id: String(id) || '',
 										image_path: image_path,
 										image: image,
 										image_name: image,
@@ -302,8 +302,8 @@ const DialogDetailFeedback = ({
 											refetchDetail();
 											setOpenPublish(false);
 											enqueueSnackbar({
-												variant: "success",
-												message: `Review berhasil ${dataDetail?.is_publish === 0 ? "diterbitkan" : "ditarik"} `,
+												variant: 'success',
+												message: `Review successful ${dataDetail?.is_publish === 0 ? 'published' : 'withdrawn'} `,
 											});
 											onClose();
 										},
