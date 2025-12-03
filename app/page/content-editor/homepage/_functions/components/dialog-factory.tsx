@@ -1,27 +1,27 @@
-import FormProvider from "@/components/RHForm/FormProvider";
-import RHFUploadFile from "@/components/RHForm/RHFUploadFile";
-import DialogModal from "@/components/custom/dialog/dialog-modal";
-import { Grid } from "@/components/grid";
-import { Button } from "@/components/ui/button";
-import { yupResolver } from "@hookform/resolvers/yup";
+import FormProvider from '@/components/RHForm/FormProvider';
+import RHFUploadFile from '@/components/RHForm/RHFUploadFile';
+import DialogModal from '@/components/custom/dialog/dialog-modal';
+import { Grid } from '@/components/grid';
+import { Button } from '@/components/ui/button';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useForm } from "react-hook-form";
-import { FactoryRouteSchema, FactorySchema } from "../models/factory";
-import RHFTextField from "@/components/RHForm/RHFTextField";
-import RHFTextArea from "@/components/RHForm/RHFTextArea";
-import { usePostFactory, usePutFactory, type FactoryType } from "@/api/factory";
-import { enqueueSnackbar } from "notistack";
-import { useEffect, useState } from "react";
-import { Typography } from "@/components/typography";
-import { cn } from "@/lib/utils";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { useForm } from 'react-hook-form';
+import { FactoryRouteSchema, FactorySchema } from '../models/factory';
+import RHFTextField from '@/components/RHForm/RHFTextField';
+import RHFTextArea from '@/components/RHForm/RHFTextArea';
+import { usePostFactory, usePutFactory, type FactoryType } from '@/api/factory';
+import { enqueueSnackbar } from 'notistack';
+import { useEffect, useState } from 'react';
+import { Typography } from '@/components/typography';
+import { cn } from '@/lib/utils';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import {
 	useDeleteFactoryRoute,
 	useGetFactoryRoutes,
 	useSaveFactoryRoutes,
-} from "@/api/factory-route";
-import DialogDelete from "@/components/custom/dialog/dialog-delete";
-import { StepNavigation } from "@/components/custom/tabs-navigation/tabs-navigation";
+} from '@/api/factory-route';
+import DialogDelete from '@/components/custom/dialog/dialog-delete';
+import { StepNavigation } from '@/components/custom/tabs-navigation/tabs-navigation';
 
 interface DialogFactoryProps {
 	open: boolean;
@@ -39,24 +39,24 @@ const DialogFactory = ({
 	isDisabled = false,
 }: DialogFactoryProps) => {
 	const steps = [
-		{ key: "reg_factory", label: "Factory Detail" },
-		{ key: "reg_route", label: "Add Route" },
+		{ key: 'reg_factory', label: 'Factory Detail' },
+		{ key: 'reg_route', label: 'Add Route' },
 	];
 	const [deleteRoute, setDeleteRoute] = useState({
 		isOpen: false,
-		id: "",
+		id: '',
 		index: 0,
 	});
 	const methods = useForm({
 		defaultValues: {
-			id: "",
-			image: "",
-			factory_name: "",
-			description: "",
-			step: "reg_factory",
+			id: '',
+			image: '',
+			factory_name: '',
+			description: '',
+			step: 'reg_factory',
 		},
 		shouldFocusError: false,
-		mode: "onChange",
+		mode: 'onChange',
 		resolver: yupResolver(FactorySchema),
 	});
 
@@ -64,23 +64,23 @@ const DialogFactory = ({
 		defaultValues: {
 			route: [
 				{
-					route_name: "",
-					description: "",
-					route_name_en: "",
-					description_en: "",
-					image: "",
-					id: "",
+					route_name: '',
+					description: '',
+					route_name_en: '',
+					description_en: '',
+					image: '',
+					id: '',
 				},
 			],
 		},
 		shouldFocusError: false,
-		mode: "onChange",
+		mode: 'onChange',
 		resolver: yupResolver(FactoryRouteSchema),
 	});
 
-	const { data: dataRoute } = useGetFactoryRoutes(data?.id || "", {
+	const { data: dataRoute } = useGetFactoryRoutes(data?.id || '', {
 		enabled: !!data?.id && open,
-		queryKey: ["factory-route-get-all", data?.id],
+		queryKey: ['factory-route-get-all', data?.id],
 	});
 	const { mutate: mutatePost, isPending: pendingPost } = usePostFactory();
 	const { mutate: mutateEdit, isPending: pendingEdit } = usePutFactory();
@@ -102,15 +102,15 @@ const DialogFactory = ({
 			mutateEdit(dataForm, {
 				onSuccess: () => {
 					methods.clearErrors();
-					methods.setValue("step", "reg_route");
+					methods.setValue('step', 'reg_route');
 					refetch && refetch();
-					enqueueSnackbar("Data has been changed", {
-						variant: "success",
+					enqueueSnackbar('Data has been changed', {
+						variant: 'success',
 					});
 				},
 				onError: (err: any) => {
 					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
-						variant: "error",
+						variant: 'error',
 					});
 				},
 			});
@@ -118,16 +118,16 @@ const DialogFactory = ({
 			mutatePost(dataForm, {
 				onSuccess: (data: any) => {
 					methods.clearErrors();
-					methods.setValue("step", "reg_route");
-					methods.setValue("id", data?.data?.id);
+					methods.setValue('step', 'reg_route');
+					methods.setValue('id', data?.data?.id);
 					refetch && refetch();
-					enqueueSnackbar("Data has been added", {
-						variant: "success",
+					enqueueSnackbar('Data has been added', {
+						variant: 'success',
 					});
 				},
 				onError: (err: any) => {
 					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
-						variant: "error",
+						variant: 'error',
 					});
 				},
 			});
@@ -139,7 +139,7 @@ const DialogFactory = ({
 		let formData: any =
 			form?.route?.map((item) => ({
 				...item,
-				factory_id: methods.watch("id"),
+				factory_id: methods.watch('id'),
 				name: item.route_name,
 				name_en: item.route_name_en,
 				description: item.description,
@@ -150,15 +150,15 @@ const DialogFactory = ({
 		mutateRoutes(formData, {
 			onSuccess: () => {
 				resetField();
-				methods.setValue("step", "reg_route");
+				methods.setValue('step', 'reg_route');
 				refetch && refetch();
-				enqueueSnackbar("Data has been added", {
-					variant: "success",
+				enqueueSnackbar('Data has been added', {
+					variant: 'success',
 				});
 			},
 			onError: (err: any) => {
 				enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
-					variant: "error",
+					variant: 'error',
 				});
 			},
 		});
@@ -173,7 +173,7 @@ const DialogFactory = ({
 				image: data?.image_path,
 				description: data?.description,
 				description_en: data?.description_en,
-				step: "reg_factory",
+				step: 'reg_factory',
 			});
 		}
 	}, [open, data]);
@@ -187,7 +187,7 @@ const DialogFactory = ({
 	};
 
 	useEffect(() => {
-		if (methods.watch("step") === "reg_route" && dataRoute?.data) {
+		if (methods.watch('step') === 'reg_route' && dataRoute?.data) {
 			methodRoutes.reset({
 				route:
 					dataRoute?.data?.map((item) => ({
@@ -200,29 +200,29 @@ const DialogFactory = ({
 					})) || [],
 			});
 		}
-	}, [methods.watch("step"), dataRoute]);
+	}, [methods.watch('step'), dataRoute]);
 
 	const onDelete = () => {
-		if (!data?.id && !deleteRoute.id) {
-			let dataRoutes = methodRoutes.watch("route") || [];
+		if (!deleteRoute.id) {
+			let dataRoutes = methodRoutes.watch('route') || [];
 			let dataRoutesFilter = dataRoutes.filter(
 				(_, index) => index !== deleteRoute.index
 			);
 
-			methodRoutes.setValue("route", dataRoutesFilter);
-			setDeleteRoute({ isOpen: false, id: "", index: 0 });
+			methodRoutes.setValue('route', dataRoutesFilter);
+			setDeleteRoute({ isOpen: false, id: '', index: 0 });
 		} else {
 			mutateDelete(
 				{ id: deleteRoute.id },
 				{
 					onSuccess: () => {
-						let dataRoutes = methodRoutes.watch("route");
+						let dataRoutes = methodRoutes.watch('route');
 						let dataRoutesFilter = dataRoutes?.filter((item) => {
 							if (!item.id) return true;
 							return item.id !== deleteRoute.id;
 						});
-						methodRoutes.setValue("route", dataRoutesFilter);
-						setDeleteRoute({ isOpen: false, id: "", index: 0 });
+						methodRoutes.setValue('route', dataRoutesFilter);
+						setDeleteRoute({ isOpen: false, id: '', index: 0 });
 					},
 				}
 			);
@@ -237,10 +237,10 @@ const DialogFactory = ({
 			}}
 			headerTitle={
 				isDisabled
-					? "Factory Detail"
+					? 'Factory Detail'
 					: data?.id
-						? "Edit Factory"
-						: "Add Factory"
+						? 'Edit Factory'
+						: 'Add Factory'
 			}
 			contentProps="w-[700px] max-h-[750px]"
 			content={
@@ -248,22 +248,22 @@ const DialogFactory = ({
 					<FormProvider methods={methods}>
 						<StepNavigation
 							steps={steps}
-							value={methods.watch("step") || ""}
+							value={methods.watch('step') || ''}
 							onChange={(key) => {
 								//methods.setValue("step", key);
-								if (key === "reg_route") {
-									if (data?.id || methods.watch("id")) {
-										methods.setValue("step", key);
+								if (key === 'reg_route') {
+									if (data?.id || methods.watch('id')) {
+										methods.setValue('step', key);
 									}
 								} else {
-									methods.setValue("step", key);
+									methods.setValue('step', key);
 								}
 							}}
 							activeColor="#153263"
 							inactiveColor="#A8C5F7"
 						/>
 
-						{methods.watch("step") === "reg_factory" && (
+						{methods.watch('step') === 'reg_factory' && (
 							<Grid container spacing={4}>
 								<Grid item xs={12}>
 									<RHFUploadFile
@@ -336,10 +336,10 @@ const DialogFactory = ({
 							</Grid>
 						)}
 
-						{methods.watch("step") === "reg_route" && (
+						{methods.watch('step') === 'reg_route' && (
 							<FormProvider methods={methodRoutes}>
 								<div className="max-h-[450px] overflow-y-scroll px-3">
-									{methodRoutes.watch("route")?.map((item, index) => (
+									{methodRoutes.watch('route')?.map((item, index) => (
 										<Grid container spacing={4} key={index} className={`mb-5`}>
 											<Grid
 												item
@@ -350,17 +350,17 @@ const DialogFactory = ({
 													Route {index + 1}
 												</Typography>
 												{(item.id || !isDisabled) &&
-													(methodRoutes.watch("route") || [])?.length > 1 && (
+													(methodRoutes.watch('route') || [])?.length > 1 && (
 														<div
 															className={cn(
 																`cursor-pointer`,
-																isDisabled ? "hidden" : "block"
+																isDisabled ? 'hidden' : 'block'
 															)}
 															onClick={() => {
 																if (isDisabled) return;
 																setDeleteRoute({
 																	isOpen: true,
-																	id: item.id || "",
+																	id: item.id || '',
 																	index: index,
 																});
 															}}
@@ -369,7 +369,7 @@ const DialogFactory = ({
 																icon="mage:trash"
 																width="22"
 																height="22"
-																color={"#FF3B30"}
+																color={'#FF3B30'}
 															/>
 														</div>
 													)}
@@ -432,16 +432,16 @@ const DialogFactory = ({
 										className="mt-5 flex-row flex items-center justify-start cursor-pointer gap-1"
 										onClick={() => {
 											if (isDisabled) return;
-											let data = methodRoutes.watch("route");
-											methodRoutes.setValue("route", [
+											let data = methodRoutes.watch('route');
+											methodRoutes.setValue('route', [
 												...(data || []),
 												{
-													route_name: "",
-													route_name_en: "",
-													description: "",
-													description_en: "",
-													image: "",
-													id: "",
+													route_name: '',
+													route_name_en: '',
+													description: '',
+													description_en: '',
+													image: '',
+													id: '',
 												},
 											]);
 										}}
@@ -474,7 +474,7 @@ const DialogFactory = ({
 					<DialogDelete
 						open={deleteRoute.isOpen}
 						onClose={() => {
-							setDeleteRoute({ isOpen: false, id: "", index: 0 });
+							setDeleteRoute({ isOpen: false, id: '', index: 0 });
 						}}
 						onSubmit={() => {
 							onDelete();

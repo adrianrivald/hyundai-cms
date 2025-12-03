@@ -1,22 +1,22 @@
-import CellText from "@/components/layout/table/data-table-cell";
-import { Button } from "@/components/ui/button";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import type { ColumnDef, Row, Table } from "@tanstack/react-table";
-import { useState } from "react";
-import DialogFactory from "../components/dialog-factory";
-import { useDeleteFactory, type FactoryType } from "@/api/factory";
-import DialogDelete from "@/components/custom/dialog/dialog-delete";
-import { enqueueSnackbar } from "notistack";
-import { Typography } from "@/components/typography";
+import CellText from '@/components/layout/table/data-table-cell';
+import { Button } from '@/components/ui/button';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import type { ColumnDef, Row, Table } from '@tanstack/react-table';
+import { useState } from 'react';
+import DialogFactory from '../components/dialog-factory';
+import { useDeleteFactory, type FactoryType } from '@/api/factory';
+import DialogDelete from '@/components/custom/dialog/dialog-delete';
+import { enqueueSnackbar } from 'notistack';
+import { Typography } from '@/components/typography';
 
 export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 	{
-		accessorKey: "image_path",
-		header: "Title",
+		accessorKey: 'image_path',
+		header: 'Title',
 		cell: ({ row }) => (
 			<CellText className="text-left">
 				<img
-					src={row?.original?.image_path || "-"}
+					src={row?.original?.image_path || '-'}
 					className="h-[30px] w-[85px] object-cover"
 				/>
 			</CellText>
@@ -31,8 +31,8 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 		},
 	},
 	{
-		accessorKey: "name",
-		header: "Factory Name",
+		accessorKey: 'name',
+		header: 'Factory Name',
 		cell: ({ row }) => <CellText className="">{row.original?.name}</CellText>,
 		meta: {
 			cellProps: {
@@ -44,11 +44,11 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 		},
 	},
 	{
-		accessorKey: "description",
-		header: "Description",
+		accessorKey: 'description',
+		header: 'Description',
 		cell: ({ row }) => (
 			<CellText className="text-left">
-				{row?.original?.description || "-"}
+				{row?.original?.description || '-'}
 			</CellText>
 		),
 		meta: {
@@ -61,8 +61,8 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 		},
 	},
 	{
-		accessorKey: "completed",
-		header: "Action",
+		accessorKey: 'completed',
+		header: 'Action',
 		cell: ({ row, table }) => <ActionCell row={row} table={table} />,
 		meta: {
 			cellProps: {
@@ -74,7 +74,7 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 		},
 	},
 	{
-		accessorKey: "ACTION_BUTTON",
+		accessorKey: 'ACTION_BUTTON',
 		header: ({ table }) => {
 			const [open, setOpen] = useState(false);
 			return (
@@ -101,7 +101,7 @@ export const dataFactoryColumn: ColumnDef<FactoryType>[] = [
 		cell: ({ row, table }) => {
 			const [open, setOpen] = useState(false);
 			return (
-				<div className="mt-5">
+				<div className="">
 					<Typography
 						className="text-blue-500 underline cursor-pointer"
 						onClick={() => {
@@ -144,18 +144,18 @@ const ActionCell = ({
 
 	const onDelete = () => {
 		mutateDelete(
-			{ id: row.original.id || "" },
+			{ id: row.original.id || '' },
 			{
 				onSuccess: () => {
 					setOpenDelete(false);
-					enqueueSnackbar("Data has been deleted", {
-						variant: "success",
+					enqueueSnackbar('Data has been deleted', {
+						variant: 'success',
 					});
 					table.resetPageIndex();
 				},
 				onError: (err: any) => {
 					enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
-						variant: "error",
+						variant: 'error',
 					});
 					table.resetPageIndex();
 				},

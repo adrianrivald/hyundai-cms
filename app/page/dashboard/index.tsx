@@ -1,11 +1,11 @@
-import { usePostDashboardTour, type DashboardTourType } from "@/api/dashboard";
-import { useGetFeedbackDashboard } from "@/api/feedback";
-import FormProvider from "@/components/RHForm/FormProvider";
-import RHFDatePicker from "@/components/RHForm/RHFDatePicker";
-import Container from "@/components/container";
-import { Grid } from "@/components/grid";
-import { Typography } from "@/components/typography";
-import { Button } from "@/components/ui/button";
+import { usePostDashboardTour, type DashboardTourType } from '@/api/dashboard';
+import { useGetFeedbackDashboard } from '@/api/feedback';
+import FormProvider from '@/components/RHForm/FormProvider';
+import RHFDatePicker from '@/components/RHForm/RHFDatePicker';
+import Container from '@/components/container';
+import { Grid } from '@/components/grid';
+import { Typography } from '@/components/typography';
+import { Button } from '@/components/ui/button';
 import {
 	ChartContainer,
 	ChartTooltip,
@@ -13,14 +13,14 @@ import {
 	type ChartConfig,
 	ChartLegendContent,
 	ChartLegend,
-} from "@/components/ui/chart";
-import { useDebounce } from "@/hooks/use-debounce";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import { endOfMonth, format, startOfMonth } from "date-fns";
-import { useEffect, useMemo, useRef, useState } from "react";
+} from '@/components/ui/chart';
+import { useDebounce } from '@/hooks/use-debounce';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { endOfMonth, format, startOfMonth } from 'date-fns';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 import {
 	CartesianGrid,
 	XAxis,
@@ -33,60 +33,60 @@ import {
 	Bar,
 	BarChart,
 	LabelList,
-} from "recharts";
-import html2canvas from "html2canvas-pro";
-import jsPDF from "jspdf";
-import { parse, formatRgb } from "culori";
-import { LoadingIndicator } from "@/components/loading-indicator";
+} from 'recharts';
+import html2canvas from 'html2canvas-pro';
+import jsPDF from 'jspdf';
+import { parse, formatRgb } from 'culori';
+import { LoadingIndicator } from '@/components/loading-indicator';
 
 const chartConfig = {
 	tour: {
-		label: "Total Visitors",
+		label: 'Total Visitors',
 	},
 	student_tour: {
-		label: "Student Tour",
-		color: "#FFCA8B",
+		label: 'Student Tour',
+		color: '#FFCA8B',
 	},
 	general_tour: {
-		label: "General Tour",
-		color: "#743F00",
+		label: 'General Tour',
+		color: '#743F00',
 	},
 	vip: {
-		label: "VIP Tour",
-		color: "#93BCFF",
+		label: 'VIP Tour',
+		color: '#93BCFF',
 	},
 	vip_tour: {
-		label: "VIP Tour",
-		color: "#93BCFF",
+		label: 'VIP Tour',
+		color: '#93BCFF',
 	},
 
 	male: {
-		label: "Male",
-		color: "#0000ff",
+		label: 'Male',
+		color: '#0000ff',
 	},
 	female: {
-		label: "Female",
-		color: "#e63312",
+		label: 'Female',
+		color: '#e63312',
 	},
 
 	general_reception: {
-		label: "General Reception",
+		label: 'General Reception',
 	},
 	body_shop: {
-		label: "Body Shop",
+		label: 'Body Shop',
 	},
 	press_shop: {
-		label: "Press Shop",
+		label: 'Press Shop',
 	},
 	assembly_shop: {
-		label: "Assembly Shop",
+		label: 'Assembly Shop',
 	},
 
 	total: {
-		label: "Total",
+		label: 'Total',
 	},
 	label: {
-		color: "var(--background)",
+		color: 'var(--background)',
 	},
 } satisfies ChartConfig;
 
@@ -106,34 +106,34 @@ export default function DashboardPage() {
 	const barChartRef = useRef<HTMLDivElement>(null);
 	const feedbackRef = useRef<HTMLDivElement>(null);
 
-	const startDate = methods.watch("start_date");
-	const endDate = methods.watch("end_date");
+	const startDate = methods.watch('start_date');
+	const endDate = methods.watch('end_date');
 
 	const debounceStartDate = useDebounce(startDate, 500);
 	const debounceEndDate = useDebounce(endDate, 500);
 
 	const start_date = useMemo(() => {
-		if (!debounceStartDate) return "";
+		if (!debounceStartDate) return '';
 		try {
-			return format(debounceStartDate, "yyyy-MM-dd");
+			return format(debounceStartDate, 'yyyy-MM-dd');
 		} catch {
-			return "";
+			return '';
 		}
 	}, [debounceStartDate]);
 
 	const end_date = useMemo(() => {
-		if (!debounceEndDate) return "";
+		if (!debounceEndDate) return '';
 		try {
-			return format(debounceEndDate, "yyyy-MM-dd");
+			return format(debounceEndDate, 'yyyy-MM-dd');
 		} catch {
-			return "";
+			return '';
 		}
 	}, [debounceEndDate]);
 
 	const { mutate } = usePostDashboardTour();
 	const { data, refetch } = useGetFeedbackDashboard(start_date, end_date, {
 		enabled: false,
-		queryKey: ["feedback-dashboard-get-all"],
+		queryKey: ['feedback-dashboard-get-all'],
 	});
 
 	useEffect(() => {
@@ -154,28 +154,28 @@ export default function DashboardPage() {
 	const chartData =
 		dataTour?.registration_by_date && dataTour?.registration_by_date?.length > 0
 			? dataTour?.registration_by_date?.map((item) => ({
-					date: format(new Date(item.date), "dd MMM yyyy"),
+					date: format(new Date(item.date), 'dd MMM yyyy'),
 					vip: item.count.vip,
-					["general-course"]: item.count["general-course"],
-					["student-course"]: item.count["student-course"],
+					['general-course']: item.count['general-course'],
+					['student-course']: item.count['student-course'],
 				}))
 			: [];
 
 	const dataPie = [
 		{
-			name: "general_tour",
-			value: dataTour?.visitor_by_package_type?.["general-course"],
-			fill: "var(--color-general-tour)",
+			name: 'general_tour',
+			value: dataTour?.visitor_by_package_type?.['general-course'],
+			fill: 'var(--color-general-tour)',
 		},
 		{
-			name: "student_tour",
-			value: dataTour?.visitor_by_package_type?.["student-course"],
-			fill: "var(--color-student-tour)",
+			name: 'student_tour',
+			value: dataTour?.visitor_by_package_type?.['student-course'],
+			fill: 'var(--color-student-tour)',
 		},
 		{
-			name: "vip",
+			name: 'vip',
 			value: dataTour?.visitor_by_package_type?.vip,
-			fill: "var(--color-vip-tour)",
+			fill: 'var(--color-vip-tour)',
 		},
 	];
 
@@ -183,7 +183,7 @@ export default function DashboardPage() {
 
 	const dataBar = dataTour?.tour_by_province
 		? Object.entries(dataTour?.tour_by_province).map(([city, total]) => ({
-				city: city.replace(/([a-z])([A-Z])/g, "$1 $2"),
+				city: city.replace(/([a-z])([A-Z])/g, '$1 $2'),
 				total,
 			}))
 		: [];
@@ -201,18 +201,18 @@ export default function DashboardPage() {
 		setLoading(true);
 
 		const charts = [lineChartRef, pieChartRef, feedbackRef, barChartRef];
-		const pdf = new jsPDF("p", "pt", "a4");
+		const pdf = new jsPDF('p', 'pt', 'a4');
 
 		const pageWidth = pdf.internal.pageSize.getWidth();
 		const pageHeight = pdf.internal.pageSize.getHeight();
 		let currentY = 15;
 
-		const headerImage = "/images/logo-report.png";
-		const title = "Dashboard Report";
+		const headerImage = '/images/logo-report.png';
+		const title = 'Dashboard Report';
 		const titleFontSize = 18;
-		const subtitle = `${format(methods.watch("start_date"), "dd/MM/yyyy")} - ${format(
-			methods.watch("end_date"),
-			"dd/MM/yyyy"
+		const subtitle = `${format(methods.watch('start_date'), 'dd/MM/yyyy')} - ${format(
+			methods.watch('end_date'),
+			'dd/MM/yyyy'
 		)}`;
 		const subtitleFontSize = 10;
 
@@ -223,7 +223,7 @@ export default function DashboardPage() {
 
 		for (const prop of styles) {
 			const val = styles.getPropertyValue(prop);
-			if (val.includes("oklch(")) {
+			if (val.includes('oklch(')) {
 				try {
 					const rgb = formatRgb(parse(val));
 					if (rgb) {
@@ -245,7 +245,7 @@ export default function DashboardPage() {
 
 			pdf.addImage(
 				headerImage,
-				"PNG",
+				'PNG',
 				imgX,
 				imgY,
 				headerImgWidth,
@@ -253,7 +253,7 @@ export default function DashboardPage() {
 			);
 
 			pdf.setFontSize(titleFontSize);
-			pdf.setFont("helvetica", "bold");
+			pdf.setFont('helvetica', 'bold');
 			const textWidth = pdf.getTextWidth(title);
 			const titleY = imgY + headerImgHeight / 2 + 5;
 			pdf.text(title, (pageWidth - textWidth) / 2, titleY);
@@ -273,15 +273,15 @@ export default function DashboardPage() {
 				const canvas = await html2canvas(chartRef.current, {
 					scale: 1.8, // better quality than 1.8
 					useCORS: true,
-					backgroundColor: "#ffffff",
+					backgroundColor: '#ffffff',
 					logging: false,
 					allowTaint: true,
 					scrollX: 0,
 					scrollY: 0,
-					ignoreElements: (el) => el.classList.contains("no-export"),
+					ignoreElements: (el) => el.classList.contains('no-export'),
 				});
 
-				const imgData = canvas.toDataURL("image/jpeg", 0.9);
+				const imgData = canvas.toDataURL('image/jpeg', 0.9);
 				const imgWidth = pageWidth - 40;
 				const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
@@ -290,7 +290,7 @@ export default function DashboardPage() {
 					currentY = 20;
 				}
 
-				pdf.addImage(imgData, "JPEG", 20, currentY, imgWidth, imgHeight);
+				pdf.addImage(imgData, 'JPEG', 20, currentY, imgWidth, imgHeight);
 				currentY += imgHeight + 20;
 			}
 
@@ -305,14 +305,14 @@ export default function DashboardPage() {
 
 	const dataGender = [
 		{
-			name: "male",
+			name: 'male',
 			value: dataTour?.gender?.male,
-			fill: "var(--color-male)",
+			fill: 'var(--color-male)',
 		},
 		{
-			name: "female",
+			name: 'female',
 			value: dataTour?.gender?.female,
-			fill: "var(--color-female)",
+			fill: 'var(--color-female)',
 		},
 	];
 
@@ -330,13 +330,13 @@ export default function DashboardPage() {
 						format="dd/MM/yyyy"
 						onChange={(date) => {
 							if (date) {
-								methods.setValue("start_date", date.toISOString());
-								methods.clearErrors("start_date");
-								methods.setValue("end_date", "");
+								methods.setValue('start_date', date.toISOString());
+								methods.clearErrors('start_date');
+								methods.setValue('end_date', '');
 							}
 						}}
 						className="w-full"
-						minDate={new Date()}
+						//minDate={new Date()}
 					/>
 					<RHFDatePicker
 						name="end_date"
@@ -346,12 +346,12 @@ export default function DashboardPage() {
 						format="dd/MM/yyyy"
 						onChange={(date) => {
 							if (date) {
-								methods.setValue("end_date", date.toISOString());
-								methods.clearErrors("end_date");
+								methods.setValue('end_date', date.toISOString());
+								methods.clearErrors('end_date');
 							}
 						}}
 						className="w-full"
-						minDate={new Date(methods.watch("start_date"))}
+						minDate={new Date(methods.watch('start_date'))}
 					/>
 					<Button
 						className="bg-amber-500 hover:bg-amber-600 cursor-pointer"
@@ -560,8 +560,8 @@ export default function DashboardPage() {
 													key={i}
 													icon={
 														i <= (data?.data?.rating_average || 0)
-															? "mdi:star"
-															: "mdi:star-outline"
+															? 'mdi:star'
+															: 'mdi:star-outline'
 													}
 													className="text-yellow-400 w-6 h-6"
 												/>
@@ -637,12 +637,12 @@ export default function DashboardPage() {
 														icon={
 															i <=
 															Number(
-																item?.responses?.[0]?.form_type === "rating"
+																item?.responses?.[0]?.form_type === 'rating'
 																	? item?.responses?.[0]?.value
 																	: 0
 															)
-																? "mdi:star"
-																: "mdi:star-outline"
+																? 'mdi:star'
+																: 'mdi:star-outline'
 														}
 														className="text-yellow-400 w-4 h-4"
 													/>
@@ -650,9 +650,9 @@ export default function DashboardPage() {
 											</div>
 
 											<Typography className="text-xs text-[#383B46] mt-2">
-												{item.responses?.[1].form_type === "free_text"
+												{item.responses?.[1].form_type === 'free_text'
 													? item?.responses?.[1]?.value
-													: "-"}
+													: '-'}
 											</Typography>
 										</div>
 									);
@@ -662,9 +662,9 @@ export default function DashboardPage() {
 							<div className="px-3 bg-white pb-5 rounded-b-sm mt-5">
 								<Button
 									className="w-full cursor-pointer"
-									variant={"hmmiOutline"}
+									variant={'hmmiOutline'}
 									onClick={() => {
-										navigate("/feedback");
+										navigate('/feedback');
 									}}
 								>
 									More Details
@@ -682,7 +682,7 @@ export default function DashboardPage() {
 						<ChartContainer
 							config={chartConfig}
 							className="w-full"
-							style={{ height: `${chartHeight}px`, maxHeight: "1024px" }}
+							style={{ height: `${chartHeight}px`, maxHeight: '1024px' }}
 						>
 							<BarChart
 								accessibilityLayer
