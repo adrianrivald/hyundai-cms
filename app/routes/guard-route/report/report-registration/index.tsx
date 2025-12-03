@@ -1,14 +1,14 @@
-import type { Route } from "./+types";
-import RegistrationReportPage from "@/page/report/register";
-import PageAuthorization from "@/components/page-authorization";
+import type { Route } from './+types';
+import RegistrationReportPage from '@/page/report/register';
+import PageAuthorization from '@/components/page-authorization';
 
 export function meta({}: Route.MetaArgs) {
-	return [{ title: "Registration Report | Hyundai Factory Tour" }];
+	return [{ title: 'Registration Report | Hyundai Factory Tour' }];
 }
 
 export default function ReportRegistration() {
 	return (
-		<PageAuthorization role={["Super", "PIC"]}>
+		<PageAuthorization role={['Super', 'PIC App', 'Tour']}>
 			<RegistrationReportPage />
 		</PageAuthorization>
 	);
