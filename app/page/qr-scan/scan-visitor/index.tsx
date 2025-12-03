@@ -10,6 +10,9 @@ import { toast } from "sonner";
 import type { Participant } from "./_functions/models/scan-visitor";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router";
+import { useOfflineMode } from "@/hooks/use-offline-mode";
+import { offlineStorage } from "@/lib/offline-storage";
+import { OfflineIndicator } from "@/components/offline-indicator";
 
 export default function ScanVisitor() {
   const navigate = useNavigate();
@@ -17,6 +20,7 @@ export default function ScanVisitor() {
   const [flashlightOn, setFlashlightOn] = useState(false);
   const [scannedData, setScannedData] = useState<Participant["data"]>();
   const [code, setCode] = useState<string>("");
+  const { isOnline, addOfflineVisitor } = useOfflineMode();
 
   const footerItems = [
     { icon: "formkit:people", label: "Visitor List" },
@@ -31,10 +35,34 @@ export default function ScanVisitor() {
     const result = detectedCodes[0].rawValue;
 
     try {
-      const res = await getParticipant(result);
-      setCode(result);
-      setScannedData(res?.data);
-      setIsScanned(true);
+      if (isOnline) {
+        const res = await getParticipant(result);
+        setCode(result);
+        setScannedData(res?.data);
+        setIsScanned(true);
+      } else {
+        // Offline mode - try to find visitor in offline storage
+        const offlineVisitors = await offlineStorage.getVisitors();
+        const offlineVisitor = offlineVisitors.find(
+          (v) => v.verification_code === result
+        );
+
+        if (offlineVisitor) {
+          setCode(result);
+          setScannedData({
+            name: offlineVisitor.name,
+            phone_number: offlineVisitor.phone_number,
+            email: offlineVisitor.email,
+            sex: offlineVisitor.sex,
+            tour: { name: offlineVisitor.tour_number },
+          });
+          setIsScanned(true);
+        } else {
+          enqueueSnackbar("Visitor not found in offline storage", {
+            variant: "error",
+          });
+        }
+      }
     } catch (error: any) {
       enqueueSnackbar(
         `Error: ${error?.response?.data?.message ?? "Failed to scan"}`,
@@ -55,9 +83,32 @@ export default function ScanVisitor() {
     e.preventDefault();
 
     try {
-      const res = await getParticipant(code);
-      setScannedData(res.data);
-      setIsScanned(true);
+      if (isOnline) {
+        const res = await getParticipant(code);
+        setScannedData(res.data);
+        setIsScanned(true);
+      } else {
+        // Offline mode - try to find visitor in offline storage
+        const offlineVisitors = await offlineStorage.getVisitors();
+        const offlineVisitor = offlineVisitors.find(
+          (v) => v.verification_code === code
+        );
+
+        if (offlineVisitor) {
+          setScannedData({
+            name: offlineVisitor.name,
+            phone_number: offlineVisitor.phone_number,
+            email: offlineVisitor.email,
+            sex: offlineVisitor.sex,
+            tour: { name: offlineVisitor.tour_number },
+          });
+          setIsScanned(true);
+        } else {
+          enqueueSnackbar("Visitor not found in offline storage", {
+            variant: "error",
+          });
+        }
+      }
     } catch (error: any) {
       enqueueSnackbar(
         `Error: ${error?.response?.data?.message ?? "Failed to scan"}`,
@@ -69,17 +120,40 @@ export default function ScanVisitor() {
   };
 
   const handleAddVisitor = async () => {
-    // Handle add visitor action
     try {
-      const res = await attendQr({ code });
-      setIsScanned(false);
-      setScannedData(undefined);
-      enqueueSnackbar(`Participant has been added`, {
-        variant: "success",
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      if (isOnline) {
+        const res = await attendQr({ code });
+        setIsScanned(false);
+        setScannedData(undefined);
+        enqueueSnackbar(`Participant has been added`, {
+          variant: "success",
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        // Offline mode - mark visitor as attended in offline storage
+        const offlineVisitors = await offlineStorage.getVisitors();
+        const offlineVisitor = offlineVisitors.find(
+          (v) => v.verification_code === code
+        );
+
+        if (offlineVisitor) {
+          await offlineStorage.updateVisitor(offlineVisitor.id, {
+            attended_at: new Date().toISOString(),
+          });
+
+          setIsScanned(false);
+          setScannedData(undefined);
+          enqueueSnackbar(`Participant marked as attended (offline)`, {
+            variant: "success",
+          });
+        } else {
+          enqueueSnackbar("Visitor not found in offline storage", {
+            variant: "error",
+          });
+        }
+      }
     } catch (error: any) {
       enqueueSnackbar(
         `Error: ${error?.response?.data?.message ?? "Failed to add participant"}`,
@@ -107,7 +181,9 @@ export default function ScanVisitor() {
         <div className="flex-1 flex flex-col">
           {/* Page Title */}
           <div className="px-6 py-4 flex justify-between items-center">
-            <div className="w-1/3"></div>
+            <div className="w-1/3 flex items-center">
+              {!isOnline && <OfflineIndicator />}
+            </div>
             <div className="w-1/3 flex justify-center items-center">
               <Typography className="text-xl font-bold text-white">
                 Scan Visitor

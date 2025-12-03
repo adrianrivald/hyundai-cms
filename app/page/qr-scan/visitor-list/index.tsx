@@ -4,13 +4,16 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import StickyFooter from "@/components/layout/sticky-footer";
 import StickyHeader from "@/components/layout/sticky-header";
 import { useState, useEffect } from "react";
-import { attendQr, useGetParticipantsByDate } from "@/api/qr-scan";
+import { attendQr, useGetParticipantsByDate, addVisitor } from "@/api/qr-scan";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useLocation, useNavigate } from "react-router";
 import DialogDelete from "@/components/custom/dialog/dialog-delete";
 import { useDeleteParticipantTourGroup } from "@/api/tour";
 import { enqueueSnackbar } from "notistack";
+import { useOfflineMode } from "@/hooks/use-offline-mode";
+import { offlineStorage } from "@/lib/offline-storage";
+import { OfflineIndicator } from "@/components/offline-indicator";
 
 export default function VisitorList() {
   const location = useLocation();
@@ -23,7 +26,14 @@ export default function VisitorList() {
   const [selectedVisitorId, setSelectedVisitorId] = useState<number | null>(
     null
   );
+  const [offlineVisitors, setOfflineVisitors] = useState<any[]>([]);
+  const [lastFetchedVisitors, setLastFetchedVisitors] = useState<any[] | null>(null);
   const { mutate: mutateDelete } = useDeleteParticipantTourGroup();
+  const {
+    isOnline,
+    offlineVisitors: storedOfflineVisitors,
+    deleteOfflineVisitor,
+  } = useOfflineMode();
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -39,7 +49,87 @@ export default function VisitorList() {
     paginate,
   });
 
-  const visitors = data?.data?.data ?? [];
+  // Hydrate last fetched list from localStorage on mount
+  useEffect(() => {
+    try {
+      const cached = localStorage.getItem("lastFetchedVisitors");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed)) setLastFetchedVisitors(parsed);
+      }
+    } catch (_) {}
+  }, []);
+
+  // Cache last fetched online visitors list for offline display
+  useEffect(() => {
+    const onlineVisitors = data?.data?.data;
+    if (Array.isArray(onlineVisitors)) {
+      setLastFetchedVisitors(onlineVisitors);
+      try {
+        localStorage.setItem("lastFetchedVisitors", JSON.stringify(onlineVisitors));
+      } catch (_) {}
+    }
+  }, [data]);
+
+  // Maintain offline visitors list for offline mutations/storage, though display uses last fetched
+  useEffect(() => {
+    if (!isOnline) {
+      setOfflineVisitors(storedOfflineVisitors);
+    } else {
+      setOfflineVisitors([]);
+    }
+  }, [isOnline, storedOfflineVisitors]);
+
+  // When offline, merge last fetched with any newly added offline visitors (avoid duplicates)
+  const offlineNewVisitors = offlineVisitors.filter(
+    (v) => String(v.verification_code || "").startsWith("offline_")
+  );
+  const mergeVisitors = (
+    base: any[],
+    extras: any[],
+  ) => {
+    const byCode = new Map<string, any>();
+    base.forEach((v) => byCode.set(String(v.verification_code ?? v.id ?? Math.random()), v));
+    extras.forEach((v) => {
+      const key = String(v.verification_code ?? v.id ?? Math.random());
+      if (!byCode.has(key)) byCode.set(key, v);
+    });
+    return Array.from(byCode.values());
+  };
+
+  const visitors = isOnline
+    ? (data?.data?.data ?? [])
+    : mergeVisitors(lastFetchedVisitors ?? [], offlineNewVisitors);
+
+  // When back online, sync offline-added visitors to server
+  useEffect(() => {
+    const syncOfflineAdds = async () => {
+      if (!isOnline) return;
+      const pendingAdds = offlineVisitors.filter((v) => String(v.verification_code || "").startsWith("offline_"));
+      if (pendingAdds.length === 0) return;
+      for (const v of pendingAdds) {
+        try {
+          await addVisitor({
+            name: v.name,
+            dob: v.dob,
+            phone_number: v.phone_number,
+            email: v.email,
+            sex: v.sex,
+            is_special_need: Boolean(v.is_special_need),
+            tour_number: v.tour_number,
+          });
+          await deleteOfflineVisitor(v.id);
+        } catch (err: any) {
+          enqueueSnackbar(`Failed to sync ${v.name}: ${err?.response?.data?.message || err.message || ""}`,
+            { variant: "error" });
+        }
+      }
+      enqueueSnackbar("Offline visitors synced", { variant: "success" });
+      refetch();
+    };
+    syncOfflineAdds();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOnline]);
 
   const filteredVisitors = visitors.filter((visitor) =>
     visitor.name.toLowerCase().includes(debouncedSearch.toLowerCase())
@@ -55,11 +145,29 @@ export default function VisitorList() {
 
   const handleBypass = async (visitorCode: string, attendedAt: string) => {
     if (attendedAt === null) {
-      await attendQr({ code: visitorCode }).then((response) => {
-        if (response.status === 200) {
-          refetch();
+      if (isOnline) {
+        await attendQr({ code: visitorCode }).then((response) => {
+          if (response.status === 200) {
+            refetch();
+          }
+        });
+      } else {
+        // Offline mode - update visitor in offline storage
+        const offlineVisitor = storedOfflineVisitors.find(
+          (v) => v.verification_code === visitorCode
+        );
+        if (offlineVisitor) {
+          await offlineStorage.updateVisitor(offlineVisitor.id, {
+            attended_at: new Date().toISOString(),
+          });
+          // Refresh offline visitors
+          const updatedVisitors = await offlineStorage.getVisitors();
+          setOfflineVisitors(updatedVisitors);
+          enqueueSnackbar("Visitor marked as attended (offline)", {
+            variant: "success",
+          });
         }
-      });
+      }
     }
   };
 
@@ -69,23 +177,48 @@ export default function VisitorList() {
   };
 
   const onDelete = () => {
-    mutateDelete(
-      { id: String(selectedVisitorId) || "" },
-      {
-        onSuccess: () => {
-          setOpenDelete(false);
-          enqueueSnackbar("Data has been deleted", {
-            variant: "success",
+    if (isOnline) {
+      mutateDelete(
+        { id: String(selectedVisitorId) || "" },
+        {
+          onSuccess: () => {
+            setOpenDelete(false);
+            enqueueSnackbar("Data has been deleted", {
+              variant: "success",
+            });
+            refetch();
+          },
+          onError: (err: any) => {
+            enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
+              variant: "error",
+            });
+          },
+        }
+      );
+    } else {
+      // Offline mode - delete from offline storage
+      const offlineVisitor = storedOfflineVisitors.find(
+        (v) => v.id === String(selectedVisitorId)
+      );
+      if (offlineVisitor) {
+        deleteOfflineVisitor(offlineVisitor.id)
+          .then(() => {
+            setOpenDelete(false);
+            enqueueSnackbar("Data has been deleted (offline)", {
+              variant: "success",
+            });
+            // Refresh offline visitors
+            offlineStorage.getVisitors().then((updatedVisitors) => {
+              setOfflineVisitors(updatedVisitors);
+            });
+          })
+          .catch((err) => {
+            enqueueSnackbar(`Error: ${err.message}`, {
+              variant: "error",
+            });
           });
-          refetch();
-        },
-        onError: (err: any) => {
-          enqueueSnackbar(`Error : ${err.response?.data?.message}`, {
-            variant: "error",
-          });
-        },
       }
-    );
+    }
   };
 
   return (
@@ -99,9 +232,12 @@ export default function VisitorList() {
         <div className="flex-1 overflow-auto">
           <ScrollArea className="h-full">
             <div className="p-6 text-white space-y-6">
-              <Typography className="text-xl font-bold text-center">
-                Visitor List
-              </Typography>
+              <div className="flex items-center justify-between">
+                <Typography className="text-xl font-bold text-center flex-1">
+                  Visitor List
+                </Typography>
+                {!isOnline && <OfflineIndicator />}
+              </div>
 
               {/* Search Bar */}
               <div className="relative">

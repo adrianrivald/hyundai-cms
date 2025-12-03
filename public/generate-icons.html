@@ -1,0 +1,42 @@
+// Simple icon generator for PWA icons
+// This creates basic colored squares as placeholders
+// In production, you should replace these with actual app icons
+
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+
+function generateIcon(size, filename) {
+  canvas.width = size;
+  canvas.height = size;
+  
+  // Background gradient similar to app theme
+  const gradient = ctx.createLinearGradient(0, 0, size, size);
+  gradient.addColorStop(0, '#153263');
+  gradient.addColorStop(1, '#00102B');
+  
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, size, size);
+  
+  // Add QR code icon
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = `${size * 0.4}px Arial`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('QR', size / 2, size / 2);
+  
+  // Convert to blob and download
+  canvas.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, 'image/png');
+}
+
+// Generate all required icon sizes
+const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+sizes.forEach(size => {
+  generateIcon(size, `icon-${size}x${size}.png`);
+});

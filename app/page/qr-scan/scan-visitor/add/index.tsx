@@ -12,6 +12,9 @@ import {
 } from "@/api/qr-scan";
 import { format } from "date-fns";
 import type { AddVisitor } from "../_functions/models/scan-visitor";
+import { useOfflineMode } from "@/hooks/use-offline-mode";
+import { offlineStorage } from "@/lib/offline-storage";
+import { enqueueSnackbar } from "notistack";
 
 type VisitorForm = {
   name: string;
@@ -46,6 +49,8 @@ export default function AddVisitor({ id }: AddVisitorProps) {
     Partial<Record<keyof VisitorForm, string>>
   >({});
   const today = format(new Date(), "yyyy-MM-dd");
+  const { isOnline, addOfflineVisitor, updateOfflineVisitor } =
+    useOfflineMode();
 
   const { data } = useGetToursByDate(today);
 
@@ -97,13 +102,64 @@ export default function AddVisitor({ id }: AddVisitorProps) {
     };
 
     try {
-      if (id) {
-        await updateVisitor({
-          ...payload,
-          id: Number(visitorId),
-        });
+      if (isOnline) {
+        if (id) {
+          await updateVisitor({
+            ...payload,
+            id: Number(visitorId),
+          });
+        } else {
+          await addVisitor(payload);
+        }
       } else {
-        await addVisitor(payload);
+        // Offline mode
+        if (id) {
+          // Update existing offline visitor
+          await updateOfflineVisitor(String(visitorId), {
+            name: payload.name,
+            dob: payload.dob,
+            phone_number: payload.phone_number,
+            email: payload.email,
+            sex: payload.sex,
+            is_special_need: payload.is_special_need,
+            tour_number: payload.tour_number,
+          });
+          enqueueSnackbar("Visitor updated (offline)", { variant: "success" });
+        } else {
+          // Add new offline visitor
+          await addOfflineVisitor({
+            name: payload.name,
+            dob: payload.dob,
+            phone_number: payload.phone_number,
+            email: payload.email,
+            sex: payload.sex,
+            is_special_need: payload.is_special_need,
+            tour_number: payload.tour_number,
+            verification_code: `offline_${Date.now()}`,
+          });
+          // Also update cached last fetched visitors so visitor list shows merged data immediately
+          try {
+            const cached = localStorage.getItem("lastFetchedVisitors");
+            const current = cached ? JSON.parse(cached) : [];
+            const newItem = {
+              name: payload.name,
+              dob: payload.dob,
+              phone_number: payload.phone_number,
+              email: payload.email,
+              sex: payload.sex,
+              is_special_need: payload.is_special_need,
+              tour_number: payload.tour_number,
+              verification_code: `offline_${Date.now()}`,
+              tour: { tour_number: payload.tour_number },
+              attended_at: null,
+            };
+            const merged = Array.isArray(current)
+              ? [...current, newItem]
+              : [newItem];
+            localStorage.setItem("lastFetchedVisitors", JSON.stringify(merged));
+          } catch (_) {}
+          enqueueSnackbar("Visitor added (offline)", { variant: "success" });
+        }
       }
 
       setTimeout(() => {
@@ -111,6 +167,7 @@ export default function AddVisitor({ id }: AddVisitorProps) {
       }, 1000);
     } catch (error) {
       console.error(error);
+      enqueueSnackbar("Failed to save visitor", { variant: "error" });
     }
   };
 
@@ -134,9 +191,24 @@ export default function AddVisitor({ id }: AddVisitorProps) {
           >
             <Icon icon="mdi:arrow-left" width={24} />
           </button>
-          <Typography className="flex-1 text-center text-white text-lg font-semibold">
-            {isUpdatePage ? "Detail Visitor" : "Add Visitor"}
-          </Typography>
+          <div className="flex-1 flex items-center justify-center gap-2">
+            <Typography className="text-white text-lg font-semibold">
+              {isUpdatePage ? "Detail Visitor" : "Add Visitor"}
+            </Typography>
+            {!isOnline && (
+              <div className="flex items-center gap-1 bg-orange-500/20 px-2 py-1 rounded-full">
+                <Icon
+                  icon="mdi:wifi-off"
+                  width="14"
+                  height="14"
+                  className="text-orange-500"
+                />
+                <Typography className="text-xs text-orange-500">
+                  Offline
+                </Typography>
+              </div>
+            )}
+          </div>
           <div className="w-6" /> {/* spacer to balance layout */}
         </div>
 

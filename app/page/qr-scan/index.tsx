@@ -5,15 +5,65 @@ import StickyFooter from "@/components/layout/sticky-footer";
 import StickyHeader from "@/components/layout/sticky-header";
 import { useGetCalendarDaily } from "@/api/qr-scan";
 import { format } from "date-fns";
+import { OfflineIndicator } from "@/components/offline-indicator";
+import { useOfflineMode } from "@/hooks/use-offline-mode";
+import { useEffect, useState } from "react";
 
 export default function QRScan() {
   const today = format(new Date(), "yyyy-MM-dd");
   const { data } = useGetCalendarDaily(today);
+  const { isOnline, offlineVisitors } = useOfflineMode();
 
   const attended = data?.data.total?.attended ?? 0;
   const participants = data?.data.total?.participants ?? 0;
-
   const percentage = data?.data?.total?.attended_pct;
+
+  // Cache last known API totals so toggling to offline keeps previously fetched values
+  const [lastTotals, setLastTotals] = useState<{
+    attended: number;
+    participants: number;
+    percentage?: number;
+  } | null>(null);
+
+  // Hydrate cached totals from localStorage on mount (keyed by date)
+  useEffect(() => {
+    try {
+      const cached = localStorage.getItem(`lastTotals:${today}`);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed && typeof parsed === "object") {
+          setLastTotals(parsed);
+        }
+      }
+    } catch (_) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (data?.data?.total) {
+      setLastTotals({
+        attended: data.data.total.attended ?? 0,
+        participants: data.data.total.participants ?? 0,
+        percentage: data.data.total.attended_pct,
+      });
+      try {
+        localStorage.setItem(
+          `lastTotals:${today}`,
+          JSON.stringify({
+            attended: data.data.total.attended ?? 0,
+            participants: data.data.total.participants ?? 0,
+            percentage: data.data.total.attended_pct,
+          })
+        );
+      } catch (_) {}
+    }
+  }, [data]);
+
+  // Use offline data when offline
+  const offlineAttended = offlineVisitors.filter((v) => v.attended_at).length;
+  const offlineTotal = offlineVisitors.length;
+  const offlinePercentage =
+    offlineTotal > 0 ? Math.round((offlineAttended / offlineTotal) * 100) : 0;
 
   return (
     <div className="flex justify-center min-h-screen bg-black">
@@ -31,11 +81,14 @@ export default function QRScan() {
           <ScrollArea className="h-full">
             <div className="p-6 text-white space-y-6">
               {/* Date Section */}
-              <div className="flex items-center gap-2 mb-4">
-                <Icon icon="mdi:calendar" width="20" height="20" />
-                <Typography className="text-sm">
-                  {format(new Date(), "dd/MM/yyyy")}
-                </Typography>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Icon icon="mdi:calendar" width="20" height="20" />
+                  <Typography className="text-sm">
+                    {format(new Date(), "dd/MM/yyyy")}
+                  </Typography>
+                </div>
+                <OfflineIndicator />
               </div>
 
               {/* Check-in Status Card */}
@@ -48,10 +101,13 @@ export default function QRScan() {
                 </div>
                 <div className="flex justify-center items-baseline gap-2">
                   <Typography className="text-[80px] font-bold text-white">
-                    {data?.data.total.attended}
+                    {isOnline ? attended : (lastTotals?.attended ?? attended)}
                   </Typography>
                   <Typography className="text-lg text-white/70">
-                    /{data?.data.total.participants}
+                    /
+                    {isOnline
+                      ? participants
+                      : (lastTotals?.participants ?? participants)}
                   </Typography>
                 </div>
               </div>
@@ -70,7 +126,9 @@ export default function QRScan() {
                       Total Visitor
                     </Typography>
                     <Typography className="text-2xl font-bold">
-                      {data?.data.total?.participants}
+                      {isOnline
+                        ? participants
+                        : (lastTotals?.participants ?? participants)}
                     </Typography>
                   </div>
                   <div className="bg-[#00235E] rounded-lg p-4">
@@ -78,7 +136,10 @@ export default function QRScan() {
                       Percentage
                     </Typography>
                     <Typography className="text-2xl font-bold">
-                      {percentage}%
+                      {isOnline
+                        ? percentage
+                        : (lastTotals?.percentage ?? percentage)}
+                      %
                     </Typography>
                   </div>
                 </div>
