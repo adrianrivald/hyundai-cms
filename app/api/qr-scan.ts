@@ -18,6 +18,7 @@ import {
   type QueryObserverOptions,
 } from "@tanstack/react-query";
 import type { AxiosError, AxiosResponse } from "axios";
+import { useLocation } from "react-router";
 
 export async function getParticipant(code: string): Promise<Participant> {
   const response = await apiConfig.get(`admin/participant/${code}`);
@@ -72,8 +73,9 @@ export const useGetCalendarDaily = (
   date: string,
   options?: QueryObserverOptions<CalendarDaily>
 ) => {
+  const location = useLocation();
   return useQuery<CalendarDaily>({
-    queryKey: ["calendar-daily-get", date],
+    queryKey: ["calendar-daily-get", date, location],
     queryFn: async () => {
       const response = await getCalendarDaily(date);
       return response;
