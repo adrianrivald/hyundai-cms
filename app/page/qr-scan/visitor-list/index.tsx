@@ -23,11 +23,18 @@ export default function VisitorList() {
   const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
   const [paginate, setPaginate] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openBypass, setOpenBypass] = useState(false);
+  const [selectedVisitor, setSelectedVisitor] = useState<{
+    id: string | number;
+    name: string;
+  } | null>(null);
   const [selectedVisitorId, setSelectedVisitorId] = useState<number | null>(
     null
   );
   const [offlineVisitors, setOfflineVisitors] = useState<any[]>([]);
-  const [lastFetchedVisitors, setLastFetchedVisitors] = useState<any[] | null>(null);
+  const [lastFetchedVisitors, setLastFetchedVisitors] = useState<any[] | null>(
+    null
+  );
   const { mutate: mutateDelete } = useDeleteParticipantTourGroup();
   const {
     isOnline,
@@ -66,7 +73,10 @@ export default function VisitorList() {
     if (Array.isArray(onlineVisitors)) {
       setLastFetchedVisitors(onlineVisitors);
       try {
-        localStorage.setItem("lastFetchedVisitors", JSON.stringify(onlineVisitors));
+        localStorage.setItem(
+          "lastFetchedVisitors",
+          JSON.stringify(onlineVisitors)
+        );
       } catch (_) {}
     }
   }, [data]);
@@ -81,15 +91,14 @@ export default function VisitorList() {
   }, [isOnline, storedOfflineVisitors]);
 
   // When offline, merge last fetched with any newly added offline visitors (avoid duplicates)
-  const offlineNewVisitors = offlineVisitors.filter(
-    (v) => String(v.verification_code || "").startsWith("offline_")
+  const offlineNewVisitors = offlineVisitors.filter((v) =>
+    String(v.verification_code || "").startsWith("offline_")
   );
-  const mergeVisitors = (
-    base: any[],
-    extras: any[],
-  ) => {
+  const mergeVisitors = (base: any[], extras: any[]) => {
     const byCode = new Map<string, any>();
-    base.forEach((v) => byCode.set(String(v.verification_code ?? v.id ?? Math.random()), v));
+    base.forEach((v) =>
+      byCode.set(String(v.verification_code ?? v.id ?? Math.random()), v)
+    );
     extras.forEach((v) => {
       const key = String(v.verification_code ?? v.id ?? Math.random());
       if (!byCode.has(key)) byCode.set(key, v);
@@ -105,7 +114,9 @@ export default function VisitorList() {
   useEffect(() => {
     const syncOfflineAdds = async () => {
       if (!isOnline) return;
-      const pendingAdds = offlineVisitors.filter((v) => String(v.verification_code || "").startsWith("offline_"));
+      const pendingAdds = offlineVisitors.filter((v) =>
+        String(v.verification_code || "").startsWith("offline_")
+      );
       if (pendingAdds.length === 0) return;
       for (const v of pendingAdds) {
         try {
@@ -120,8 +131,10 @@ export default function VisitorList() {
           });
           await deleteOfflineVisitor(v.id);
         } catch (err: any) {
-          enqueueSnackbar(`Failed to sync ${v.name}: ${err?.response?.data?.message || err.message || ""}`,
-            { variant: "error" });
+          enqueueSnackbar(
+            `Failed to sync ${v.name}: ${err?.response?.data?.message || err.message || ""}`,
+            { variant: "error" }
+          );
         }
       }
       enqueueSnackbar("Offline visitors synced", { variant: "success" });
@@ -143,32 +156,51 @@ export default function VisitorList() {
     }
   }, [location.state, refetch]);
 
-  const handleBypass = async (visitorCode: string, attendedAt: string) => {
-    if (attendedAt === null) {
-      if (isOnline) {
-        await attendQr({ code: visitorCode }).then((response) => {
-          if (response.status === 200) {
-            refetch();
-          }
-        });
-      } else {
-        // Offline mode - update visitor in offline storage
-        const offlineVisitor = storedOfflineVisitors.find(
-          (v) => v.verification_code === visitorCode
-        );
-        if (offlineVisitor) {
-          await offlineStorage.updateVisitor(offlineVisitor.id, {
-            attended_at: new Date().toISOString(),
-          });
-          // Refresh offline visitors
-          const updatedVisitors = await offlineStorage.getVisitors();
-          setOfflineVisitors(updatedVisitors);
-          enqueueSnackbar("Visitor marked as attended (offline)", {
-            variant: "success",
-          });
+  const handleBypass = async (visitorCode: string, visitorName: string) => {
+    setSelectedVisitor({ id: visitorCode, name: visitorName });
+    setOpenBypass(true);
+  };
+
+  const confirmBypass = async () => {
+    if (!selectedVisitor) return;
+
+    const { id: visitorCode } = selectedVisitor;
+
+    if (isOnline) {
+      try {
+        const response = await attendQr({ code: String(visitorCode) });
+        if (response.status === 200) {
+          enqueueSnackbar("Visitor marked as attended", { variant: "success" });
+          refetch();
         }
+      } catch (error: any) {
+        enqueueSnackbar(
+          `Error: ${error.response?.data?.message || "Failed to mark as attended"}`,
+          {
+            variant: "error",
+          }
+        );
+      }
+    } else {
+      // Offline mode - update visitor in offline storage
+      const offlineVisitor = storedOfflineVisitors.find(
+        (v) => v.verification_code === visitorCode
+      );
+      if (offlineVisitor) {
+        await offlineStorage.updateVisitor(offlineVisitor.id, {
+          attended_at: new Date().toISOString(),
+        });
+        // Refresh offline visitors
+        const updatedVisitors = await offlineStorage.getVisitors();
+        setOfflineVisitors(updatedVisitors);
+        enqueueSnackbar("Visitor marked as attended (offline)", {
+          variant: "success",
+        });
       }
     }
+
+    setOpenBypass(false);
+    setSelectedVisitor(null);
   };
 
   const onOpenDelete = (visitorId: number) => {
@@ -345,6 +377,7 @@ export default function VisitorList() {
             </div>
           </ScrollArea>
         </div>
+
         <DialogDelete
           open={openDelete}
           onClose={() => {
@@ -354,6 +387,20 @@ export default function VisitorList() {
             onDelete();
           }}
         />
+
+        <DialogDelete
+          open={openBypass}
+          onClose={() => {
+            setOpenBypass(false);
+          }}
+          onSubmit={() => {
+            confirmBypass();
+          }}
+          title={`Are you sure you want to mark this user as attended?`}
+          subtitle="This action will permanently bypass the selected user and cannot be undone.
+"
+        />
+
         <StickyFooter activeItem="Visitor List" />
       </div>
     </div>
